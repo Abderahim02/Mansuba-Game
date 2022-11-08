@@ -22,6 +22,41 @@ const char* place_to_string(enum color_t c, enum sort_t s){
   else
     return "NO SORT";
 }
+const char* dir_to_string(enum dir_t d){
+  switch (d){
+  case 1:
+    return "EAST";
+    break;
+  case 2:
+    return "NEAST";
+    break;
+  case 3:
+    return "NORTH";
+    break;
+  case 4:
+    return "NWEST";
+    break;
+  case -1 :
+    return "WEST";
+    break;
+  case -2 :
+    return "SWEST";
+    break;
+  case -3 :
+    return "SOUTH";
+    break;
+  case -4:
+    return "SEAST";
+    break;
+  case 9:
+    return "EMPTY DIRECTION";
+    break;
+  case 0 :
+    return "NO DIR";
+    break;
+  }
+}
+
 int main(int argc, char *argv[]){
   enum color_t c = WHITE;
   enum sort_t s = PAWN;
