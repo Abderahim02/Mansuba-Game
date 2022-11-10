@@ -3,9 +3,14 @@
 #include<string.h>
 #include"world.h"
 
-// It's just a test if the upload to github works.
+// The struct for the world.
 struct world_t
 {
     int position[WORLD_SIZE];
 };
 
+// The main function.
+int main(int argc, char *argv[]) {
+    printf("world.c is compiling.\n"); // Test for Makefile
+    return 0;
+}
