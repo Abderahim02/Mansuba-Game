@@ -32,12 +32,14 @@ void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c){
   b->sorts[idx] = c;
 }
 
+
+/*
 int main(int argc, char *argv[]){
     return 0;
     }
 
 
-/*
+
 Version 2
 
 #include<stdio.h>
@@ -95,7 +97,7 @@ void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c)
     b->sorts[idx] = c;
 }
 
-
+*/
 // The main function, mainly for testing.
 int main(int argc, char *argv[])
 {
@@ -125,4 +127,3 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-*/
