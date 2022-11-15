@@ -8,14 +8,15 @@ struct world_t{
   enum sort_t sorts[WORLD_SIZE];
 };
 
+struct world_t world;
 struct world_t* world_init(){
-  struct world_t world;
   for(int i=0; i < WORLD_SIZE; ++i){ 
       world.colors[i] = NO_COLOR;   
       world.sorts[i] = NO_SORT;
   }
-    return 0 ;
+    return &world ;
 }
+
 enum color_t world_get( const struct world_t* b, unsigned int idx){
   enum color_t color = b->colors[idx];
   return color;
