@@ -61,23 +61,32 @@ struct neighbors_t get_neighbors(unsigned int idx){
   enum dir_t dir = SEAST;
   int j=0;
   while( j <= MAX_NEIGHBORS && dir != MAX_DIR){
-    if( get_neighbor(idx, dir) != UINT_MAX ){
-      neighbors.n[j]={.i=get_neighbor(idx, dir), .d=dir};
-    ++dir;
-    ++j;
-  }
-  else{
-    neighbors.n[j]={.i = UINT_MAX, .d=NO_DIR};
-    break;
+    if( get_neighbor(idx, dir) != UINT_MAX ) {
+      neighbors.n[j].i = get_neighbor(idx, dir);
+      neighbors.n[j].d = dir;
+      ++dir;
+      ++j;
+    }
+    else {
+      neighbors.n[j].i = UINT_MAX;
+      neighbors.n[j].d = NO_DIR;
+      break;
+    }
   }
   return neighbors;
 }
 
-int main(){
+/*int main(){
+  struct world_t world={{1,1,1,2,1,2,0,0,1},{1,1,1,1,1,1,1,0,0,1}};
+
   struct neighbors_t neighbors={.n = { {2, NORTH}, {3, SOUTH}, {UINT_MAX, NO_DIR}} } ;
-    int i = 0;
-    while(i < 3 && neighbors.n[i].d !=UINT_MAX){
-      printf("la case %d est un voisin de %d située à %d",i, 2, get_neighbors(2).n.d);
-    }
-    return 0;
+  int i = 0;
+  while(i < 3 && neighbors.n[i].d !=UINT_MAX){
+    printf("la case %d est un voisin de %d située à %d",i, 2, get_neighbors(2).n.d);
   }
+  return 0;
+}
+*/
+int main(){
+  return 0;
+}
