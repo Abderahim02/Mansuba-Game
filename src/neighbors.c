@@ -56,23 +56,20 @@ unsigned int get_neighbor(unsigned int idx, enum dir_t d) {
     }
 }
 
-struct neighbors_t get_neighbors(unsigned int idx){
+struct neighbors_t get_neighbors( unsigned int idx){
   struct neighbors_t neighbors;
   enum dir_t dir = SEAST;
   int j=0;
-  while( j <= MAX_NEIGHBORS && dir != MAX_DIR){
-    if( get_neighbor(idx, dir) != UINT_MAX ) {
-      neighbors.n[j].i = get_neighbor(idx, dir);
+  while( j < MAX_NEIGHBORS && dir < MAX_DIR){
+    if( get_neighbor(idx, dir) != UINT_MAX ){
+      neighbors.n[j].i = get_neighbor(idx, dir);  //la boucle va remplir neighbors avec les voisins de idx avec j voisins 
       neighbors.n[j].d = dir;
       ++dir;
       ++j;
     }
-    else {
-      neighbors.n[j].i = UINT_MAX;
-      neighbors.n[j].d = NO_DIR;
-      break;
-    }
   }
+  neighbors.n[j+1].i = UINT_MAX; //à  la fin on ajoute l element UNINT_MAX a la j+1 ieme position  
+  neighbors.n[j+1].d = NO_DIR;
   return neighbors;
 }
 
