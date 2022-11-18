@@ -12,7 +12,7 @@ struct player;
 
 // Players includes the structs position_info and player. 
 struct players;
-
+struct world_t;
 
 // We need to create some functions here, which we define later.
 
