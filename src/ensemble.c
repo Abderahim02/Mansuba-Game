@@ -22,12 +22,27 @@ struct player {
 };
 
 // _________________________
+<<<<<<< HEAD
 void init_players(struct world_t* worldt) {
   for (int i = 0; i < WORLD_SIZE; ++i) {
     // In the begin we put the white pieces to the left and the black pieces to the right.
     if (i % WIDTH == 0) {
       worldt->colors[i] = WHITE;
       worldt->sorts[i] = 1;
+=======
+void init_players(struct world_t* b) {
+    // struct world_t *world = world_init();
+    for (int i = 0; i <= WORLD_SIZE; ++i) {
+        // In the begin we put the white pieces to the left and the black pieces to the right.
+        if (i % WIDTH == 0) {
+            world_set(b,i,WHITE);
+            world_set_sort(b,i,1);
+        }
+        else if (i % WIDTH-1 == 0) {
+            world_set(b,i,BLACK);
+            world_set_sort(b,i,1);       
+        }
+>>>>>>> origin/master
     }
     else if (i % WIDTH-1 == 0) {
       worldt->colors[i] = BLACK;
@@ -53,6 +68,10 @@ void move_player(struct world_t world, struct player player, int ex_idx, int new
     player.current[new_id]=player.current[ex_id]; 
   }
 }
+
+
+// ________________________
+// void update_current_pieces() {}
 
 
 int main() {
