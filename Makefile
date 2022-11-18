@@ -1,18 +1,33 @@
-WIDTH ?= 5
-HEIGHT ?= 4
+WIDTH ?= 10
+HEIGHT ?= 10
+GCC = gcc
 MANSUBA_FLAGS = -DWIDTH=$(WIDTH) -DHEIGHT=$(HEIGHT)
 CFLAGS = -Wall -Wextra -std=c99 -g3 $(MANSUBA_FLAGS)
 
 all: project
 
-%.o: %.c
-	gcc -c $(CFLAGS) $<
+neighbors.o: src/neighbors.c
+	gcc -c $(CFLAGS) src/neighbors.c
+world.o: src/world.c
+	gcc -c $(CFLAGS) src/world.c
 
-project: # (Add your dependency here, e.g "project.o")
-	# (Add your compile command here, e.g "gcc $(CFLAGS) project.o -o project")
+ensemble.o: src/ensemble.c
+	gcc -c $(CFLAGS) src/ensemble.c
 
-test_project: # (Add your dependency here, e.g "test.o")
-	# (Add your compile command here, e.g "gcc $(CFLAGS) test.o -o test_project")
+geometry.o: src/geometry.c
+	gcc -c $(CFLAGS) src/geomerty.c
+
+
+
+project: src/project.c
+	$(GCC) $(CFLAGS) src/project.c -o project
+
+test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o 
+	$(GCC) $(CFLAGS)  tst/test.c src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
 
 clean:
-	rm -f *.o *~
+	rm -f project test *.o *~
+
+
+
+#gcc test.c ../src/geometry.c -o test

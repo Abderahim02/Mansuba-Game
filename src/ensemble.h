@@ -7,12 +7,12 @@ struct position_info;
 
 // Create a new struct which includes the struct position_info
 // for using two player in another struct.
-struct player;
-
+// struct player;
 
 // Players includes the structs position_info and player. 
 struct players;
-struct world_t;
+// struct players;
+
 
 // We need to create some functions here, which we define later.
 

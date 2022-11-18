@@ -4,39 +4,41 @@
 #include "world.h"
 #include "geometry.h"
 #include "neighbors.h"
-#include "ensemble.h"
+
 
 // _____________________
 struct positions_info { 
   int initial_WHITE[HEIGHT];
-  //int allowed_moves_WHITE[HEIGHT];  //à ce pont on  a pas besion de definir le champ mouvements possibles pour chaque joueur 
+  /*  à ce pont on  a pas besion de definir le champ mouvements possibles pour chaque joueur */
   int current_pieces_WHITE[HEIGHT]; // les positions des pièces du joieur avec les pieces blahces
-  int initial_BLACK[HEIGHT];
-  //int allowed_moves_BLACK[HEIGHT];
+  int initial_BLACK[HEIGHT]
   int current_pieces_BLACK[HEIGHT]; //les positions des pièces du joueur avec les pieces blahces
 };
 
-
-
-
 // _____________________cette fonction initialise le monde avec les positions initales de chaque joueur , on suppose que le joueur avec les pieces blanches occupe les positions latèrales à gauche tants que l'autre joueur occupe celles à droite 
 
+// _________________________
 void init_players(struct world_t* b) {
-  // struct world_t *world = world_init();
-  for (int i = 0; i < WORLD_SIZE; ++i) {
-    // In the begin we put the white pieces to the left and the black pieces to the right.
-    if (i % WIDTH == 0) {
-      world_set(b,i,WHITE);
-      world_set_sort(b,i,1);
+    struct position_info position_info;
+    for (int i = 0; i <= WORLD_SIZE; ++i) {
+        // In the begin we put the white pieces to the left and the black pieces to the right.
+        if (i % WIDTH == 0) {
+            world_set(b,i,WHITE);
+            world_set_sort(b,i,1);
+            position_info.initial_White[i] = i;
+            position_info.current_pieces_White[i] = i;
+        }
+        else if (i % WIDTH-1 == 0) {
+            world_set(b,i,BLACK);
+            world_set_sort(b,i,1);
+            position_info.initial_Black[i] = i;
+            position_info.current_pieces_Black[i] = i;
+        }
     }
-    else if (i % WIDTH-1 == 0) {
-      world_set(b,i,BLACK);
-      world_set_sort(b,i,1);       
-    }
-  }
 }
 //____________ensemble de fonctions auxiliares :
 //la premiere sert à verifier si la case à laquelle on veut se deplacer new_idx est un voisin de la case ex_idx:
+
 int is_newex_neighbor(int ex_idx,int new_idx){
   struct neighbors_t neighbors = get_neighbors(ex_idx);
   for ( int j=0; j < MAX_NEIGHBORS; ++j){
@@ -76,8 +78,6 @@ void update_current_pieces(int player, struct positions_info infos,int ex_idx, i
     }
   }
 }
-
-
 // c'est la fonction qui fait un mouvement d'une piece si c'est possible
 
 void move_player(struct world_t world, int player,struct positions_info infos, int ex_idx, int new_idx ){

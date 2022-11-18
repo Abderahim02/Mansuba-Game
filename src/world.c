@@ -18,16 +18,14 @@ struct world_t* world_init(){
 }
 
 enum color_t world_get( const struct world_t* b, unsigned int idx){
-  enum color_t color = b->colors[idx];
-  return color;
+  return b->colors[idx] ;
 }
 // j'ai rencontré un problème lorsque je veux créer un monde du au fait que world_get prend un const struct world_t* 
 void world_set(struct world_t* b, unsigned int idx, enum color_t c){
   b->colors[idx] = c;
 }
 enum sort_t world_get_sort(const struct world_t* b, unsigned int idx){
-  enum sort_t sort = b->sorts[idx];
-  return sort;
+  return b->sorts[idx] ;
 }
 void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c){
   b->sorts[idx] = c;
@@ -110,17 +108,11 @@ int main(int argc, char *argv[])
         // printf("The color of the position %d is: %d\n", i, world.colors[i]);
         printf("The color of the position %d is: %d\n", i, world_get(world.colors,i));
 
-        // A Test for world_get_sort
-        printf("The sort of the position %d is: %d\n", i, world_get_sort(world.sorts,i));
     }
     
     // A Test for world_set
     world_set(world.colors, 2, BLACK);
     printf("The color of the position %d is: %d\n", 2, world_get(world.colors,2));
-    
-    // A Test for world_set_sort
-    world_set_sort(world.sorts, 3, PAWN);
-    printf("The color of the position %d is: %d\n", 3, world_get_sort(world.colors,3));
     
 
 
