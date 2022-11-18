@@ -23,21 +23,25 @@ struct players {
 };
 
 // _________________________
-void init_players(struct world_t* world) {
-    struct world_t *world = world_init();
+void init_players(struct world_t* b) {
+    // struct world_t *world = world_init();
     for (int i = 0; i <= WORLD_SIZE; ++i) {
         // In the begin we put the white pieces to the left and the black pieces to the right.
         if (i % WIDTH == 0) {
-            world->colors[i] = WHITE;
-            world->sorts[i] = 1;
+            world_set(b,i,WHITE);
+            world_set_sort(b,i,1);
         }
         else if (i % WIDTH-1 == 0) {
-            world->colors[i] = BLACK;
-            world->sorts[i] = 1;
+            world_set(b,i,BLACK);
+            world_set_sort(b,i,1);       
         }
     }
 
 }
+
+
+// ________________________
+// void update_current_pieces() {}
 
 
 int main() {
