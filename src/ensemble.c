@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ensemble.h"
+/*
 #include "world.h"
 #include "geometry.h"
 #include "neighbors.h"
-
+*/
 
 // _____________________
 struct positions_info { 
   int initial_WHITE[HEIGHT];
   /*  à ce pont on  a pas besion de definir le champ mouvements possibles pour chaque joueur */
   int current_pieces_WHITE[HEIGHT]; // les positions des pièces du joieur avec les pieces blahces
-  int initial_BLACK[HEIGHT]
+  int initial_BLACK[HEIGHT];
   int current_pieces_BLACK[HEIGHT]; //les positions des pièces du joueur avec les pieces blahces
 };
 
@@ -106,10 +108,7 @@ void move_player(struct world_t world, int player,struct positions_info infos, i
 }
 
 
-// ________________________
-
- 
-
+// _____________
 int main() {
   return 0;
 }
