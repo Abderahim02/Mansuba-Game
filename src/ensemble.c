@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ensemble.h"
+/*
 #include "world.h"
 #include "geometry.h"
 #include "neighbors.h"
-
+*/
 
 // _____________________
 struct world_t{ 
@@ -171,10 +173,6 @@ void print_world( struct world_t* world ){
   }
 }
 
-
-// ________________________
-
- 
 int main() {
   struct world_t* world = world_init();
   struct positions_info positions = init_infos();
