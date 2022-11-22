@@ -3,7 +3,7 @@
 #include <string.h>
 #include "geometry.h"
 #include "neighbors.h"
-#define UINT_MAX 10
+#define UINT_MAX 1000
 // _______________________
 void init_neighbors(unsigned int seed) {
     // For the first it should does nothing.
@@ -13,20 +13,26 @@ void init_neighbors(unsigned int seed) {
 unsigned int get_neighbor(unsigned int idx, enum dir_t d) {
     // Case for beeing on North or South edge of the playing field.
     if ((idx < WIDTH && (d == NORTH || d == NEAST || d == NWEST)) || 
-        (idx >= WORLD_SIZE-WIDTH && (d == SOUTH || d == SWEST || d == SEAST))) {
+        (idx > WORLD_SIZE - WIDTH && (d == SOUTH || d == SWEST || d == SEAST))) {
             return UINT_MAX;
         }
     // Case for beeing on the West edge of the playing field.
-    else if ((idx % WIDTH == 0 && idx < WORLD_SIZE) && (d == WEST || d == NWEST || d == SWEST)) {
+    else if ( idx % WIDTH == 0  && (d == WEST || d == NWEST || d == SWEST)) {
         return UINT_MAX;
     }
     // Case for beeing on the East edge of the playing field.
-    else if ((idx % (WIDTH-1) && idx <= WORLD_SIZE) && (d == EAST || d == NEAST || d == SEAST)) {
+    else if ( idx % WIDTH == WIDTH-1 && (d == EAST || d == NEAST || d == SEAST)) {
         return UINT_MAX;
     }
+    else if ( (idx == 0  || idx == WIDTH - 1) && d == NORTH){
+      return UINT_MAX;
+    }
+    else if ( (idx == WORLD_SIZE - WIDTH || idx == WORLD_SIZE - 1) &&  d == SOUTH){
+      return UINT_MAX;
+    }
     // Cases for having a neighbour.
-    switch (d)
-    {
+    else{
+      switch (d){
     case NORTH:
         return idx - WIDTH;
         break;
@@ -52,7 +58,8 @@ unsigned int get_neighbor(unsigned int idx, enum dir_t d) {
       return idx + (WIDTH-1);
       break;
     default:
-      break;
+      return UINT_MAX;
+      }
     }
 }
 
@@ -60,11 +67,15 @@ struct neighbors_t get_neighbors( unsigned int idx){
   struct neighbors_t neighbors;
   enum dir_t dir = SEAST;
   int j=0;
-  while( j < MAX_NEIGHBORS && dir < MAX_DIR){
+  while( j <= MAX_NEIGHBORS && dir < MAX_DIR){
     if( get_neighbor(idx, dir) != UINT_MAX ){
       neighbors.n[j].i = get_neighbor(idx, dir);  //la boucle va remplir neighbors avec les voisins de idx avec j voisins 
       neighbors.n[j].d = dir;
-      ++dir;
+      dir = dir +1;
+      ++j;
+    }
+    else{
+      dir = dir +1;
       ++j;
     }
   }
@@ -74,16 +85,9 @@ struct neighbors_t get_neighbors( unsigned int idx){
 }
 
 /*int main(){
-  struct world_t world={{1,1,1,2,1,2,0,0,1},{1,1,1,1,1,1,1,0,0,1}};
-
-  struct neighbors_t neighbors={.n = { {2, NORTH}, {3, SOUTH}, {UINT_MAX, NO_DIR}} } ;
-  int i = 0;
-  while(i < 3 && neighbors.n[i].d !=UINT_MAX){
-    printf("la case %d est un voisin de %d située à %d",i, 2, get_neighbors(2).n.d);
-  }
+  struct neighbors_t neighbors = get_neighbors(2);
+  printf("%d", neighbors.n[1].i);
   return 0;
 }
 */
-int main(){
-  return 0;
-}
+
