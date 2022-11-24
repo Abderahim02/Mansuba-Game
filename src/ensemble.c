@@ -18,7 +18,7 @@ enum players{
 };
 struct positions_info { 
   /*  at this poin we don't have to define a structure for possible mouvements of each player */
-  int initial_WHITE[HEIGHT]; // initial positions of he player with white pawns
+  int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
   int current_pieces_WHITE[HEIGHT]; // current positions of the player with white pawns
   int initial_BLACK[HEIGHT];  // initial positions of he player with black pawns
   int current_pieces_BLACK[HEIGHT]; //current positions of the player with black pawns
@@ -173,7 +173,7 @@ void print_world( struct world_t* world ){
 
 // ________________________a test with two rounds game
 
- 
+
 int main() {
   struct world_t* world = world_init();
   struct positions_info positions = init_infos();

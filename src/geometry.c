@@ -57,9 +57,11 @@ const char* dir_to_string(enum dir_t d){
   }
 }
 
+/*
 int main(int argc, char *argv[]){
   enum color_t c = WHITE;
   enum sort_t s = PAWN;
   printf("The case is: %s\n",place_to_string(c,s));
   return 0;
 }
+*/
