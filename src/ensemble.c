@@ -16,14 +16,15 @@ enum players{
   PLAYER_WHITE = 2 ,
   PLAYER_BLACK = 1 ,
 };
+
 struct positions_info { 
   /*  at this poin we don't have to define a structure for possible mouvements of each player */
-  int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
-  int current_pieces_WHITE[HEIGHT]; // current positions of the player with white pawns
-  int initial_BLACK[HEIGHT];  // initial positions of he player with black pawns
-  int current_pieces_BLACK[HEIGHT]; //current positions of the player with black pawns
-  int MAX_TURNS; // Maximum allowed turns = WORLD SIZE
-  int TURNS;  // Played turns in the game.
+  unsigned int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
+  unsigned int current_pieces_WHITE[HEIGHT]; // current positions of the player with white pawns
+  unsigned int initial_BLACK[HEIGHT];  // initial positions of he player with black pawns
+  unsigned int current_pieces_BLACK[HEIGHT]; //current positions of the player with black pawns
+  unsigned int MAX_TURNS; // Maximum allowed turns = WORLD SIZE
+  unsigned int TURNS;  // Played turns in the game.
 };
 
 //____________________________________________________________________________________________
@@ -36,10 +37,10 @@ struct positions_info init_infos(){
   int a = 0;
   int b = HEIGHT-1;
   for (int i=0; i < HEIGHT ; ++i){
-    infos.current_pieces_BLACK[i] = a;
-    infos.initial_BLACK[i] = a;
-    infos.current_pieces_WHITE[i] = b;
-    infos.initial_WHITE[i] = b;
+    infos.current_pieces_BLACK[i] = b;
+    infos.initial_BLACK[i] = b;
+    infos.current_pieces_WHITE[i] = a;
+    infos.initial_WHITE[i] = a;
     a = a + HEIGHT;
     b = b + HEIGHT;
   }
@@ -141,7 +142,6 @@ void move_player(struct world_t* world, enum players player, struct positions_in
 }
 
 
-
 int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned int new_idx){
   if (is_new_ex_neighbor(ex_idx, new_idx) == 0){
     struct neighbors_t neighbors = get_neighbors(ex_idx);
@@ -162,6 +162,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
     }
     return 0;
   }
+
 void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
     case PLAYER_WHITE:
@@ -229,8 +230,8 @@ int simple_win(enum players player, struct positions_info infos) {
     {
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
-      for (int i = 1; i < WORLD_SIZE; ++i) {
-        for (int j = 0; j <= HEIGHT; ++j) {
+      for (int i = 1; i < HEIGHT; ++i) {
+        for (int j = 0; j < HEIGHT; ++j) {
           if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
             return 1;
           }
@@ -239,7 +240,7 @@ int simple_win(enum players player, struct positions_info infos) {
       break;
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
-      for (int i = 0; i < WORLD_SIZE; ++i) {
+      for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
           if (infos.current_pieces_BLACK[i] == infos.initial_WHITE[j]) {
             return 1;
@@ -314,11 +315,12 @@ int main() {
   printf("\n");
   //print_init_players(positions);
   //print_current(positions);
-  printf("le mouvement est %d\n", is_allowed_simple_jump(world,10,22));
-  printf("Is WHITE a simple winner? %d \n", simple_win(PLAYER_WHITE, positions));
-  printf("Is BLACK a simple winner? %d \n", simple_win(PLAYER_BLACK, positions));
-  printf("Is WHITE a winner? %d \n", complex_win(PLAYER_WHITE, positions));
-  printf("Is BLACK a winner? %d \n", complex_win(PLAYER_BLACK, positions));
+  printf("Is %d a neigbour of %d: %d\n", 10,1, is_new_ex_neighbor(10,1));
+  printf("le mouvement est %d\n", is_allowed_simple_jump(world,1,44));
+  // printf("Is WHITE a simple winner? %d \n", simple_win(PLAYER_WHITE, positions));
+  // printf("Is BLACK a simple winner? %d \n", simple_win(PLAYER_BLACK, positions));
+  // printf("Is WHITE a winner? %d \n", complex_win(PLAYER_WHITE, positions));
+  // printf("Is BLACK a winner? %d \n", complex_win(PLAYER_BLACK, positions));
   // for (int i; i < HEIGHT; ++i) {
   //   printf("Pos_B[%d] = %d\n", i, positions.initial_BLACK[i]);
   //   printf("Pos_W[%d] = %d\n", i, positions.initial_WHITE[i]);
