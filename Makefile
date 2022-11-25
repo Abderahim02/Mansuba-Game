@@ -19,8 +19,8 @@ geometry.o: src/geometry.c
 
 
 
-project: src/project.c
-	$(GCC) $(CFLAGS) src/project.c -o project
+project: src/ensemble.c src/neighbors.o src/world.o src/geometry.o
+	$(GCC) $(CFLAGS) src/ensemble.c   src/neighbors.o src/world.o src/geometry.o -o project
 
 test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o 
 	$(GCC) $(CFLAGS)  tst/test.c src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test

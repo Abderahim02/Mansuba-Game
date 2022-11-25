@@ -8,13 +8,13 @@ struct world_t{
   enum sort_t sorts[WORLD_SIZE];
 };
 
-struct world_t world;
+struct world_t monde;
 struct world_t* world_init(){
   for(int i=0; i < WORLD_SIZE; ++i){ 
-      world.colors[i] = NO_COLOR;   
-      world.sorts[i] = NO_SORT;
+      monde.colors[i] = NO_COLOR;   
+      monde.sorts[i] = NO_SORT;
   }
-    return &world ;
+    return  &monde;
 }
 
 enum color_t world_get( const struct world_t* b, unsigned int idx){
@@ -98,7 +98,7 @@ void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c)
 
 */
 // The main function, mainly for testing.
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
     struct world_t world;
     // Initializing a world with NO_COLORS and NO_SORTS.
@@ -114,9 +114,8 @@ int main(int argc, char *argv[])
     world_set(world.colors, 2, BLACK);
     printf("The color of the position %d is: %d\n", 2, world_get(world.colors,2));
     
-
-
     printf("world.c is compiling.\n"); // Test for Makefile
     return 0;
 }
 
+*/
