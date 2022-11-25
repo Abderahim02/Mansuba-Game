@@ -64,4 +64,5 @@ int main(int argc, char *argv[]){
   printf("The case is: %s\n",place_to_string(c,s));
   return 0;
 }
+
 */

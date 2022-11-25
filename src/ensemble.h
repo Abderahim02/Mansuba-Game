@@ -21,13 +21,16 @@ struct positions_info init_infos();
 void add_to_current_piece(struct positions_info positions_info, enum players player, unsigned int idx);
 
 // Initialize current pieces for black and white.
+
 // Furthermore it sets the world the beginning position.
 void init_players(struct world_t* b, struct positions_info positions_info);
 
 // Is a bool function and returns 1 if new_idx is a neighbor to ex_idx.
-int is_newex_neighbor(int ex_idx,int new_idx);
+int is_new_ex_neighbor(int ex_idx,int new_idx);
 
 // Is a help/bool function, which returns 1 if the 
+
+int is_allowed_to_move(struct world_t world, int ex_idx, int new_idx);
 int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsigned int new_idx);
 
 
