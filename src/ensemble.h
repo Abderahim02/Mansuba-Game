@@ -41,6 +41,10 @@ void move_player(struct world_t* world, enum players player, struct positions_in
 // one of the other player's starting positions before MAX_TURNS turns.
 int simple_win(struct world_t* world, enum players player, struct positions_info infos);
 
+// the winner is the first player to cover all the other player's starting positions 
+// with his pieces before MAX_TURNS turns.
+int complex_win(enum players player, struct positions_info infos);
+
 void print_world( struct world_t* world );
 
 // We need to create some functions here, which we define later.

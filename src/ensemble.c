@@ -180,22 +180,22 @@ void print_world( struct world_t* world ){
 
 // Simple win function: the winner is the first player to reach with one of his pieces 
 // one of the other player's starting positions before MAX_TURNS turns.
-int simple_win(struct world_t* world, enum players player, struct positions_info infos) {
+int simple_win(enum players player, struct positions_info infos) {
   if (infos.TURNS <= infos.MAX_TURNS) {
     switch (player)
     {
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
-      for (int i = 1; i < HEIGHT; ++i) {
-        if ((infos.current_pieces_WHITE[i] % WIDTH - 1) == 0) {
+      for (int i = 1; i < WORLD_SIZE; ++i) {
+        if ((infos.current_pieces_WHITE[i] % (WIDTH - 1)) == 0) {
           return 1;
         }
       } 
       break;
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
-      for (int i = 0; i < HEIGHT; ++i) {
-        if ((infos.current_pieces_WHITE[i] % WIDTH) == 0) {
+      for (int i = 0; i < WORLD_SIZE; ++i) {
+        if ((infos.current_pieces_BLACK[i] % WIDTH) == 0) {
           return 1;
         }
       } 
@@ -207,10 +207,40 @@ int simple_win(struct world_t* world, enum players player, struct positions_info
   return 0;
 }
 
+// The winner is the first player to cover all the other player's starting positions 
+// with his pieces before MAX_TURNS turns.
+int complex_win(enum players player, struct positions_info infos) {
+  if (infos.TURNS <= infos.MAX_TURNS) {
+    switch (player)
+    {
+    case PLAYER_WHITE:
+      // PLAYER_WHITE has to reach all init_position of PLAYER_BLACK to win.
+      for (int i = 1; i < WORLD_SIZE; ++i) {
+        if ((infos.current_pieces_WHITE[i] % (WIDTH - 1)) != 0) {
+          return 0;
+        }
+      } 
+      break;
+    case PLAYER_BLACK:
+      // PLAYER_BLACK has to reach all init_position of PLAYER_WHITE to win.
+      for (int i = 0; i < WORLD_SIZE; ++i) {
+        if ((infos.current_pieces_BLACK[i] % WIDTH) != 0) {
+          return 0;
+        }
+      } 
+      break;
+    default:
+      break;
+    }
+    // The function must reach this line to fulfill all requested conditions of winning.
+    return 1;
+  }
+  return 0;
+}
+
+
 
 // ________________________a test with two rounds game
-
-
 int main() {
   struct world_t* world = world_init();
   struct positions_info positions = init_infos();
@@ -218,12 +248,16 @@ int main() {
   printf("First round: \n");
   print_world(world);
   printf("\n");
-  printf("Is WHITE a simple winner? %d \n", simple_win(world, PLAYER_WHITE, positions));
-  printf("Is BLACK a simple winner? %d \n", simple_win(world, PLAYER_BLACK, positions));
+  printf("Is WHITE a simple winner? %d \n", simple_win(PLAYER_WHITE, positions));
+  printf("Is BLACK a simple winner? %d \n", simple_win(PLAYER_BLACK, positions));
+  printf("Is WHITE a winner? %d \n", complex_win(PLAYER_WHITE, positions));
+  printf("Is BLACK a winner? %d \n", complex_win(PLAYER_BLACK, positions));
   
   move_player(world, PLAYER_WHITE, positions, 0, 1);
   printf("Second round:\n");
   print_world(world);
   printf("\n");
+  printf("Is WHITE a winner? %d \n", complex_win(PLAYER_WHITE, positions));
+  printf("Is BLACK a winner? %d \n", complex_win(PLAYER_BLACK, positions));
   return 0;
 }
