@@ -204,7 +204,7 @@ void print_world( struct world_t* world ){
 
 
 void print_init_players(struct positions_info positions){
-  for(int i=0; i<HEIGHT; ++i ){
+  for(int i=0; i<HEIGHT; ++i){
     printf("%d\n ", positions.initial_BLACK[i]);
 
   }
@@ -241,7 +241,7 @@ int simple_win(enum players player, struct positions_info infos) {
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
-          if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
+          if (infos.current_pieces_BLACK[i] == infos.initial_WHITE[j]) {
             return 1;
           }
         }
