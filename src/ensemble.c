@@ -115,7 +115,6 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
 
 // this is our function that do the move if it is allowed
 void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx ){
->>>>>>> cbd6cc8087e10f29d56079cff9cc6fe711b09d5d
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
     if(is_allowed_to_simple_move(world, ex_idx, new_idx) == 1){
@@ -315,14 +314,14 @@ int main() {
   printf("\n");
   //print_init_players(positions);
   //print_current(positions);
-  printf("le mouvement est %d\n", allowed_simple_jump(world,10,22));
+  printf("le mouvement est %d\n", is_allowed_simple_jump(world,10,22));
   printf("Is WHITE a simple winner? %d \n", simple_win(PLAYER_WHITE, positions));
   printf("Is BLACK a simple winner? %d \n", simple_win(PLAYER_BLACK, positions));
   printf("Is WHITE a winner? %d \n", complex_win(PLAYER_WHITE, positions));
   printf("Is BLACK a winner? %d \n", complex_win(PLAYER_BLACK, positions));
-  for (int i; i < HEIGHT; ++i) {
-    printf("Pos_B[%d] = %d\n", i, positions.initial_BLACK[i]);
-    printf("Pos_W[%d] = %d\n", i, positions.initial_WHITE[i]);
-  }
+  // for (int i; i < HEIGHT; ++i) {
+  //   printf("Pos_B[%d] = %d\n", i, positions.initial_BLACK[i]);
+  //   printf("Pos_W[%d] = %d\n", i, positions.initial_WHITE[i]);
+  // }
   return 0;
 }
