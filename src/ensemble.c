@@ -22,6 +22,8 @@ struct positions_info {
   int current_pieces_WHITE[HEIGHT]; // current positions of the player with white pawns
   int initial_BLACK[HEIGHT];  // initial positions of he player with black pawns
   int current_pieces_BLACK[HEIGHT]; //current positions of the player with black pawns
+  int MAX_TURNS; // Maximum allowed turns = WORLD SIZE
+  int TURNS;  // Played turns in the game.
 };
 
 //____________________________________________________________________________________________
@@ -34,6 +36,8 @@ struct positions_info init_infos(){
     infos.current_pieces_BLACK[i] = WORLD_SIZE;
     infos.current_pieces_WHITE[i] = WORLD_SIZE;
   }
+  infos.MAX_TURNS = WORLD_SIZE;
+  infos.TURNS = 0;
   return infos;
 }
 /* this function add the position idx to current pieces for the player , we will need it just at the begining of the game */
@@ -70,7 +74,7 @@ void init_players(struct world_t* b, struct positions_info positions_info) {
             world_set_sort(b,i,1);
             add_to_current_piece(positions_info, PLAYER_WHITE, i);
         }
-        else if ((i% WIDTH)  == WIDTH - 1 ) {
+        else if ((i% WIDTH)  == WIDTH - 1) {
             world_set(b, i, BLACK);
             world_set_sort(b, i, 1);
             add_to_current_piece(positions_info, PLAYER_BLACK, i);
@@ -157,7 +161,10 @@ void move_player(struct world_t* world, enum players player, struct positions_in
   default:
     break;
   }
+  ++infos.TURNS;
 }
+
+
 void print_world( struct world_t* world ){
   for (int i=0; i< WORLD_SIZE ; ++i){
     if( i%HEIGHT == 0 && i != 0 ){
@@ -171,6 +178,36 @@ void print_world( struct world_t* world ){
 }
 
 
+// Simple win function: the winner is the first player to reach with one of his pieces 
+// one of the other player's starting positions before MAX_TURNS turns.
+int simple_win(struct world_t* world, enum players player, struct positions_info infos) {
+  if (infos.TURNS <= infos.MAX_TURNS) {
+    switch (player)
+    {
+    case PLAYER_WHITE:
+      // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
+      for (int i = 1; i < HEIGHT; ++i) {
+        if ((infos.current_pieces_WHITE[i] % WIDTH - 1) == 0) {
+          return 1;
+        }
+      } 
+      break;
+    case PLAYER_BLACK:
+      // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
+      for (int i = 0; i < HEIGHT; ++i) {
+        if ((infos.current_pieces_WHITE[i] % WIDTH) == 0) {
+          return 1;
+        }
+      } 
+      break;
+    default:
+      break;
+    }
+  }
+  return 0;
+}
+
+
 // ________________________a test with two rounds game
 
 
@@ -181,6 +218,8 @@ int main() {
   printf("First round: \n");
   print_world(world);
   printf("\n");
+  printf("Is WHITE a simple winner? %d \n", simple_win(world, PLAYER_WHITE, positions));
+  printf("Is BLACK a simple winner? %d \n", simple_win(world, PLAYER_BLACK, positions));
   
   move_player(world, PLAYER_WHITE, positions, 0, 1);
   printf("Second round:\n");

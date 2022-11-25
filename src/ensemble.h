@@ -5,6 +5,7 @@
 #include "geometry.h"
 #include "neighbors.h"
 
+#define MAX_TURNS (WORLD_SIZE)
 
 struct world_t;
 
@@ -35,6 +36,10 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
 
 // If conditions are ok, a piece moves.
 void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx );
+
+// Simple win function: the winner is the first player to reach with one of his pieces 
+// one of the other player's starting positions before MAX_TURNS turns.
+int simple_win(struct world_t* world, enum players player, struct positions_info infos);
 
 void print_world( struct world_t* world );
 
