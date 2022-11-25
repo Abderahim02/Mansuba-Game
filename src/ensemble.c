@@ -204,7 +204,7 @@ int simple_win(enum players player, struct positions_info infos) {
       for (int i = 1; i < WORLD_SIZE; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
           if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
-            return 0;
+            return 1;
           }
         }
       } 
@@ -212,8 +212,10 @@ int simple_win(enum players player, struct positions_info infos) {
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
-        if ((infos.current_pieces_BLACK[i] % WIDTH) == 0) {
-          return 1;
+        for (int j = 0; j <= HEIGHT; ++j) {
+          if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
+            return 1;
+          }
         }
       } 
       break;
@@ -234,7 +236,7 @@ int complex_win(enum players player, struct positions_info infos) {
       // PLAYER_WHITE has to reach all init_position of PLAYER_BLACK to win.
       for (int i = 1; i < WORLD_SIZE; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
-          if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
+          if (infos.current_pieces_WHITE[i] != infos.initial_BLACK[j]) {
             return 0;
           }
         }
@@ -244,7 +246,7 @@ int complex_win(enum players player, struct positions_info infos) {
       // PLAYER_BLACK has to reach all init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
-          if (infos.current_pieces_BLACK[i] == infos.initial_WHITE[j]) {
+          if (infos.current_pieces_BLACK[i] != infos.initial_WHITE[j]) {
             return 0;
           }
         }
@@ -264,7 +266,7 @@ int main() {
   struct world_t* world = world_init();
   struct positions_info positions = init_infos();
   init_players(world, positions);
-  
+
   printf("First round: \n");
   print_world(world);
   printf("\n");
