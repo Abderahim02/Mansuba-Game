@@ -97,6 +97,8 @@ void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c)
 }
 
 */
+
+/*
 // The main function, mainly for testing.
 /*int main(int argc, char *argv[])
 {
