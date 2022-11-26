@@ -16,6 +16,7 @@ enum players{
   PLAYER_WHITE = 2 ,
   PLAYER_BLACK = 1 ,
 };
+
 struct positions_info { 
   /*  at this poin we don't have to define a structure for possible mouvements of each player */
   unsigned int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
@@ -34,10 +35,10 @@ struct positions_info init_infos(){
   int a = 0;
   int b = HEIGHT-1;
   for (int i=0; i < HEIGHT ; ++i){
-    infos.current_pieces_BLACK[i] = a;
-    infos.initial_BLACK[i] = a;
-    infos.current_pieces_WHITE[i] = b;
-    infos.initial_WHITE[i] = b;
+    infos.current_pieces_BLACK[i] = b;
+    infos.initial_BLACK[i] = b;
+    infos.current_pieces_WHITE[i] = a;
+    infos.initial_WHITE[i] = a;
     a = a + HEIGHT;
     b = b + HEIGHT;
   }
@@ -170,7 +171,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
   }
     return 0;
 }
-// it our main jump function 
+// it's our main jump function 
 void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
     case PLAYER_WHITE:
@@ -214,7 +215,7 @@ void print_world( struct world_t* world ){
 
 //________________________________________________test functions _________________________
 void print_init_players(struct positions_info positions){
-  for(int i=0; i<HEIGHT; ++i ){
+  for(int i=0; i<HEIGHT; ++i){
     printf("%d\n ", positions.initial_BLACK[i]);
 
   }
@@ -239,19 +240,21 @@ int simple_win(enum players player, struct positions_info infos) {
     {
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
-      for (int i = 1; i < WORLD_SIZE; ++i) {
-        for (int j = 0; j <= HEIGHT; ++j) {
+      for (int i = 1; i < HEIGHT; ++i) {
+        for (int j = 0; j < HEIGHT; ++j) {
           if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
-            return 0;
+            return 1;
           }
         }
       } 
       break;
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
-      for (int i = 0; i < WORLD_SIZE; ++i) {
-        if ((infos.current_pieces_BLACK[i] % WIDTH) == 0) {
-          return 1;
+      for (int i = 0; i < HEIGHT; ++i) {
+        for (int j = 0; j <= HEIGHT; ++j) {
+          if (infos.current_pieces_BLACK[i] == infos.initial_WHITE[j]) {
+            return 1;
+          }
         }
       } 
       break;
@@ -272,7 +275,7 @@ int complex_win(enum players player, struct positions_info infos) {
       // PLAYER_WHITE has to reach all init_position of PLAYER_BLACK to win.
       for (int i = 1; i < WORLD_SIZE; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
-          if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
+          if (infos.current_pieces_WHITE[i] != infos.initial_BLACK[j]) {
             return 0;
           }
         }
@@ -282,7 +285,7 @@ int complex_win(enum players player, struct positions_info infos) {
       // PLAYER_BLACK has to reach all init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
         for (int j = 0; j <= HEIGHT; ++j) {
-          if (infos.current_pieces_BLACK[i] == infos.initial_WHITE[j]) {
+          if (infos.current_pieces_BLACK[i] != infos.initial_WHITE[j]) {
             return 0;
           }
         }
@@ -298,12 +301,11 @@ int complex_win(enum players player, struct positions_info infos) {
 }
 
 
-// ________________________a test with two rounds game
+// ________________________a test with 4 rounds game
 int main(){
   struct world_t* world = world_init();
   struct positions_info positions = init_infos();
   init_players(world, positions);
-  
   printf("initial board: \n");
   print_world(world);
   printf("\n");
@@ -327,9 +329,6 @@ int main(){
   simple_jump(world, PLAYER_WHITE, positions, 12, 14);
   print_world(world);
   printf("\n");
-  
-  
-  struct neighbors_t nei = get_neighbors(0);
 
     return 0;
   }
