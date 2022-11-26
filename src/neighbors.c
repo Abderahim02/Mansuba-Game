@@ -64,10 +64,10 @@ unsigned int get_neighbor(unsigned int idx, enum dir_t d) {
 }
 
 struct neighbors_t get_neighbors( unsigned int idx){
-  struct neighbors_t neighbors;
+  struct neighbors_t neighbors={.n={{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}}}; 
   enum dir_t dir = SEAST;
   int j=0;
-  while( j <= MAX_NEIGHBORS && dir < MAX_DIR){
+  /*while( j <= MAX_NEIGHBORS && dir < MAX_DIR){
     if( get_neighbor(idx, dir) != UINT_MAX ){
       neighbors.n[j].i = get_neighbor(idx, dir);  //la boucle va remplir neighbors avec les voisins de idx avec j voisins 
       neighbors.n[j].d = dir;
@@ -79,15 +79,40 @@ struct neighbors_t get_neighbors( unsigned int idx){
       ++j;
     }
   }
-  neighbors.n[j+1].i = UINT_MAX; //à  la fin on ajoute l element UNINT_MAX a la j+1 ieme position  
-  neighbors.n[j+1].d = NO_DIR;
+
+  
+  }*/
+  while( j < MAX_NEIGHBORS && dir < MAX_DIR){
+    unsigned int test=get_neighbor(idx, dir);
+    if( test!= UINT_MAX ){
+      neighbors.n[j].i = test;  //la boucle va remplir neighbors avec les voisins de idx avec j voisins 
+      neighbors.n[j].d = dir;
+      dir = dir +1;
+      ++j;
+    }
+    else{
+      dir = dir +1;
+    }
+  }
+ 
+  if( j < MAX_NEIGHBORS) {
+    int k=j;
+    while( k < MAX_NEIGHBORS){
+    neighbors.n[k].i = UINT_MAX; /* we fill the left positions with UINT_MAX everywere 
+    because is we put 0 there we will have problems after because 0 is already a position in the world */ 
+    neighbors.n[k].d = NO_DIR;
+    ++k;
+      }
+  }
   return neighbors;
 }
 
 /*int main(){
-  struct neighbors_t neighbors = get_neighbors(2);
-  printf("%d", neighbors.n[1].i);
+  struct neighbors_t nei = get_neighbors(2);
+  for (int j=0; j < MAX_NEIGHBORS; ++j){
+      printf("le voisin :%d , sa direction : %d\n", nei.n[j].i, nei.n[j].d );
+  }
+
   return 0;
-}
-*/
+}*/
 
