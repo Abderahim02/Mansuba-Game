@@ -171,6 +171,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
   }
     return 0;
 }
+
 // it's our main jump function 
 void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
@@ -197,6 +198,61 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
   }
 }
 
+
+// Multiple jump function
+void multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx) {
+  int a = 1;
+  switch (player) {
+  case PLAYER_WHITE:
+    while (a) {
+      a = 0;
+      // Forward move
+      if (is_allowed_simple_jump(world, ex_idx, ex_idx + 2)) {
+        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + 2);
+        a = 1;
+        ex_idx = ex_idx + 2;
+      }
+      // Forward left move
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - 18)) {
+        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx - 18);
+        a = 1;
+        ex_idx = ex_idx - 18;
+      }
+      // Forward right move
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + 22)) {
+        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + 22);
+        a = 1;
+        ex_idx = ex_idx + 22;
+      }
+    }
+    break;
+  case PLAYER_BLACK:
+    while (a) {
+      a = 0;
+      // Forward move: is the same as with player white only mirror-inverted. 
+      if (is_allowed_simple_jump(world, ex_idx, ex_idx - 2)) {
+        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx - 2);
+        a = 1;
+        ex_idx = ex_idx - 2;
+      }
+      // Forward left move
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + 18)) {
+        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx + 18);
+        a = 1;
+        ex_idx = ex_idx + 18;
+      }
+      // Forward right move
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - 22)) {
+        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx - 22);
+        a = 1;
+        ex_idx = ex_idx - 22;
+      }
+    }
+    break;
+  default:
+    break;
+  }
+}
 
 //____________________________________________________
 //this one print our world so we that we can see changes every time
@@ -315,10 +371,24 @@ int main(){
   printf("\n");
 
   printf("2nd round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 10, 12);
+  // simple_jump(world, PLAYER_WHITE, positions, 10, 12);
+  multi_jump(world, PLAYER_WHITE, positions, 10);
   print_world(world);
   printf("\n");
   
+
+
+  printf("3rd round: \n");
+  move_player(world, PLAYER_WHITE, positions, 12, 13);
+  print_world(world);
+  printf("\n");
+
+  printf("4rd round: \n");
+  multi_jump(world, PLAYER_WHITE, positions, 20);
+  print_world(world);
+  printf("\n");
+
+  /*
   printf("3rd round: \n");
   simple_jump(world, PLAYER_WHITE, positions, 11, 13);
   print_world(world);
@@ -329,6 +399,6 @@ int main(){
   simple_jump(world, PLAYER_WHITE, positions, 12, 14);
   print_world(world);
   printf("\n");
-
-    return 0;
+  */
+  return 0;
   }
