@@ -290,28 +290,26 @@ void print_current(struct positions_info positions){
 
 // Simple win function: the winner is the first player to reach with one of his pieces 
 // one of the other player's starting positions before MAX_TURNS turns.
-int simple_win(enum players player, struct positions_info infos) {
+int simple_win(struct world_t* world, enum players player, struct positions_info infos) {
   if (infos.TURNS <= infos.MAX_TURNS) {
     switch (player)
     {
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
       for (int i = 1; i < HEIGHT; ++i) {
-        for (int j = 0; j < HEIGHT; ++j) {
-          if (infos.current_pieces_WHITE[i] == infos.initial_BLACK[j]) {
+        //for (int j = 0; j < HEIGHT; ++j) {
+          if (world->colors[infos.initial_BLACK[i]] == WHITE) {
             return 1;
           }
         }
-      } 
       break;
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
       for (int i = 0; i < HEIGHT; ++i) {
-        for (int j = 0; j <= HEIGHT; ++j) {
-          if (infos.current_pieces_BLACK[i] == infos.initial_WHITE[j]) {
+        //for (int j = 0; j < HEIGHT; ++j) {
+          if (world->colors[infos.initial_WHITE[i]] == BLACK ){
             return 1;
           }
-        }
       } 
       break;
     default:
@@ -330,7 +328,7 @@ int complex_win(enum players player, struct positions_info infos) {
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach all init_position of PLAYER_BLACK to win.
       for (int i = 1; i < WORLD_SIZE; ++i) {
-        for (int j = 0; j <= HEIGHT; ++j) {
+        for (int j = 0; j < HEIGHT; ++j) {
           if (infos.current_pieces_WHITE[i] != infos.initial_BLACK[j]) {
             return 0;
           }
@@ -340,7 +338,7 @@ int complex_win(enum players player, struct positions_info infos) {
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach all init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
-        for (int j = 0; j <= HEIGHT; ++j) {
+        for (int j = 0; j < HEIGHT; ++j) {
           if (infos.current_pieces_BLACK[i] != infos.initial_WHITE[j]) {
             return 0;
           }
@@ -413,7 +411,7 @@ int main(){
   print_world(world);
   printf("\n");
 
-  printf("End : PLAYER_WHITE victory ? %d\n", simple_win(PLAYER_WHITE, positions) );
+  printf("End : PLAYER_WHITE victory ? %d\n", simple_win(world, PLAYER_WHITE, positions) );
 
   /*
   printf("3rd round: \n");
