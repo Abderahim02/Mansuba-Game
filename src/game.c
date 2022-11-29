@@ -35,10 +35,10 @@ enum players get_random_player() {
 
 // function to get the next player.
 enum players next_player(int current_player) {
-    if (current_player == 0) {
-        return 1;
+    if (current_player == 1) {
+        return 2;
     }
-    return 0;
+    return 1;
 }
 
 // Choosing a random pieces depending on the player.
@@ -106,10 +106,12 @@ int main(){
     init_players(world, infos);
     enum players current_player = get_random_player();
     while(nobody_has_won(world, infos)){
-        unsigned int p = choose_random_piece_belonging_to(infos, current_player);
+        /*unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, infos, p);
         move_current_player( world, current_player, infos, random_move);
         print_world(world);
+        printf("\n");*/
+        printf("random position: %d\n", choose_random_piece_belonging_to(infos, current_player));
         current_player = next_player(current_player);
     }
     return 0;
