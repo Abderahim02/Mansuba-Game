@@ -387,6 +387,33 @@ int main(){
   multi_jump(world, PLAYER_WHITE, positions, 20);
   print_world(world);
   printf("\n");
+  
+  printf("5th round: \n");
+  simple_jump(world, PLAYER_WHITE, positions, 13, 35);
+  print_world(world);
+  printf("\n");
+
+  printf("6th round: \n");
+  move_player(world, PLAYER_WHITE, positions, 35, 36);
+  print_world(world);
+  printf("\n");
+
+  printf("7th round: \n");
+  move_player(world, PLAYER_WHITE, positions, 36, 37);
+  print_world(world);
+  printf("\n");
+
+  printf("8th round: \n");
+  move_player(world, PLAYER_BLACK, positions, 39, 38);
+  print_world(world);
+  printf("\n");
+
+  printf("9th round: \n");
+  simple_jump(world, PLAYER_WHITE, positions, 37, 39);
+  print_world(world);
+  printf("\n");
+
+  printf("End : PLAYER_WHITE victory ? %d\n", simple_win(PLAYER_WHITE, positions) );
 
   /*
   printf("3rd round: \n");
