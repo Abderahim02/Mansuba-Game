@@ -206,23 +206,23 @@ void multi_jump(struct world_t* world, enum players player, struct positions_inf
   case PLAYER_WHITE:
     while (a) {
       a = 0;
-      // Forward move
+      // Forward move: For white it means to jump +2
       if (is_allowed_simple_jump(world, ex_idx, ex_idx + 2)) {
         simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + 2);
         a = 1;
         ex_idx = ex_idx + 2;
       }
-      // Forward left move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - 18)) {
-        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx - 18);
+      // Forward left move: means to jump 2*width-2.
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - (2*WIDTH-2))) {
+        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx - (2*WIDTH-2));
         a = 1;
-        ex_idx = ex_idx - 18;
+        ex_idx = ex_idx - (2*WIDTH-2);
       }
-      // Forward right move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + 22)) {
-        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + 22);
+      // Forward right move: means to jumo 2*width+2.
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH+2))) {
+        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + (2*WIDTH+2));
         a = 1;
-        ex_idx = ex_idx + 22;
+        ex_idx = ex_idx + (2*WIDTH+2);
       }
     }
     break;
@@ -236,16 +236,16 @@ void multi_jump(struct world_t* world, enum players player, struct positions_inf
         ex_idx = ex_idx - 2;
       }
       // Forward left move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + 18)) {
-        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx + 18);
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH-2))) {
+        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx + (2*WIDTH-2));
         a = 1;
-        ex_idx = ex_idx + 18;
+        ex_idx = ex_idx + (2*WIDTH-2);
       }
       // Forward right move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - 22)) {
-        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx - 22);
+      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - (2*WIDTH+2))) {
+        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx - (2*WIDTH+2));
         a = 1;
-        ex_idx = ex_idx - 22;
+        ex_idx = ex_idx - (2*WIDTH+2);
       }
     }
     break;
@@ -297,19 +297,17 @@ int simple_win(struct world_t* world, enum players player, struct positions_info
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
       for (int i = 1; i < HEIGHT; ++i) {
-        //for (int j = 0; j < HEIGHT; ++j) {
-          if (world->colors[infos.initial_BLACK[i]] == WHITE) {
-            return 1;
-          }
+        if (world->colors[infos.initial_BLACK[i]] == WHITE) {
+          return 1;
         }
+      }
       break;
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
       for (int i = 0; i < HEIGHT; ++i) {
-        //for (int j = 0; j < HEIGHT; ++j) {
-          if (world->colors[infos.initial_WHITE[i]] == BLACK ){
-            return 1;
-          }
+        if (world->colors[infos.initial_WHITE[i]] == BLACK) {
+          return 1;
+        }
       } 
       break;
     default:
@@ -321,27 +319,23 @@ int simple_win(struct world_t* world, enum players player, struct positions_info
 
 // The winner is the first player to cover all the other player's starting positions 
 // with his pieces before MAX_TURNS turns.
-int complex_win(enum players player, struct positions_info infos) {
+int complex_win(struct world_t* world, enum players player, struct positions_info infos) {
   if (infos.TURNS <= infos.MAX_TURNS) {
     switch (player)
     {
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach all init_position of PLAYER_BLACK to win.
       for (int i = 1; i < WORLD_SIZE; ++i) {
-        for (int j = 0; j < HEIGHT; ++j) {
-          if (infos.current_pieces_WHITE[i] != infos.initial_BLACK[j]) {
-            return 0;
-          }
+        if (world->colors[infos.initial_BLACK[i]] == WHITE) {
+          return 0;
         }
       } 
       break;
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach all init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
-        for (int j = 0; j < HEIGHT; ++j) {
-          if (infos.current_pieces_BLACK[i] != infos.initial_WHITE[j]) {
-            return 0;
-          }
+        if (world->colors[infos.initial_WHITE[i]] != BLACK) {
+          return 0;
         }
       } 
       break;
