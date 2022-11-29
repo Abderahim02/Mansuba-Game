@@ -115,6 +115,7 @@ int main(){
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, infos, p);
         // printf("Choose random peace: %d belonging to: %d\n", p , current_player);
+        update_current_pieces(current_player, infos, random_move.ex_idx, random_move.new_idx);
         printf("Moving from %d to %d and using move %d \n", random_move.ex_idx, random_move.new_idx, random_move.type);
         print_current_pieces(infos);
         move_current_player(world, current_player, infos, random_move);

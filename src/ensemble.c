@@ -82,7 +82,7 @@ int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsign
 
 
 void update_current_pieces(enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
-  if( player == 1){
+  if(player == PLAYER_BLACK){
     for(int i=0; i < HEIGHT; ++i){
       if( infos.current_pieces_BLACK[i] == ex_idx ){
 	        infos.current_pieces_BLACK[i] = new_idx;
