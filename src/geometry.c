@@ -19,8 +19,9 @@ const char* place_to_string(enum color_t c, enum sort_t s){
       break;
     }
   }
-  else
+  else{
     return "NO SORT";
+  }
 }
 const char* dir_to_string(enum dir_t d){
   switch (d){
@@ -52,6 +53,9 @@ const char* dir_to_string(enum dir_t d){
     return "EMPTY DIRECTION";
     break;
   case 0 :
+    return "NO DIR";
+    break;
+  default:
     return "NO DIR";
     break;
   }

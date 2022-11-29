@@ -17,10 +17,8 @@ ensemble.o: src/ensemble.c
 geometry.o: src/geometry.c
 	gcc -c $(CFLAGS) src/geomerty.c
 
-
-
-project: src/ensemble.c src/neighbors.o src/world.o src/geometry.o
-	$(GCC) $(CFLAGS) src/ensemble.c   src/neighbors.o src/world.o src/geometry.o -o project
+project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o
+	$(GCC) $(CFLAGS) src/game.c src/ensemble.o  src/neighbors.o src/world.o src/geometry.o -o project
 
 test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o 
 	$(GCC) $(CFLAGS)  tst/test.c src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
