@@ -81,22 +81,26 @@ int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsign
 //this function update player's information after every move 
 
 
-void update_current_pieces(enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
-  if( player == 1){
-    for(int i=0; i < HEIGHT; ++i){
-      if( infos.current_pieces_BLACK[i] == ex_idx ){
-	        infos.current_pieces_BLACK[i] = new_idx;
-          ++infos.TURNS;
+void update_current_pieces(enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
+switch (player){
+  case PLAYER_BLACK:
+      for(int i=0; i < HEIGHT; ++i){
+      if( infos->current_pieces_BLACK[i] == ex_idx ){
+	        infos->current_pieces_BLACK[i] = new_idx;
+          ++infos->TURNS;
+        }
       }
+      break;
+  case PLAYER_WHITE:
+      for(int i=0; i < HEIGHT; ++i){
+      if( infos->current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
+	        infos->current_pieces_WHITE[i] = new_idx;
+          ++infos->TURNS;
+       }
     }
-  }
-  else{
-    for(int i=0; i < HEIGHT; ++i){
-      if( infos.current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
-	        infos.current_pieces_WHITE[i] = new_idx;
-          ++infos.TURNS;
-      }
-    }
+    break;
+  default:
+    break;
   }
 }
 
@@ -105,21 +109,22 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
 void simple_move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
-    if(is_allowed_to_simple_move(world, ex_idx, new_idx) == 1){
+    if(is_allowed_to_simple_move(world, ex_idx, new_idx)){
       world->colors[new_idx] = BLACK;  // We update the information about the world 
       world->colors[ex_idx] = NO_COLOR ;
       world->sorts[ex_idx] = NO_SORT;
       world->sorts[new_idx] = PAWN;
-      update_current_pieces(player, infos, ex_idx, new_idx); // We update the information about the current pieces here, because there is a problem with the index.
+      update_current_pieces(player, &infos, ex_idx, new_idx);
+       // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
   case PLAYER_WHITE: //player with white_pawn
-    if(is_allowed_to_simple_move(world, ex_idx, new_idx) == 1){
+    if(is_allowed_to_simple_move(world, ex_idx, new_idx)){
       world->colors[new_idx] = WHITE;
       world->colors[ex_idx] = NO_COLOR ;
       world->sorts[ex_idx] = NO_SORT;
       world->sorts[new_idx] = PAWN;
-      update_current_pieces(player, infos, ex_idx, new_idx);
+      update_current_pieces(player, &infos, ex_idx, new_idx);
     }
     break;
   default:
@@ -173,7 +178,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            update_current_pieces(player, infos, ex_idx, new_idx);   
+            update_current_pieces(player, &infos, ex_idx, new_idx);   
       }
       break;
     case PLAYER_BLACK:
@@ -182,7 +187,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            update_current_pieces(player, infos, ex_idx, new_idx);
+            update_current_pieces(player, &infos, ex_idx, new_idx);
       }
       break;
     default:
@@ -340,7 +345,11 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
   return 0;
 }
 
-
+void print_current_pieces(struct positions_info infos){
+    for(int i=0 ; i < HEIGHT; ++i){
+      printf("%d\n" , infos.current_pieces_WHITE[i]);
+    }
+}
 // ________________________a test with 4 rounds game
 /*int main(){
   struct world_t* world = world_init();
@@ -349,16 +358,19 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
   printf("initial board: \n");
   print_world(world);
   printf("\n");
+
   printf("1st round: \n");
   simple_move_player(world, PLAYER_WHITE, positions, 0, 11);
   print_world(world);
   printf("\n");
+  print_current_pieces(positions);
 
   printf("2nd round: \n");
   // simple_jump(world, PLAYER_WHITE, positions, 10, 12);
   multi_jump(world, PLAYER_WHITE, positions, 10);
   print_world(world);
   printf("\n");
+  print_current_pieces(positions);
   
 
 
@@ -409,6 +421,7 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
   simple_jump(world, PLAYER_WHITE, positions, 12, 14);
   print_world(world);
   printf("\n");
-  return 0;
-  }
-*/
+  
+    return 0;
+  }*/
+  

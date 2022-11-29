@@ -45,7 +45,7 @@ struct positions_info init_infos();
 int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsigned int new_idx);
 
 // Updated the current pieces.
-void update_current_pieces(enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
+void update_current_pieces(enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // If conditions are ok, a piece moves.
 void simple_move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
@@ -83,5 +83,5 @@ int simple_win(struct world_t* world, enum players player, struct positions_info
 int complex_win(struct world_t* world, enum players player, struct positions_info infos);
 
 // We need to create some functions here, which we define later.
-
+void print_current_pieces(struct positions_info infos);
 #endif // __ENSEMBLE_H__
