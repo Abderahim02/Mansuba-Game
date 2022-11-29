@@ -113,7 +113,7 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
 
 
 // this is our function that do the move if it is allowed
-void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx ){
+void simple_move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx ){
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
     if(is_allowed_to_simple_move(world, ex_idx, new_idx) == 1){
@@ -366,7 +366,7 @@ int main(){
   print_world(world);
   printf("\n");
   printf("1st round: \n");
-  move_player(world, PLAYER_WHITE, positions, 0, 11);
+  simple_move_player(world, PLAYER_WHITE, positions, 0, 11);
   print_world(world);
   printf("\n");
 
@@ -379,7 +379,7 @@ int main(){
 
 
   printf("3rd round: \n");
-  move_player(world, PLAYER_WHITE, positions, 12, 13);
+  simple_move_player(world, PLAYER_WHITE, positions, 12, 13);
   print_world(world);
   printf("\n");
 
@@ -394,7 +394,7 @@ int main(){
   printf("\n");
 
   printf("6th round: \n");
-  move_player(world, PLAYER_WHITE, positions, 35, 36);
+  simple_move_player(world, PLAYER_WHITE, positions, 35, 36);
   print_world(world);
   printf("\n");
 
@@ -404,7 +404,7 @@ int main(){
   printf("\n");
 
   printf("8th round: \n");
-  move_player(world, PLAYER_BLACK, positions, 39, 38);
+  simple_move_player(world, PLAYER_BLACK, positions, 39, 38);
   print_world(world);
   printf("\n");
 
