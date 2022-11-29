@@ -29,16 +29,16 @@ enum players current_player = PLAYER_WHITE;
 enum players get_random_player() {
     srand(time(0));
     // % will help us to get either 0 or 1.
-    int rand_player = rand() % 2;
+    int rand_player = (rand() % 2) + 1;
     return rand_player;
 }
 
 // function to get the next player.
 enum players next_player(int current_player) {
-    if (current_player == 0) {
-        return 1;
+    if (current_player == 1) {
+        return 2;
     }
-    return 0;
+    return 1;
 }
 
 // Choosing a random pieces depending on the player.
@@ -108,9 +108,13 @@ int main(){
     while(nobody_has_won(world, infos)){
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, infos, p);
-        move_current_player( world, current_player, infos, random_move);
-        print_world(world);
+        // move_current_player(world, current_player, infos, random_move);
+        // print_world(world);
+        printf("\n");
         current_player = next_player(current_player);
+        printf("Current player:%d Next player %d\n", current_player, next_player(current_player));
+        printf("Choose random peace: %d belonging to: %d\n",choose_random_piece_belonging_to(infos, current_player), current_player);
+        usleep(7500 * 1000);
     }
     return 0;
 }
