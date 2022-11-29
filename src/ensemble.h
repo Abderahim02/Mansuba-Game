@@ -5,8 +5,6 @@
 #include "geometry.h"
 #include "neighbors.h"
 
-#define MAX_TURNS (WORLD_SIZE)
-
 struct world_t;
 
 enum players;
@@ -15,7 +13,7 @@ enum players;
 // the allowed moves and the where the peaces are at the moment
 struct position_info;
 
-
+// Initialize the informations.
 struct positions_info init_infos();
 
 void add_to_current_piece(struct positions_info positions_info, enum players player, unsigned int idx);
@@ -26,31 +24,49 @@ void add_to_current_piece(struct positions_info positions_info, enum players pla
 void init_players(struct world_t* b, struct positions_info positions_info);
 
 // Is a bool function and returns 1 if new_idx is a neighbor to ex_idx.
-int is_new_ex_neighbor(int ex_idx,int new_idx);
+int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx);
 
 // Is a help/bool function, which returns 1 if the 
-
-int is_allowed_to_move(struct world_t world, int ex_idx, int new_idx);
 int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsigned int new_idx);
 
-
+// Updated the current pieces.
 void update_current_pieces(enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
 
-
 // If conditions are ok, a piece moves.
-void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx );
+void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
 
 // Simple win function: the winner is the first player to reach with one of his pieces 
 // one of the other player's starting positions before MAX_TURNS turns.
 int simple_win(struct world_t* world, enum players player, struct positions_info infos);
 
+// Gives back the number of neighbors.
+int number_of_neighbors(struct neighbors_t neighbors);
+
+// Bool function. Jump is allowed or not.
+int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned int new_idx);
+
+// simple jump function.
+void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
+
+// Jumps as long as it is possible.
+void multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx);
+
+// Test function to print the world.
+void print_world( struct world_t* world);
+
+// Help function.
+void print_init_players(struct positions_info positions);
+
+// Help function.
+void print_current(struct positions_info positions);
+
+// Bool function.
+int simple_win(struct world_t* world, enum players player, struct positions_info infos);
+
 // the winner is the first player to cover all the other player's starting positions 
 // with his pieces before MAX_TURNS turns.
-int complex_win(enum players player, struct positions_info infos);
-
-void print_world( struct world_t* world );
+int complex_win(struct world_t* world, enum players player, struct positions_info infos);
 
 // We need to create some functions here, which we define later.
-
 
 #endif // __ENSEMBLE_H__

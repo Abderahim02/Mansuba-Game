@@ -4,6 +4,7 @@
 #include "world.h"
 #include "geometry.h"
 #include "neighbors.h"
+#include "ensemble.h"
 #define UINT_MAX 100
 // _____________________
 struct world_t{ 
@@ -11,12 +12,13 @@ struct world_t{
   enum sort_t sorts[WORLD_SIZE];
 };
 
-
+// ___________________
 enum players{
   PLAYER_WHITE = 2 ,
   PLAYER_BLACK = 1 ,
 };
 
+// ___________________
 struct positions_info { 
   /*  at this poin we don't have to define a structure for possible mouvements of each player */
   unsigned int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
@@ -27,7 +29,6 @@ struct positions_info {
   unsigned int TURNS;  // Played turns in the game.
 };
 
-//____________________________________________________________________________________________
 
 //this function initialize the infomations about players , we will initialize our world and informations separatly 
 struct positions_info init_infos(){
@@ -111,7 +112,7 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
 
 
 // this is our function that do the move if it is allowed
-void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx ){
+void move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
     if(is_allowed_to_simple_move(world, ex_idx, new_idx) == 1){
@@ -138,7 +139,7 @@ void move_player(struct world_t* world, enum players player, struct positions_in
 }
 //_______________________________________________ the jump function_____________________________
 //this first auxillary gives us the number of neighbors of a position , it will help us with the loops 
-int number_of_neighbors(struct neighbors_t neighbors){
+int number_of_neighbors(struct neighbors_t neighbors) {
   int c=0;
   for(int j=0; j < MAX_NEIGHBORS; ++j){
       if(neighbors.n[j].i < UINT_MAX){
@@ -147,6 +148,7 @@ int number_of_neighbors(struct neighbors_t neighbors){
   }
   return c;
 }
+
 // this one tells us if the jump is possible
 int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned int new_idx){
   if (is_new_ex_neighbor(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't jump on it only simple move 
@@ -173,7 +175,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
 }
 
 // it's our main jump function 
-void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
+void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx) {
   switch (player){
     case PLAYER_WHITE:
       if(is_allowed_simple_jump(world, ex_idx, new_idx)){
@@ -256,7 +258,7 @@ void multi_jump(struct world_t* world, enum players player, struct positions_inf
 
 //____________________________________________________
 //this one print our world so we that we can see changes every time
-void print_world( struct world_t* world ){
+void print_world( struct world_t* world) {
   for (int i=0; i< WORLD_SIZE ; ++i){
     if( i%HEIGHT == 0 && i != 0 ){
       printf("\n%d ", world->colors[i]);    
@@ -270,7 +272,7 @@ void print_world( struct world_t* world ){
 
 
 //________________________________________________test functions _________________________
-void print_init_players(struct positions_info positions){
+void print_init_players(struct positions_info positions) {
   for(int i=0; i<HEIGHT; ++i){
     printf("%d\n ", positions.initial_BLACK[i]);
 
@@ -278,7 +280,7 @@ void print_init_players(struct positions_info positions){
 }
 
 
-void print_current(struct positions_info positions){
+void print_current(struct positions_info positions) {
   for(int i=0; i<HEIGHT; ++i ){
     printf("%d\n ", positions.current_pieces_BLACK[i]);
 
