@@ -157,7 +157,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
             unsigned int tmp_position = neighbors.n[j].i; // we use tmporary variables to reduce complexity
             enum dir_t tmp_dir = neighbors.n[j].d;
             if(world->sorts[tmp_position] == PAWN){  //if the neighbor position is filled with a pawn
-                //struct neighbors_t neighbors_of_tmp = get_neighbors(tmp_position); // we get neighbors of this tmp_position
+                struct neighbors_t neighbors_of_tmp = get_neighbors(tmp_position); // we get neighbors of this tmp_position
                 unsigned int neighbor_in_same_dir = get_neighbor(tmp_position, tmp_dir); // we get the position that is a neighbor of this tmp_neighbor in the 
                       //same direction that tmp_neighbor is neighbor of ex_idx (we got the neighbor of the neighbor of ex_idx in the same direction)
                 if((neighbor_in_same_dir == new_idx)  && (world->sorts[neighbor_in_same_dir] == 0) ){ /*we check if it is the position that we want to go in 
@@ -387,33 +387,6 @@ int main(){
   multi_jump(world, PLAYER_WHITE, positions, 20);
   print_world(world);
   printf("\n");
-  
-  printf("5th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 13, 35);
-  print_world(world);
-  printf("\n");
-
-  printf("6th round: \n");
-  move_player(world, PLAYER_WHITE, positions, 35, 36);
-  print_world(world);
-  printf("\n");
-
-  printf("7th round: \n");
-  move_player(world, PLAYER_WHITE, positions, 36, 37);
-  print_world(world);
-  printf("\n");
-
-  printf("8th round: \n");
-  move_player(world, PLAYER_BLACK, positions, 39, 38);
-  print_world(world);
-  printf("\n");
-
-  printf("9th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 37, 39);
-  print_world(world);
-  printf("\n");
-
-  printf("End : PLAYER_WHITE victory ? %d\n", simple_win(PLAYER_WHITE, positions) );
 
   /*
   printf("3rd round: \n");
