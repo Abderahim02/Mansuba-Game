@@ -97,6 +97,7 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
     for(int i=0; i < HEIGHT; ++i){
       if( infos.current_pieces_BLACK[i] == ex_idx ){
 	        infos.current_pieces_BLACK[i] = new_idx;
+          ++infos.TURNS;
       }
     }
   }
@@ -104,6 +105,7 @@ void update_current_pieces(enum players player, struct positions_info infos, uns
     for(int i=0; i < HEIGHT; ++i){
       if( infos.current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
 	        infos.current_pieces_WHITE[i] = new_idx;
+          ++infos.TURNS;
       }
     }
   }
