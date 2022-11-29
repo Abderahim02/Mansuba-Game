@@ -81,6 +81,7 @@ int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsign
 //this function update player's information after every move 
 
 
+
 void update_current_pieces(enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
 switch (player){
   case PLAYER_BLACK:
@@ -89,6 +90,21 @@ switch (player){
 	        infos->current_pieces_BLACK[i] = new_idx;
           ++infos->TURNS;
         }
+
+/*void update_current_pieces(enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
+  if(player == PLAYER_BLACK){
+    for(int i=0; i < HEIGHT; ++i){
+      if( infos.current_pieces_BLACK[i] == ex_idx ){
+	        infos.current_pieces_BLACK[i] = new_idx;
+          ++infos.TURNS;
+      }
+    }
+  }
+  else{
+    for(int i=0; i < HEIGHT; ++i){
+      if( infos.current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
+	        infos.current_pieces_WHITE[i] = new_idx;
+          ++infos.TURNS;*/
       }
       break;
   case PLAYER_WHITE:
