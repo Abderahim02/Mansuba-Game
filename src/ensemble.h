@@ -40,7 +40,11 @@ void init_players(struct world_t* b, struct positions_info positions_info);
 int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx);
 
 //
-struct positions_info init_infos();
+struct positions_info* init_infos();
+
+//
+void init_infos_2(struct positions_info* infos);
+
 // Is a help/bool function, which returns 1 if the 
 int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsigned int new_idx);
 

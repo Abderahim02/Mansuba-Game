@@ -90,9 +90,11 @@ void move_current_player(struct world_t* world, enum players player, struct posi
     switch (move.type){
         case SIMPLE_JUMP:
             simple_jump(world, player, infos, move.ex_idx, move.new_idx);
+            update_current_pieces(player, &infos, move.ex_idx, move.new_idx);
             break;
         case SIMPLE_MOVE:
             simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
+            update_current_pieces(player, &infos, move.ex_idx, move.new_idx);
             break;
         default:
             break;
@@ -101,52 +103,46 @@ void move_current_player(struct world_t* world, enum players player, struct posi
 }
 
 
-/*int main(){
-=======
-void print_current_pieces(struct positions_info infos) {
-    for (int i = 0; i < HEIGHT; ++i) {
-        printf("In %d is peace %d \n",i ,infos.current_pieces_WHITE[i]);
-    }
-}
 
 int main(){
     struct world_t* world = world_init();
-    struct positions_info infos = init_infos();
+    struct positions_info infos;
+    init_infos_2(&infos);
     init_players(world, infos);
     enum players current_player = get_random_player();
     while(nobody_has_won(world, infos)){
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, infos, p);
-
         move_current_player( world, current_player, infos, random_move);
         print_world(world);
         printf("\n");
         //printf("random position: %d\n", choose_random_piece_belonging_to(infos, current_player));
         //move_current_player(world, current_player, infos, random_move);
         //print_world(world);
-        printf("\n");
         //current_player = next_player(current_player);
         //printf("Current player:%d Next player %d\n", current_player, next_player(current_player));
         //printf("Choose random peace: %d belonging to: %d\n",choose_random_piece_belonging_to(infos, current_player), current_player);
         print_current_pieces(infos);
         usleep(750 * 100);
         // printf("Choose random peace: %d belonging to: %d\n", p , current_player);
-        update_current_pieces(current_player, infos, random_move.ex_idx, random_move.new_idx);
+        update_current_pieces(current_player, &infos, random_move.ex_idx, random_move.new_idx);
         printf("Moving from %d to %d and using move %d \n", random_move.ex_idx, random_move.new_idx, random_move.type);
         print_current_pieces(infos);
         move_current_player(world, current_player, infos, random_move);
         print_world(world);
         printf("\n");
         current_player = next_player(current_player);
-        usleep(8500 * 1000);
+        // usleep(8500 * 1000);
     }
     return 0;
 }
-*/
 
+/*
 int main(){
   struct world_t* world = world_init();
-  struct positions_info positions = init_infos();
+  struct positions_info positions;
+//   struct positions_info* p = init_infos();
+  init_infos_2(&positions);
   init_players(world, positions);
   printf("initial board: \n");
   print_world(world);
@@ -154,6 +150,7 @@ int main(){
 
   printf("1st round: \n");
   simple_move_player(world, PLAYER_WHITE, positions, 0, 11);
+  update_current_pieces(PLAYER_WHITE, &positions, 0, 11);
   print_world(world);
   printf("\n");
   print_current_pieces(positions);
@@ -164,7 +161,9 @@ int main(){
   print_world(world);
   printf("\n");
   //update_current_pieces(WHITE, &positions, 30,1);
+  update_current_pieces(PLAYER_WHITE, &positions, 0, 44);
   print_current_pieces(positions);
   printf("%d", positions.TURNS);
   return 0;
 }
+*/

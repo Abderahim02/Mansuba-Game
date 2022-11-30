@@ -19,7 +19,7 @@ struct world_t{
 
 
 //this function initialize the infomations about players , we will initialize our world and informations separatly 
-struct positions_info init_infos(){
+struct positions_info* init_infos(){
   struct positions_info infos;
   int a = 0;
   int b = HEIGHT-1;
@@ -33,7 +33,24 @@ struct positions_info init_infos(){
   }
   infos.MAX_TURNS = WORLD_SIZE;
   infos.TURNS = 0;
-  return infos;
+  return &infos;
+}
+
+// I think that "struct positions_info* init_infos()" was making a lot of problems.
+// If you use this function for the initializing, the update function works.
+void init_infos_2(struct positions_info* infos) {
+  int a = 0;
+  int b = HEIGHT-1;
+  for (int i=0; i < HEIGHT ; ++i){
+    infos->current_pieces_BLACK[i] = b;
+    infos->initial_BLACK[i] = b;
+    infos->current_pieces_WHITE[i] = a;
+    infos->initial_WHITE[i] = a;
+    a = a + HEIGHT;
+    b = b + HEIGHT;
+  }
+  infos->MAX_TURNS = WORLD_SIZE;
+  infos->TURNS = 0;
 }
 
 /* it's the function that give for each player his initial positions , we suppose the initially the player with white pawns 
@@ -87,7 +104,9 @@ switch (player){
   case PLAYER_BLACK:
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_BLACK[i] == ex_idx ){
+          printf("Black[%d] is currently: %d\n",i , infos->current_pieces_BLACK[i]);
 	        infos->current_pieces_BLACK[i] = new_idx;
+          printf("I updated BLACK[%d] = %d\n",i, infos->current_pieces_BLACK[i]);
           ++infos->TURNS;
         }
 
@@ -110,7 +129,9 @@ switch (player){
   case PLAYER_WHITE:
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
+          printf("White[%d] is currently: %d\n",i , infos->current_pieces_WHITE[i]);
 	        infos->current_pieces_WHITE[i] = new_idx;
+          printf("I updated White[%d] = %d\n",i, infos->current_pieces_WHITE[i]);
           ++infos->TURNS;
        }
     }
