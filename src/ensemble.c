@@ -19,7 +19,7 @@ struct world_t{
 
 
 //this function initialize the infomations about players , we will initialize our world and informations separatly 
-struct positions_info* init_infos(){
+/*struct positions_info* init_infos(){
   struct positions_info infos;
   int a = 0;
   int b = HEIGHT-1;
@@ -34,14 +34,14 @@ struct positions_info* init_infos(){
   infos.MAX_TURNS = WORLD_SIZE;
   infos.TURNS = 0;
   return &infos;
-}
+}*/
 
 // I think that "struct positions_info* init_infos()" was making a lot of problems.
 // If you use this function for the initializing, the update function works.
 void init_infos_2(struct positions_info* infos) {
   int a = 0;
   int b = HEIGHT-1;
-  for (int i=0; i < HEIGHT ; ++i){
+  for (int i = 0; i < HEIGHT ; ++i){
     infos->current_pieces_BLACK[i] = b;
     infos->initial_BLACK[i] = b;
     infos->current_pieces_WHITE[i] = a;
@@ -90,8 +90,6 @@ int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsign
       return 1;
     }
    }
-
-  //at the moment we do just simple moves
   return 0;
 }
 
@@ -117,10 +115,6 @@ switch (player){
          // printf("White[%d] is currently: %d\n",i , infos->current_pieces_WHITE[i]);
 	        infos->current_pieces_WHITE[i] = new_idx;
           //printf("I updated White[%d] = %d\n",i, infos->current_pieces_WHITE[i]);
-
-          // printf("White[%d] is currently: %d\n",i , infos->current_pieces_WHITE[i]);
-	        infos->current_pieces_WHITE[i] = new_idx;
-          // printf("I updated White[%d] = %d\n",i, infos->current_pieces_WHITE[i]);
           ++infos->TURNS;
        }
     }
@@ -129,7 +123,6 @@ switch (player){
     break;
   }
 }
-
 //_______________
 void print_current_pieces(struct positions_info infos){
     for(int i=0 ; i < HEIGHT; ++i){
@@ -142,28 +135,28 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
     if(is_allowed_to_simple_move(world, ex_idx, new_idx)){
+      printf("is allowed to move from  %d to %d: %dwith player black", ex_idx, new_idx, is_allowed_to_simple_move(world, ex_idx, new_idx) );
       world->colors[new_idx] = BLACK;  // We update the information about the world 
       world->colors[ex_idx] = NO_COLOR ;
       world->sorts[ex_idx] = NO_SORT;
       world->sorts[new_idx] = PAWN;
       //print_current_pieces(infos);
-      //update_current_pieces(player, &infos, ex_idx, new_idx);
+      update_current_black_pieces(player, &infos, ex_idx, new_idx);
       print_current_pieces(infos);
-      ++infos.TURNS;
 
        // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
   case PLAYER_WHITE: //player with white_pawn
     if(is_allowed_to_simple_move(world, ex_idx, new_idx)){
+      printf("is allowed to move from  %d to %d: %d with player white", ex_idx, new_idx, is_allowed_to_simple_move(world, ex_idx, new_idx) );
       world->colors[new_idx] = WHITE;
       world->colors[ex_idx] = NO_COLOR ;
       world->sorts[ex_idx] = NO_SORT;
       world->sorts[new_idx] = PAWN;
       //print_current_pieces(infos);
-      //update_current_pieces(player, &infos, ex_idx, new_idx);
+      update_current_white_pieces(player, &infos, ex_idx, new_idx);
       print_current_pieces(infos);
-      ++infos.TURNS;
     }
     break;
   default:
@@ -217,7 +210,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            update_current_pieces(player, &infos, ex_idx, new_idx);   
+            //update_current_pieces(player, &infos, ex_idx, new_idx);   
       }
       break;
     case PLAYER_BLACK:
@@ -226,7 +219,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            update_current_pieces(player, &infos, ex_idx, new_idx);
+            //update_current_pieces(player, &infos, ex_idx, new_idx);
       }
       break;
     default:
@@ -436,79 +429,3 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
   }
   return 0;
 }
-
-// ________________________a test with 4 rounds game
-/*int main(){
-  struct world_t* world = world_init();
-  struct positions_info positions = init_infos();
-  init_players(world, positions);
-  printf("initial board: \n");
-  print_world(world);
-  printf("\n");
-
-  printf("1st round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 0, 11);
-  print_world(world);
-  printf("\n");
-  print_current_pieces(positions);
-
-  printf("2nd round: \n");
-  // simple_jump(world, PLAYER_WHITE, positions, 10, 12);
-  multi_jump(world, PLAYER_WHITE, positions, 10);
-  print_world(world);
-  printf("\n");
-  print_current_pieces(positions);
-  
-
-
-  printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 12, 13);
-  print_world(world);
-  printf("\n");
-
-  printf("4rd round: \n");
-  multi_jump(world, PLAYER_WHITE, positions, 20);
-  print_world(world);
-  printf("\n");
-  
-  printf("5th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 13, 35);
-  print_world(world);
-  printf("\n");
-
-  printf("6th round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 35, 36);
-  print_world(world);
-  printf("\n");
-
-  printf("7th round: \n");
-  move_player(world, PLAYER_WHITE, positions, 36, 37);
-  print_world(world);
-  printf("\n");
-
-  printf("8th round: \n");
-  simple_move_player(world, PLAYER_BLACK, positions, 39, 38);
-  print_world(world);
-  printf("\n");
-
-  printf("9th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 37, 39);
-  print_world(world);
-  printf("\n");
-
-  printf("End : PLAYER_WHITE victory ? %d\n", simple_win(world, PLAYER_WHITE, positions) );
-
-  printf("3rd round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 11, 13);
-  print_world(world);
-  printf("\n");
-
-
-  printf("4th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 12, 14);
-  print_world(world);
-  printf("\n");
-  
-    return 0;
-  }*/
-  
