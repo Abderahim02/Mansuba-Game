@@ -82,14 +82,56 @@ int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx){
   }
   return 0;
 }
-/*this one verify if it is an allowed simple move */
-  
-int is_allowed_to_simple_move(struct world_t* world, unsigned int ex_idx, unsigned int new_idx){
-  if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-    if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+
+int is_current_piece_White( struct positions_info infos, unsigned int ex_idx) {
+  for (int i = 0; i < HEIGHT; ++i) {
+    if (infos.current_pieces_WHITE[i] == ex_idx) {
       return 1;
     }
-   }
+  }
+  return 0;
+}
+
+int is_current_piece_Black( struct positions_info infos, unsigned int ex_idx) {
+  for (int i = 0; i < HEIGHT; ++i) {
+    if (infos.current_pieces_BLACK[i] == ex_idx) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+
+/*this one verify if it is an allowed simple move */
+int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
+  switch (player) {
+  case PLAYER_WHITE:
+    if (is_current_piece_White(infos, ex_idx)) {
+      if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
+        if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+        return 1;
+        }
+      }
+    }
+    break;
+  case PLAYER_BLACK:
+    if (is_current_piece_Black(infos, ex_idx)) {
+      if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
+        if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+        return 1;
+        }
+      }
+    }
+  
+  default:
+    break;
+  }
+  
+  // if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
+  //   if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+  //     return 1;
+  //   }
+  //  }
 
   //at the moment we do just simple moves
   return 0;
@@ -133,7 +175,7 @@ switch (player){
 //_______________
 void print_current_pieces(struct positions_info infos){
     for(int i=0 ; i < HEIGHT; ++i){
-      printf("%d\n" , infos.current_pieces_WHITE[i]);
+          printf("%d   %d\n ", infos.current_pieces_BLACK[i], infos.current_pieces_WHITE[i]);
     }
 }
 
@@ -141,28 +183,37 @@ void print_current_pieces(struct positions_info infos){
 void simple_move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
-    if(is_allowed_to_simple_move(world, ex_idx, new_idx)){
-      world->colors[new_idx] = BLACK;  // We update the information about the world 
-      world->colors[ex_idx] = NO_COLOR ;
-      world->sorts[ex_idx] = NO_SORT;
-      world->sorts[new_idx] = PAWN;
+    if(is_allowed_to_simple_move(world, player, infos, ex_idx, new_idx)){
+      world_set(world, new_idx, BLACK);
+      world_set(world, ex_idx, NO_COLOR);
+      world_set_sort(world, ex_idx, NO_SORT);
+      world_set_sort(world, new_idx, PAWN);
+
+      // world->colors[new_idx] = BLACK;  // We update the information about the world 
+      // world->colors[ex_idx] = NO_COLOR ;
+      // world->sorts[ex_idx] = NO_SORT;
+      // world->sorts[new_idx] = PAWN;
       //print_current_pieces(infos);
       //update_current_pieces(player, &infos, ex_idx, new_idx);
-      print_current_pieces(infos);
+      // print_current_pieces(infos);
       ++infos.TURNS;
 
        // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
   case PLAYER_WHITE: //player with white_pawn
-    if(is_allowed_to_simple_move(world, ex_idx, new_idx)){
-      world->colors[new_idx] = WHITE;
-      world->colors[ex_idx] = NO_COLOR ;
-      world->sorts[ex_idx] = NO_SORT;
-      world->sorts[new_idx] = PAWN;
+    if(is_allowed_to_simple_move(world, player, infos, ex_idx, new_idx)){
+      world_set(world, new_idx, WHITE);
+      world_set(world, ex_idx, NO_COLOR);
+      world_set_sort(world, ex_idx, NO_SORT);
+      world_set_sort(world, new_idx, PAWN);
+      // world->colors[new_idx] = WHITE;
+      // world->colors[ex_idx] = NO_COLOR ;
+      // world->sorts[ex_idx] = NO_SORT;
+      // world->sorts[new_idx] = PAWN;
       //print_current_pieces(infos);
       //update_current_pieces(player, &infos, ex_idx, new_idx);
-      print_current_pieces(infos);
+      // print_current_pieces(infos);
       ++infos.TURNS;
     }
     break;
@@ -217,7 +268,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            update_current_pieces(player, &infos, ex_idx, new_idx);   
+            // update_current_pieces(player, &infos, ex_idx, new_idx);   
       }
       break;
     case PLAYER_BLACK:
@@ -226,7 +277,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            update_current_pieces(player, &infos, ex_idx, new_idx);
+            // update_current_pieces(player, &infos, ex_idx, new_idx);
       }
       break;
     default:
@@ -361,7 +412,7 @@ void print_world( struct world_t* world) {
 //________________________________________________test functions _________________________
 void print_init_players(struct positions_info positions) {
   for(int i=0; i<HEIGHT; ++i){
-    printf("%d\n ", positions.initial_BLACK[i]);
+    printf("%d   %d\n ", positions.current_pieces_BLACK[i], positions.current_pieces_WHITE[i]);
 
   }
 }
@@ -369,8 +420,7 @@ void print_init_players(struct positions_info positions) {
 
 void print_current(struct positions_info positions) {
   for(int i=0; i<HEIGHT; ++i ){
-    printf("%d\n ", positions.current_pieces_BLACK[i]);
-
+    printf("%d   %d\n ", positions.current_pieces_BLACK[i], positions.current_pieces_WHITE[i]);
   }
 }
 
@@ -437,78 +487,23 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
   return 0;
 }
 
-// ________________________a test with 4 rounds game
-/*int main(){
-  struct world_t* world = world_init();
-  struct positions_info positions = init_infos();
-  init_players(world, positions);
-  printf("initial board: \n");
-  print_world(world);
-  printf("\n");
-
-  printf("1st round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 0, 11);
-  print_world(world);
-  printf("\n");
-  print_current_pieces(positions);
-
-  printf("2nd round: \n");
-  // simple_jump(world, PLAYER_WHITE, positions, 10, 12);
-  multi_jump(world, PLAYER_WHITE, positions, 10);
-  print_world(world);
-  printf("\n");
-  print_current_pieces(positions);
-  
-
-
-  printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 12, 13);
-  print_world(world);
-  printf("\n");
-
-  printf("4rd round: \n");
-  multi_jump(world, PLAYER_WHITE, positions, 20);
-  print_world(world);
-  printf("\n");
-  
-  printf("5th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 13, 35);
-  print_world(world);
-  printf("\n");
-
-  printf("6th round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 35, 36);
-  print_world(world);
-  printf("\n");
-
-  printf("7th round: \n");
-  move_player(world, PLAYER_WHITE, positions, 36, 37);
-  print_world(world);
-  printf("\n");
-
-  printf("8th round: \n");
-  simple_move_player(world, PLAYER_BLACK, positions, 39, 38);
-  print_world(world);
-  printf("\n");
-
-  printf("9th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 37, 39);
-  print_world(world);
-  printf("\n");
-
-  printf("End : PLAYER_WHITE victory ? %d\n", simple_win(world, PLAYER_WHITE, positions) );
-
-  printf("3rd round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 11, 13);
-  print_world(world);
-  printf("\n");
-
-
-  printf("4th round: \n");
-  simple_jump(world, PLAYER_WHITE, positions, 12, 14);
-  print_world(world);
-  printf("\n");
-  
-    return 0;
-  }*/
+int count_pieces(struct world_t* world) {
+    int b = 0;
+    int w = 0;
+    for (int i = 0; i < WORLD_SIZE; ++i) {
+        if (world->colors[i] == BLACK) {
+          ++b;
+        }
+        if (world->colors[i] == WHITE) {
+          ++w;
+        }
+    }
+    if (b == 10) {
+      if (w == 10) {
+        return w;
+      }
+      return w;
+    }
+    return b;
+}
   

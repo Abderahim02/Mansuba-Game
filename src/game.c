@@ -48,10 +48,12 @@ unsigned int choose_random_piece_belonging_to(struct positions_info infos, unsig
     switch (current_player) {
     case PLAYER_WHITE:
         i = rand() % HEIGHT;
+        printf("\nchoosed: %d\n\n", i);
         return infos.current_pieces_WHITE[i];
         break;
     case PLAYER_BLACK:
         i = rand() % HEIGHT;
+        printf("\nchoosed: %d\n\n", i);
         return infos.current_pieces_BLACK[i];
         break;    
     default:
@@ -68,19 +70,19 @@ struct move choose_random_move_for_piece(struct world_t* world, enum players pla
     struct move move; 
     move.ex_idx = ex_idx;
     unsigned int i = WORLD_SIZE+2;
-    while(is_allowed_simple_jump(world, ex_idx, i)==0 && is_allowed_to_simple_move(world, ex_idx, i) == 0 
+    while(is_allowed_simple_jump(world, ex_idx, i)==0 && is_allowed_to_simple_move(world, player, infos, ex_idx, i) == 0 
         && is_multi_jump_allowed(world, player, infos, ex_idx) == 0){
         i = rand() % WORLD_SIZE;
         if (is_multi_jump_allowed(world, player, infos, ex_idx)) {
             move.type = MULTIPLE_JUMP;
             return move;
         }
-        if(is_allowed_simple_jump(world, ex_idx, i)){
+        else if(is_allowed_simple_jump(world, ex_idx, i)){
             move.new_idx = i;
             move.type = SIMPLE_JUMP;
             return move;
         }
-        else if (is_allowed_to_simple_move(world, ex_idx, i)){
+        else if (is_allowed_to_simple_move(world, player, infos, ex_idx, i)){
             move.new_idx = i;
             move.type = SIMPLE_MOVE;
             return move;
@@ -91,27 +93,26 @@ struct move choose_random_move_for_piece(struct world_t* world, enum players pla
 }
 //this function does the move
 void move_current_player(struct world_t* world, enum players player, struct positions_info infos, struct move move){
-    switch (move.type){
-        case 0:
-            break;
-        case MULTIPLE_JUMP:
-            // multi_jump(world, player, infos, move.ex_idx);
-            printf("I did a multiple JUMP!! \n");
-            move.new_idx = multi_jump(world, player, infos, move.ex_idx);
-            break;
-        case SIMPLE_JUMP:
-            simple_jump(world, player, infos, move.ex_idx, move.new_idx);
-            update_current_pieces(player, &infos, move.ex_idx, move.new_idx);
-            break;
-        case SIMPLE_MOVE:
-            simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
-            update_current_pieces(player, &infos, move.ex_idx, move.new_idx);
-            break;
-        default:
-            break;
+    if (move.type != 0) {
+        switch (move.type){
+            case MULTIPLE_JUMP:
+                // multi_jump(world, player, infos, move.ex_idx);
+                printf("I did a multiple JUMP!! \n");
+                move.new_idx = multi_jump(world, player, infos, move.ex_idx);
+                break;
+            case SIMPLE_JUMP:
+                simple_jump(world, player, infos, move.ex_idx, move.new_idx);
+                // update_current_pieces(player, &infos, move.ex_idx, move.new_idx);
+                break;
+            case SIMPLE_MOVE:
+                simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
+                // update_current_pieces(player, &infos, move.ex_idx, move.new_idx);
+                break;
+            default:
+                break;
+        }
+        printf("Player %d move with %d from %d to %d\n",player , move.type, move.ex_idx, move.new_idx);
     }
-    printf("I move with %d from %d to %d\n", move.type, move.ex_idx, move.new_idx);
-
 }
 
 
@@ -123,11 +124,13 @@ int main(){
     init_infos_2(&infos);
     init_players(world, infos);
     enum players current_player = get_random_player();
+    unsigned int p = choose_random_piece_belonging_to(infos, current_player);
     while(nobody_has_won(world, infos)){
-        unsigned int p = choose_random_piece_belonging_to(infos, current_player);
+        p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, current_player, infos, p);
         move_current_player( world, current_player, infos, random_move);
         update_current_pieces(current_player, &infos, random_move.ex_idx, random_move.new_idx);
+        print_current_pieces(infos);
         print_world(world);
         printf("\n");
         printf("_____________________________\n");
@@ -136,9 +139,18 @@ int main(){
             printf("the winner is : %s", victor);
             return 1;
         }
+        if (count_pieces(world) != 10) {
+            printf("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+            printf("%d\n", count_pieces(world));
+            printf("Choosen peace was: %d\n", p);
+            // print("Jump from %d to %d", random_move.ex_idx, random_move.new_idx);
+            // printf()
+            return 1;
+        }
         else {
             current_player = next_player(current_player);
-        usleep(8500 * 1000);
+        usleep(50 * 1000);
+        ++infos.MAX_TURNS;
         }
     }
     return 0;
