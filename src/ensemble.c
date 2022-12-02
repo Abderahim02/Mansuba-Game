@@ -170,7 +170,7 @@ switch (player){
 //_______________
 void print_current_pieces(struct positions_info infos){
     for(int i=0 ; i < HEIGHT; ++i){
-          printf("%d   %d\n ", infos.current_pieces_BLACK[i], infos.current_pieces_WHITE[i]);
+          printf("%d   %d\n \n", infos.current_pieces_BLACK[i], infos.current_pieces_WHITE[i]);
     }
 }
 

@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,13 +10,14 @@ struct world_t{
   enum sort_t sorts[WORLD_SIZE];
 };
 
-struct world_t monde;
+//struct world_t monde;
 struct world_t* world_init(){
+  struct world_t* monde = malloc(sizeof(struct world_t));
   for(int i=0; i < WORLD_SIZE; ++i){ 
-      monde.colors[i] = NO_COLOR;   
-      monde.sorts[i] = NO_SORT;
+      monde->colors[i] = NO_COLOR;   
+      monde->sorts[i] = NO_SORT;
   }
-    return  &monde;
+    return  monde;
 }
 
 enum color_t world_get( const struct world_t* b, unsigned int idx){
@@ -100,7 +103,7 @@ void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c)
 
 /*
 // The main function, mainly for testing.
-/*int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     struct world_t world;
     // Initializing a world with NO_COLORS and NO_SORTS.

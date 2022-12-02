@@ -64,7 +64,7 @@ unsigned int get_neighbor(unsigned int idx, enum dir_t d) {
 }
 
 struct neighbors_t get_neighbors( unsigned int idx){
-  struct neighbors_t neighbors={.n={{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}}}; 
+  struct neighbors_t neighbors={.n={{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0}}}; 
   enum dir_t dir = SEAST;
   int j=0;
   /*while( j <= MAX_NEIGHBORS && dir < MAX_DIR){
@@ -83,7 +83,7 @@ struct neighbors_t get_neighbors( unsigned int idx){
   
   }*/
   while( j < MAX_NEIGHBORS && dir < MAX_DIR){
-    unsigned int test=get_neighbor(idx, dir);
+    unsigned int test = get_neighbor(idx, dir);
     if( test!= UINT_MAX ){
       neighbors.n[j].i = test;  //la boucle va remplir neighbors avec les voisins de idx avec j voisins 
       neighbors.n[j].d = dir;
@@ -95,15 +95,15 @@ struct neighbors_t get_neighbors( unsigned int idx){
     }
   }
  
-  if( j < MAX_NEIGHBORS) {
+  /*if( j < MAX_NEIGHBORS) {
     int k=j;
     while( k < MAX_NEIGHBORS){
     neighbors.n[k].i = UINT_MAX; /* we fill the left positions with UINT_MAX everywere 
-    because is we put 0 there we will have problems after because 0 is already a position in the world */ 
+    because is we put 0 there we will have problems after because 0 is already a position in the world 
     neighbors.n[k].d = NO_DIR;
     ++k;
       }
-  }
+  }*/
   return neighbors;
 }
 
@@ -115,4 +115,3 @@ struct neighbors_t get_neighbors( unsigned int idx){
 
   return 0;
 }*/
-
