@@ -67,8 +67,9 @@ int nobody_has_won(struct world_t* world, struct positions_info infos){
 struct move choose_random_move_for_piece(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx){
     struct move move; 
     move.ex_idx = ex_idx;
-    unsigned int i=0;
-    while(is_allowed_simple_jump(world, ex_idx, i)==0 && is_allowed_to_simple_move(world, ex_idx, i) == 0){
+    unsigned int i = WORLD_SIZE+2;
+    while(is_allowed_simple_jump(world, ex_idx, i)==0 && is_allowed_to_simple_move(world, ex_idx, i) == 0 
+        && is_multi_jump_allowed(world, player, infos, ex_idx) == 0){
         i = rand() % WORLD_SIZE;
         if (is_multi_jump_allowed(world, player, infos, ex_idx)) {
             move.type = MULTIPLE_JUMP;
@@ -91,6 +92,8 @@ struct move choose_random_move_for_piece(struct world_t* world, enum players pla
 
 void move_current_player(struct world_t* world, enum players player, struct positions_info infos, struct move move){
     switch (move.type){
+        case 0:
+            break;
         case MULTIPLE_JUMP:
             // multi_jump(world, player, infos, move.ex_idx);
             printf("I did a multiple JUMP!! \n");
@@ -107,6 +110,7 @@ void move_current_player(struct world_t* world, enum players player, struct posi
         default:
             break;
     }
+    printf("I move with %d from %d to %d\n", move.type, move.ex_idx, move.new_idx);
 
 }
 
