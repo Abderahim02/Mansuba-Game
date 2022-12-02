@@ -67,8 +67,11 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
 // simple jump function.
 void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
 
+// Test function is multiple jump is possible.
+unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx);
+
 // Jumps as long as it is possible.
-void multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx);
+unsigned int multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx);
 
 // Test function to print the world.
 void print_world( struct world_t* world);
