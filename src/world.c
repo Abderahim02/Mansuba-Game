@@ -22,8 +22,8 @@ void destroyWorld (struct world_t* world) {
         //git add ga  free(world->colors[i]);
        // free(world->sorts[i]);
      //   }
-    free(world->sorts);
-    free(world->colors);
+    //free(world->sorts);
+    //free(world->colors);
     free(world);
 }
 
