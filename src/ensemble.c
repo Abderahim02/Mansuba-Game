@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "world.h"
-#include "geometry.h"
-#include "neighbors.h"
 #include "ensemble.h"
 #define UINT_MAX 100
 // _____________________
@@ -19,22 +16,6 @@ struct world_t{
 
 
 //this function initialize the infomations about players , we will initialize our world and informations separatly 
-/*struct positions_info* init_infos(){
-  struct positions_info infos;
-  int a = 0;
-  int b = HEIGHT-1;
-  for (int i=0; i < HEIGHT ; ++i){
-    infos.current_pieces_BLACK[i] = b;
-    infos.initial_BLACK[i] = b;
-    infos.current_pieces_WHITE[i] = a;
-    infos.initial_WHITE[i] = a;
-    a = a + HEIGHT;
-    b = b + HEIGHT;
-  }
-  infos.MAX_TURNS = WORLD_SIZE;
-  infos.TURNS = 0;
-  return &infos;
-}*/
 
 // I think that "struct positions_info* init_infos()" was making a lot of problems.
 // If you use this function for the initializing, the update function works.
