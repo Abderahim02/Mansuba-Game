@@ -83,6 +83,23 @@ int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx){
   return 0;
 }
 
+int is_neighbor_black(unsigned int ex_idx, unsigned int new_idx) {
+  struct neighbors_t neighbors;
+  if (new_idx == get_neighbor(ex_idx, NEAST) || new_idx == get_neighbor(ex_idx, EAST) || new_idx == get_neighbor(ex_idx, SEAST)) {
+    return 0;
+  }
+  return 1;
+}
+
+int is_neighbor_white(unsigned int ex_idx, unsigned int new_idx) {
+  struct neighbors_t neighbors;
+  if (new_idx == get_neighbor(ex_idx, NWEST) || new_idx == get_neighbor(ex_idx, WEST) || new_idx == get_neighbor(ex_idx, SWEST)) {
+    return 0;
+  }
+  return 1;
+}
+
+
 int is_current_piece_White( struct positions_info infos, unsigned int ex_idx) {
   for (int i = 0; i < HEIGHT; ++i) {
     if (infos.current_pieces_WHITE[i] == ex_idx) {
@@ -103,13 +120,11 @@ int is_current_piece_Black( struct positions_info infos, unsigned int ex_idx) {
 
 
 /*this one verify if it is an allowed simple move */
-int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info*
-
- infos, unsigned int ex_idx, unsigned int new_idx){
+int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player) {
   case PLAYER_WHITE:
     if (is_current_piece_White(*infos, ex_idx)) {
-      if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
+      if (is_new_ex_neighbor(ex_idx, new_idx) && is_neighbor_white(ex_idx, new_idx)) { // we check if new_ex is a neighbor 
         if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
         return 1;
         }
@@ -117,7 +132,7 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
     }
     break;
   case PLAYER_BLACK:
-    if (is_current_piece_Black(*infos, ex_idx)) {
+    if (is_current_piece_Black(*infos, ex_idx) && is_neighbor_black(ex_idx, new_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
         if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
         return 1;
@@ -128,14 +143,6 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   default:
     break;
   }
-  
-  // if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-  //   if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
-  //     return 1;
-  //   }
-  //  }
-
-  //at the moment we do just simple moves
   return 0;
 }
 
@@ -494,4 +501,4 @@ int count_pieces(struct world_t* world) {
     }
     return b;
 }
-  
+
