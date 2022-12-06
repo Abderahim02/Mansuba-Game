@@ -281,6 +281,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
 
 // Test function is multiple jump is possible.
 unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx) {
+unsigned int new_idx= ex_idx;
 int a = 1;
   switch (player) {
   case PLAYER_WHITE:
@@ -288,19 +289,19 @@ int a = 1;
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward move: For white it means to jump +2
-      if (is_allowed_simple_jump(world, ex_idx, ex_idx + 2)) {
+      if (is_allowed_simple_jump(world, new_idx, new_idx+ 2)) {
         a = 1;
-        ex_idx = ex_idx + 2;
+        new_idx = new_idx + 2;
       }
       // Forward left move: means to jump 2*width-2.
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH-2))) {
         a = 1;
-        ex_idx = ex_idx - (2*WIDTH-2);
+        new_idx = new_idx- (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH+2))) {
         a = 1;
-        ex_idx = ex_idx + (2*WIDTH+2);
+        new_idx = new_idx + (2*WIDTH+2);
       }
     }
     return a;
@@ -309,19 +310,19 @@ int a = 1;
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward move: is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump(world, ex_idx, ex_idx - 2)) {
+      if (is_allowed_simple_jump(world, new_idx, new_idx - 2)) {
         a = 1;
-        ex_idx = ex_idx - 2;
+        new_idx = new_idx - 2;
       }
       // Forward left move
       else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH-2))) {
         a = 1;
-        ex_idx = ex_idx + (2*WIDTH-2);
+        new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump(world, new_idx, new_idx- (2*WIDTH+2))) {
         a = 1;
-        ex_idx = ex_idx - (2*WIDTH+2);
+        new_idx = new_idx - (2*WIDTH+2);
       }
     }
     return a;
@@ -334,28 +335,29 @@ int a = 1;
 
 // Multiple jump function: it will return the ending position of the multi jump.
 unsigned int multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx) {
+  unsigned int new_idx = ex_idx;
   int a = 1;
   switch (player) {
   case PLAYER_WHITE:
     while (a) {
       a = 0;
       // Forward move: For white it means to jump +2
-      if (is_allowed_simple_jump(world, ex_idx, ex_idx + 2)) {
-        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + 2);
+      if (is_allowed_simple_jump(world, new_idx, new_idx + 2)) {
+        simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx + 2);
         a = 1;
-        ex_idx = ex_idx + 2;
+        new_idx = new_idx + 2;
       }
       // Forward left move: means to jump 2*width-2.
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - (2*WIDTH-2))) {
-        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx - (2*WIDTH-2));
+      else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH-2))) {
+        simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx - (2*WIDTH-2));
         a = 1;
-        ex_idx = ex_idx - (2*WIDTH-2);
+        new_idx = new_idx - (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH+2))) {
-        simple_jump(world, PLAYER_WHITE, infos, ex_idx, ex_idx + (2*WIDTH+2));
+      else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH+2))) {
+        simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx + (2*WIDTH+2));
         a = 1;
-        ex_idx = ex_idx + (2*WIDTH+2);
+        new_idx = new_idx + (2*WIDTH+2);
       }
     }
     break;
@@ -363,29 +365,29 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
     while (a) {
       a = 0;
       // Forward move: is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump(world, ex_idx, ex_idx - 2)) {
-        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx - 2);
+      if (is_allowed_simple_jump(world, new_idx, new_idx - 2)) {
+        simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx - 2);
         a = 1;
-        ex_idx = ex_idx - 2;
+        new_idx = new_idx - 2;
       }
-      // Forward left move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH-2))) {
-        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx + (2*WIDTH-2));
+      // Forward left movee
+      else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH-2))) {
+        simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2));
         a = 1;
-        ex_idx = ex_idx + (2*WIDTH-2);
+        new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx - (2*WIDTH+2))) {
-        simple_jump(world, PLAYER_BLACK, infos, ex_idx, ex_idx - (2*WIDTH+2));
+      else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH+2))) {
+        simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2));
         a = 1;
-        ex_idx = ex_idx - (2*WIDTH+2);
+        new_idx= new_idx - (2*WIDTH+2);
       }
     }
     break;
   default:
     break;
   }
-  return ex_idx;
+  return new_idx;
 }
 
 //____________________________________________________

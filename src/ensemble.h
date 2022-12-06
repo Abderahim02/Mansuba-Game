@@ -4,7 +4,6 @@
 #include "world.h"
 #include "geometry.h"
 #include "neighbors.h"
-
 struct world_t;
 
 enum players{
