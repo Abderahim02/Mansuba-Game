@@ -45,13 +45,13 @@ struct positions_info* init_infos();
 void init_infos_2(struct positions_info* infos);
 
 // Is a help/bool function, which returns 1 if the 
-int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
+int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // Updated the current pieces.
 void update_current_pieces(enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // If conditions are ok, a piece moves.
-void simple_move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
+void simple_move_player(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // Simple win function: the winner is the first player to reach with one of his pieces 
 // one of the other player's starting positions before MAX_TURNS turns.
@@ -64,13 +64,13 @@ int number_of_neighbors(struct neighbors_t neighbors);
 int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned int new_idx);
 
 // simple jump function.
-void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx);
+void simple_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // Test function is multiple jump is possible.
-unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx);
+unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx);
 
 // Jumps as long as it is possible.
-unsigned int multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx);
+unsigned int multi_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx);
 
 // Test function to print the world.
 void print_world( struct world_t* world);

@@ -103,10 +103,12 @@ int is_current_piece_Black( struct positions_info infos, unsigned int ex_idx) {
 
 
 /*this one verify if it is an allowed simple move */
-int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
+int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info*
+
+ infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player) {
   case PLAYER_WHITE:
-    if (is_current_piece_White(infos, ex_idx)) {
+    if (is_current_piece_White(*infos, ex_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
         if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
         return 1;
@@ -115,7 +117,7 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
     }
     break;
   case PLAYER_BLACK:
-    if (is_current_piece_Black(infos, ex_idx)) {
+    if (is_current_piece_Black(*infos, ex_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
         if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
         return 1;
@@ -175,7 +177,7 @@ void print_current_pieces(struct positions_info infos){
 }
 
 // this is our function that do the move if it is allowed
-void simple_move_player(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx){
+void simple_move_player(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
     if(is_allowed_to_simple_move(world, player, infos, ex_idx, new_idx)){
@@ -183,15 +185,9 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-
-      // world->colors[new_idx] = BLACK;  // We update the information about the world 
-      // world->colors[ex_idx] = NO_COLOR ;
-      // world->sorts[ex_idx] = NO_SORT;
-      // world->sorts[new_idx] = PAWN;
-      //print_current_pieces(infos);
-      //update_current_pieces(player, &infos, ex_idx, new_idx);
+      update_current_pieces(player, infos, ex_idx, new_idx);
       // print_current_pieces(infos);
-      ++infos.TURNS;
+    //  ++infos->TURNS;
        // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
@@ -201,14 +197,10 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      // world->colors[new_idx] = WHITE;
-      // world->colors[ex_idx] = NO_COLOR ;
-      // world->sorts[ex_idx] = NO_SORT;
-      // world->sorts[new_idx] = PAWN;
       //print_current_pieces(infos);
-      //update_current_pieces(player, &infos, ex_idx, new_idx);
+      update_current_pieces(player, infos, ex_idx, new_idx);
       // print_current_pieces(infos);
-      ++infos.TURNS;
+     // ++infos->TURNS;
     }
     break;
   default:
@@ -254,7 +246,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
 }
 
 // it's our main jump function 
-void simple_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx, unsigned int new_idx) {
+void simple_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
   switch (player){
     case PLAYER_WHITE:
       if(is_allowed_simple_jump(world, ex_idx, new_idx)){
@@ -262,7 +254,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            //update_current_pieces(player, &infos, ex_idx, new_idx);   
+            update_current_pieces(player, infos, ex_idx, new_idx);   
       }
       break;
     case PLAYER_BLACK:
@@ -271,7 +263,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world->colors[ex_idx] = NO_COLOR ;
             world->sorts[ex_idx] = NO_SORT;
             world->sorts[new_idx] = PAWN;
-            //update_current_pieces(player, &infos, ex_idx, new_idx);
+            update_current_pieces(player, infos, ex_idx, new_idx);
       }
       break;
     default:
@@ -280,7 +272,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
 }
 
 // Test function is multiple jump is possible.
-unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx) {
+unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx) {
 unsigned int new_idx= ex_idx;
 int a = 1;
   switch (player) {
@@ -334,7 +326,7 @@ int a = 1;
 }
 
 // Multiple jump function: it will return the ending position of the multi jump.
-unsigned int multi_jump(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx) {
+unsigned int multi_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx) {
   unsigned int new_idx = ex_idx;
   int a = 1;
   switch (player) {

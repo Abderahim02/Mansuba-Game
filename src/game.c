@@ -66,7 +66,7 @@ int nobody_has_won(struct world_t* world, struct positions_info infos){
 }
 
 //this function generate a random possible move for the random choosen piece ex_idx
-struct move choose_random_move_for_piece(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx){
+struct move choose_random_move_for_piece(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx){
     struct move move; 
     move.ex_idx = ex_idx;
     unsigned int i = 92;
@@ -92,7 +92,7 @@ struct move choose_random_move_for_piece(struct world_t* world, enum players pla
     return move;
 }
 //_________________simple moves only test______
-struct move choose_random_simple_move_for_piece(struct world_t* world, enum players player, struct positions_info infos, unsigned int ex_idx){
+struct move choose_random_simple_move_for_piece(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx){
     struct move move; 
     move.ex_idx = ex_idx;
     unsigned int i=15; /*we were putting initializing i with 0 and we had a problem of 
@@ -109,16 +109,16 @@ number of pieces increasing*/
 }
 
 //simple moves only
-void simple_move_current_player(struct world_t* world, enum players player, struct positions_info infos, struct move move){
+void simple_move_current_player(struct world_t* world, enum players player, struct positions_info* infos, struct move move){
     if(move.type ==SIMPLE_MOVE){
             simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
-            update_current_pieces(current_player, &infos, move.ex_idx, move.new_idx);
+            //update_current_pieces(current_player, &infos, move.ex_idx, move.new_idx);
     }
     }
 
 
 //this function does the move
-void move_current_player(struct world_t* world, enum players player, struct positions_info infos, struct move move){
+void move_current_player(struct world_t* world, enum players player, struct positions_info* infos, struct move move){
     if (move.type != 0) {
         switch (move.type){
             case MULTIPLE_JUMP:
@@ -146,6 +146,7 @@ void move_current_player(struct world_t* world, enum players player, struct posi
 //in function mulyi jump we must use just a copy of ex_idx 
 //is allowed to multi jump should return another value like -1 if its not possible, else it should return the position where to go
 
+
 //The game :
 int main(){
     struct world_t* world = world_init();
@@ -157,16 +158,16 @@ int main(){
     unsigned int p = choose_random_piece_belonging_to(infos, current_player);
     while(nobody_has_won(world, infos) /*&& infos.TURNS < 100*/){
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
-        struct move random_move = choose_random_move_for_piece(world, current_player, infos, p);
-        move_current_player( world, current_player, infos, random_move);
-       // if(is_allowed_to_simple_move(world, current_player, infos, random_move.ex_idx, random_move.new_idx)){
-        //simple_move_current_player( world, current_player, infos, random_move);
-        update_current_pieces(current_player, &infos, random_move.ex_idx, random_move.new_idx);
-        //print_current_pieces(infos);
+        struct move random_move = choose_random_move_for_piece(world, current_player, &infos, p);
+        move_current_player( world, current_player, &infos, random_move);
+        //if(is_allowed_to_simple_move(world, current_player, infos, random_move.ex_idx, random_move.new_idx)){
+        //simple_move_current_player( world, current_player, &infos, random_move);
+        //update_current_pieces(current_player, &infos, random_move.ex_idx, random_move.new_idx);
+        print_current_pieces(infos);
         print_world(world);
         printf("\n");
         printf("_____________________________\n");
-       // }
+        //}
         if(simple_win(world, current_player, infos)){
             char *victor = (current_player == PLAYER_WHITE)? "PLAYER_WHITE" : "PLAYER_BLACK" ;
             printf("the winner is : %s\n", victor);
@@ -190,8 +191,8 @@ int main(){
     }
     return 0;
 }
-
 /*
+
 int main(){
   struct world_t* world = world_init();
   struct positions_info positions ;
@@ -203,73 +204,73 @@ int main(){
   printf("\n");
 
   printf("1st round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 0, 11);
-  update_current_pieces(WHITE,&positions,  0, 11);
+  simple_move_player(world, PLAYER_WHITE, &positions, 0, 11);
+  //update_current_pieces(PLAYER_WHITE,&positions,  0, 11);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
   
 
   printf("2nd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions, 11, 12);
-  update_current_pieces(WHITE, &positions, 11,12);
+  simple_move_player(world, PLAYER_WHITE, &positions, 11, 12);
+  //update_current_pieces(PLAYER_WHITE, &positions, 11,12);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,12, 13);
-  update_current_pieces(WHITE, &positions, 12,13);
+  simple_move_player(world, PLAYER_WHITE, &positions,12, 13);
+  //update_current_pieces(WHITE, &positions, 12,13);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,13, 14);
-  update_current_pieces(WHITE, &positions, 13,14);
+  simple_move_player(world, PLAYER_WHITE, &positions,13, 14);
+  //update_current_pieces(WHITE, &positions, 13,14);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,14, 15);
-  update_current_pieces(WHITE, &positions, 14,15);
+  simple_move_player(world, PLAYER_WHITE, &positions,14, 15);
+  //update_current_pieces(WHITE, &positions, 14,15);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,15, 16);
-  update_current_pieces(WHITE, &positions, 15,16);
+  simple_move_player(world, PLAYER_WHITE, &positions,15, 16);
+  //update_current_pieces(WHITE, &positions, 15,16);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,16, 17);
-  update_current_pieces(WHITE, &positions, 16,17);
+  simple_move_player(world, PLAYER_WHITE, &positions,16, 17);
+  //update_current_pieces(WHITE, &positions, 16,17);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,17, 18);
-  update_current_pieces(WHITE, &positions, 17,18);
+  simple_move_player(world, PLAYER_WHITE, &positions,17, 18);
+  //update_current_pieces(WHITE, &positions, 17,18);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_WHITE, positions,18, 19);
-  update_current_pieces(WHITE, &positions, 18,19);
+  simple_move_player(world, PLAYER_WHITE, &positions,18, 19);
+  //update_current_pieces(WHITE, &positions, 18,19);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
 
 
   printf("3rd round: \n");
-  simple_move_player(world, PLAYER_BLACK, positions,19, 0);
-  update_current_pieces(WHITE, &positions, 19,0);
+  simple_move_player(world, PLAYER_BLACK, &positions,19, 0);
+  //update_current_pieces(WHITE, &positions, 19,0);
   print_current_pieces(positions);
   print_world(world);
   printf("\n");
@@ -277,6 +278,7 @@ int main(){
   printf("%d", positions.TURNS);
   return 0;
 }
+
 int main(){
     struct neighbors_t nei= get_neighbors(2);
     for(int j=0; j < MAX_NEIGHBORS; ++j){
