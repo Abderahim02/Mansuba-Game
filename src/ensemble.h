@@ -2,21 +2,15 @@
 #define __ENSEMBLE_H__
 
 #include "world.h"
-#include "geometry.h"
 #include "neighbors.h"
-struct world_t;
 
 enum players{
   PLAYER_WHITE = 2 ,
   PLAYER_BLACK = 1 ,
 };
 
-
 // The position_info includes the positions in the begin (initial)
 // the allowed moves and the where the peaces are at the moment
-struct position_info;
-
-// Initialize the informations.
 struct positions_info { 
   /*  at this poin we don't have to define a structure for possible mouvements of each player */
   unsigned int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
@@ -27,22 +21,14 @@ struct positions_info {
   unsigned int TURNS;  // Played turns in the game.
 };
 
-
-void add_to_current_piece(struct positions_info positions_info, enum players player, unsigned int idx);
-
-// Initialize current pieces for black and white.
-
 // Furthermore it sets the world the beginning position.
-void init_players(struct world_t* b, struct positions_info positions_info);
+void init_players(struct world_t* b);
 
 // Is a bool function and returns 1 if new_idx is a neighbor to ex_idx.
 int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx);
 
-//
-struct positions_info* init_infos();
-
-//
-void init_infos_2(struct positions_info* infos);
+// Initialize current pieces for black and white.
+void init_infos(struct positions_info* infos);
 
 // Is a help/bool function, which returns 1 if the 
 int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
@@ -81,17 +67,18 @@ void print_init_players(struct positions_info positions);
 // Help function.
 void print_current(struct positions_info positions);
 
-// Bool function.
+// Bool function for the simple win.
 int simple_win(struct world_t* world, enum players player, struct positions_info infos);
 
-// the winner is the first player to cover all the other player's starting positions 
+// The winner is the first player to cover all the other player's starting positions 
 // with his pieces before MAX_TURNS turns.
 int complex_win(struct world_t* world, enum players player, struct positions_info infos);
 
-// We need to create some functions here, which we define later.
+// Another help function.
 void print_current_pieces(struct positions_info infos);
 
-//
+// To fix an error.
 int count_pieces(struct world_t* world);
+
 
 #endif // __ENSEMBLE_H__

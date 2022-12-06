@@ -1,25 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "world.h"
 #include "ensemble.h"
 #define UINT_MAX 100
-// _____________________
+
 struct world_t{ 
   enum color_t colors[WORLD_SIZE];
   enum sort_t sorts[WORLD_SIZE];
 };
 
-// ___________________
-
-
-// ___________________
-
-
-//this function initialize the infomations about players , we will initialize our world and informations separatly 
-
 // I think that "struct positions_info* init_infos()" was making a lot of problems.
 // If you use this function for the initializing, the update function works.
-void init_infos_2(struct positions_info* infos) {
+void init_infos(struct positions_info* infos) {
   int a = 0;
   int b = HEIGHT-1;
   for (int i = 0; i < HEIGHT ; ++i){
@@ -36,7 +29,7 @@ void init_infos_2(struct positions_info* infos) {
 
 /* it's the function that give for each player his initial positions , we suppose the initially the player with white pawns 
 will take the last column at the left edge and the other player will take the last column at the right edge */
-void init_players(struct world_t* b, struct positions_info positions_info) {
+void init_players(struct world_t* b) {
     //struct positions_info positions_info;
     for (int i = 0; i < WORLD_SIZE; ++i) {
         // In the begin we put the white pieces to the left and the black pieces to the right.
@@ -51,9 +44,8 @@ void init_players(struct world_t* b, struct positions_info positions_info) {
     }
 }
 
-//_____________________________a list of functions that will help us for the move_player function :
-/*this one verify if new_idx is a neighbor of ex_idx*/
-
+// A list of functions that will help us for the move_player function :
+// this one verify if new_idx is a neighbor of ex_idx.
 int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx){
   struct neighbors_t neighbors = get_neighbors(ex_idx); //we use get_neighbor to get the neighbors list of ex_idx 
   for ( int j=0; j < MAX_NEIGHBORS; ++j){
@@ -64,23 +56,23 @@ int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx){
   return 0;
 }
 
+// For Black peaces we only want to go to the left / west.
 int is_neighbor_black(unsigned int ex_idx, unsigned int new_idx) {
-  struct neighbors_t neighbors;
   if (new_idx == get_neighbor(ex_idx, NEAST) || new_idx == get_neighbor(ex_idx, EAST) || new_idx == get_neighbor(ex_idx, SEAST)) {
     return 0;
   }
   return 1;
 }
 
+// For White peaces we only want to go to the right / east.
 int is_neighbor_white(unsigned int ex_idx, unsigned int new_idx) {
-  struct neighbors_t neighbors;
   if (new_idx == get_neighbor(ex_idx, NWEST) || new_idx == get_neighbor(ex_idx, WEST) || new_idx == get_neighbor(ex_idx, SWEST)) {
     return 0;
   }
   return 1;
 }
 
-
+// Next two functions are help functions.
 int is_current_piece_White( struct positions_info infos, unsigned int ex_idx) {
   for (int i = 0; i < HEIGHT; ++i) {
     if (infos.current_pieces_WHITE[i] == ex_idx) {
@@ -100,7 +92,7 @@ int is_current_piece_Black( struct positions_info infos, unsigned int ex_idx) {
 }
 
 
-/*this one verify if it is an allowed simple move */
+// This one verify if it is an allowed simple move.
 int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player) {
   case PLAYER_WHITE:
@@ -127,18 +119,13 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   return 0;
 }
 
-//this function update player's information after every move 
-
-
-
+// This function update player's information after every move.
 void update_current_pieces(enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
 switch (player){
   case PLAYER_BLACK:
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_BLACK[i] == ex_idx ){
-          // printf("Black[%d] is currently: %d\n",i , infos->current_pieces_BLACK[i]);
 	        infos->current_pieces_BLACK[i] = new_idx;
-          // printf("I updated BLACK[%d] = %d\n",i, infos->current_pieces_BLACK[i]);
           ++infos->TURNS;
         }
       }
@@ -146,9 +133,7 @@ switch (player){
   case PLAYER_WHITE:
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
-         // printf("White[%d] is currently: %d\n",i , infos->current_pieces_WHITE[i]);
 	        infos->current_pieces_WHITE[i] = new_idx;
-          //printf("I updated White[%d] = %d\n",i, infos->current_pieces_WHITE[i]);
           ++infos->TURNS;
        }
     }
@@ -157,14 +142,14 @@ switch (player){
     break;
   }
 }
-//_______________
+
 void print_current_pieces(struct positions_info infos){
     for(int i=0 ; i < HEIGHT; ++i){
           printf("%d   %d\n \n", infos.current_pieces_BLACK[i], infos.current_pieces_WHITE[i]);
     }
 }
 
-// this is our function that do the move if it is allowed
+// This is our function that do the move if it is allowed.
 void simple_move_player(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
@@ -174,9 +159,7 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
       update_current_pieces(player, infos, ex_idx, new_idx);
-      // print_current_pieces(infos);
-    //  ++infos->TURNS;
-       // We update the information about the current pieces here, because there is a problem with the index.
+      // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
   case PLAYER_WHITE: //player with white_pawn
@@ -185,10 +168,7 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      //print_current_pieces(infos);
       update_current_pieces(player, infos, ex_idx, new_idx);
-      // print_current_pieces(infos);
-     // ++infos->TURNS;
     }
     break;
   default:
@@ -196,8 +176,8 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
   }
 
 }
-//_______________________________________________ the jump function_____________________________
-//this first auxillary gives us the number of neighbors of a position , it will help us with the loops 
+//______________________________________________the jump function_____________________________
+// This first auxillary gives us the number of neighbors of a position, it will help us with the loops. 
 int number_of_neighbors(struct neighbors_t neighbors) {
   int c=0;
   for(int j=0; j < MAX_NEIGHBORS; ++j){
@@ -208,7 +188,7 @@ int number_of_neighbors(struct neighbors_t neighbors) {
   return c;
 }
 
-// this one tells us if the jump is possible
+// This one tells us if the jump is possible
 int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned int new_idx){
   if (is_new_ex_neighbor(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't jump on it only simple move 
     struct neighbors_t neighbors = get_neighbors(ex_idx); // we get the neighbors of ex_idx  
@@ -218,7 +198,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
             unsigned int tmp_position = neighbors.n[j].i; // we use tmporary variables to reduce complexity
             enum dir_t tmp_dir = neighbors.n[j].d;
             if(world->sorts[tmp_position] == PAWN){  //if the neighbor position is filled with a pawn
-                struct neighbors_t neighbors_of_tmp = get_neighbors(tmp_position); // we get neighbors of this tmp_position
+                // struct neighbors_t neighbors_of_tmp = get_neighbors(tmp_position); // we get neighbors of this tmp_position
                 unsigned int neighbor_in_same_dir = get_neighbor(tmp_position, tmp_dir); // we get the position that is a neighbor of this tmp_neighbor in the 
                       //same direction that tmp_neighbor is neighbor of ex_idx (we got the neighbor of the neighbor of ex_idx in the same direction)
                 if((neighbor_in_same_dir == new_idx)  && (world->sorts[neighbor_in_same_dir] == 0) ){ /*we check if it is the position that we want to go in 
@@ -233,7 +213,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
     return 0;
 }
 
-// it's our main jump function 
+// It's our main jump function.
 void simple_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
   switch (player){
     case PLAYER_WHITE:
@@ -321,7 +301,7 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
   case PLAYER_WHITE:
     while (a) {
       a = 0;
-      // Forward move: For white it means to jump +2
+      // Forward move: For white it means to jump +2.
       if (is_allowed_simple_jump(world, new_idx, new_idx + 2)) {
         simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx + 2);
         a = 1;
@@ -344,19 +324,19 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
   case PLAYER_BLACK:
     while (a) {
       a = 0;
-      // Forward move: is the same as with player white only mirror-inverted. 
+      // Forward move: Is the same as with player white only mirror-inverted. 
       if (is_allowed_simple_jump(world, new_idx, new_idx - 2)) {
         simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx - 2);
         a = 1;
         new_idx = new_idx - 2;
       }
-      // Forward left movee
+      // Forward left move.
       else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH-2))) {
         simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2));
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
-      // Forward right move
+      // Forward right move.
       else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH+2))) {
         simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2));
         a = 1;
@@ -370,8 +350,7 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
   return new_idx;
 }
 
-//____________________________________________________
-//this one print our world so we that we can see changes every time
+// This one print our world so we that we can see changes every time
 void print_world( struct world_t* world) {
   for (int i=0; i< WORLD_SIZE ; ++i){
     if( i%HEIGHT == 0 && i != 0 ){
@@ -384,8 +363,7 @@ void print_world( struct world_t* world) {
   }
 }
 
-
-//________________________________________________test functions _________________________
+// Test functions.
 void print_init_players(struct positions_info positions) {
   for(int i=0; i<HEIGHT; ++i){
     printf("%d   %d\n ", positions.current_pieces_BLACK[i], positions.current_pieces_WHITE[i]);
@@ -393,17 +371,13 @@ void print_init_players(struct positions_info positions) {
   }
 }
 
-
 void print_current(struct positions_info positions) {
   for(int i=0; i<HEIGHT; ++i ){
     printf("%d   %d\n ", positions.current_pieces_BLACK[i], positions.current_pieces_WHITE[i]);
   }
 }
 
-
-// ________________________a test with two rounds game
-
-// Simple win function: the winner is the first player to reach with one of his pieces 
+// Simple win function: The winner is the first player to reach with one of his pieces 
 // one of the other player's starting positions before MAX_TURNS turns.
 int simple_win(struct world_t* world, enum players player, struct positions_info infos) {
   if (infos.TURNS <= infos.MAX_TURNS) {
@@ -463,6 +437,7 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
   return 0;
 }
 
+// Used this function to be sure the peaces are updated.
 int count_pieces(struct world_t* world) {
     int b = 0;
     int w = 0;
@@ -482,4 +457,3 @@ int count_pieces(struct world_t* world) {
     }
     return b;
 }
-
