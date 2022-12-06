@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "geometry.h"
+
 const char* place_to_string(enum color_t c, enum sort_t s){
-  if ( s == 1 ){
+  if (s == PAWN) {
     switch (c){
     case 1:
       return "BLACK";
@@ -19,10 +20,9 @@ const char* place_to_string(enum color_t c, enum sort_t s){
       break;
     }
   }
-  else{
-    return "NO SORT";
-  }
+  return "NO SORT";
 }
+
 const char* dir_to_string(enum dir_t d){
   switch (d){
   case 1:
@@ -50,23 +50,10 @@ const char* dir_to_string(enum dir_t d){
     return "SEAST";
     break;
   case 9:
-    return "EMPTY DIRECTION";
-    break;
-  case 0 :
-    return "NO DIR";
+    return "MAX_DIR";
     break;
   default:
-    return "NO DIR";
+    return "NO_DIR";
     break;
   }
 }
-
-/*
-int main(int argc, char *argv[]){
-  enum color_t c = WHITE;
-  enum sort_t s = PAWN;
-  printf("The case is: %s\n",place_to_string(c,s));
-  return 0;
-}
-
-*/
