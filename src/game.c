@@ -18,11 +18,12 @@ SIMPLE_JUMP = 2,
 MULTIPLE_JUMP = 3, 
 };
 
-//
+//we add the types of victory
 enum victory{
     COMPLEX_WIN = 1,
     SIMPLE_WIN = 2,
 };
+
 // We define a structure that will give us all the data about the move.
 struct move{
     unsigned int ex_idx;
@@ -152,7 +153,7 @@ void move_current_player(struct world_t* world, enum players player, struct posi
     }
 }
 
-
+//we do a function that do the simple game
 int simple_win_game(struct world_t* world, struct positions_info infos , unsigned int MAX_TURNS, enum players current_player){
     while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
@@ -186,6 +187,8 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
     printf("There is no Winner.\n");
     return 0;
 }
+//we do a function that do the complex game, we did it we int output so as if there is an error 
+//the game stop
 int complex_win_game(struct world_t* world, struct positions_info infos, unsigned int MAX_TURNS , enum players current_player){
     while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
@@ -230,22 +233,22 @@ int main(int argc, const char *argv[]){
     init_players(world);
     enum players current_player = get_random_player();
     //unsigned int MAX_TURNS = (argc > 1) ? atoi(argv[1]) : 2*WORLD_SIZE ;
-    enum victory victory_type = SIMPLE_WIN;
-    unsigned int MAX_TURNS = 2*WORLD_SIZE;
-    int s = rand()%WORLD_SIZE;
+    enum victory victory_type = SIMPLE_WIN; //we take by default a SIMPLE_WIN game
+    unsigned int MAX_TURNS = 2*WORLD_SIZE; // we take as default MAX_TURNS = 2*WORLD_SIZE
+    int s = rand(); 
     int opt;
     //we use getopt to take arguments -s -t -m from command line
-    while((opt = getopt(argc, argv, "s:m:t:")) != -1) 
-    { 
+    while((opt = getopt(argc, argv, "s:m:t:")) != -1) //the ser of argument we have is s m t
+    {  //getopt return -1 when there is no more argument from the command line
         switch(opt) 
         { 
             case 's': 
                 //printf("optarg s :%s\n", optarg);
-                if(optarg == NULL){
-                    s=rand()%WORLD_SIZE;
+                if(optarg == NULL){ //if there is no value for the argument
+                    s=rand()%WORLD_SIZE; //we set a random value
                 }
                 else{
-                    s = atoi(optarg)%WORLD_SIZE ;
+                    s = atoi(optarg) ;
                 }
                 break;
             case 'm':
@@ -254,6 +257,7 @@ int main(int argc, const char *argv[]){
                 break;
             case 't': 
                 //printf("optarg t:%s\n", optarg);
+                //note that optarg which is the value of the argument -t is a char* type 
                 if(strlen(optarg)==1 && optarg[0] == 'c'){
                     victory_type = COMPLEX_WIN;
                 }
@@ -277,6 +281,6 @@ int main(int argc, const char *argv[]){
             simple_win_game(world, infos, MAX_TURNS, current_player);
             break;
     }
-    destroyWorld(world);
+    destroyWorld(world); // we free the allocated memory space for world at the end
     return 0;
 }
