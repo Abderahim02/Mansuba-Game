@@ -1,7 +1,7 @@
 WIDTH ?= 10
 HEIGHT ?= 10
 GCC = gcc
-MANSUBA_FLAGS = -DWIDTH=$(WIDTH) -DHEIGHT=$(HEIGHT)
+MANSUBA_FLAGS = -DWIDTH=$(WIDTH) -DHEIGHT=$(HEIGHT) 
 CFLAGS = -Wall -Wextra -std=c99 -g3 $(MANSUBA_FLAGS)
 
 all: project
@@ -21,7 +21,7 @@ project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o
 	$(GCC) $(CFLAGS) src/game.c src/ensemble.o  src/neighbors.o src/world.o src/geometry.o -o project
 
 test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o 
-	$(GCC) $(CFLAGS)  tst/test.c src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
+	$(GCC) $(CFLAGS)  tst/test.c src/game.o src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
 
 clean:
 	rm -f project test *.o *~

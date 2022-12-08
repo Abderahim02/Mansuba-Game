@@ -4,12 +4,6 @@
 #include "world.h"
 #include "ensemble.h"
 #define UINT_MAX 100
-
-struct world_t{ 
-  enum color_t colors[WORLD_SIZE];
-  enum sort_t sorts[WORLD_SIZE];
-};
-
 // I think that "struct positions_info* init_infos()" was making a lot of problems.
 // If you use this function for the initializing, the update function works.
 void init_infos(struct positions_info* infos) {

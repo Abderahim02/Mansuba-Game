@@ -5,6 +5,8 @@
 #include "geometry.h"
 #include "neighbors.h"
 #include "ensemble.h"
+#include <unistd.h>
+#include <getopt.h>
 // For creating a real random number.
 #include <time.h>
 
@@ -14,6 +16,12 @@ enum move_types{
 SIMPLE_MOVE = 1,
 SIMPLE_JUMP = 2,
 MULTIPLE_JUMP = 3, 
+};
+
+//
+enum victory{
+    COMPLEX_WIN = 1,
+    SIMPLE_WIN = 2,
 };
 // We define a structure that will give us all the data about the move.
 struct move{
@@ -132,6 +140,7 @@ void move_current_player(struct world_t* world, enum players player, struct posi
                 break;
             case SIMPLE_JUMP:
                 simple_jump(world, player, infos, move.ex_idx, move.new_idx);
+                // printf("I did a simple JUMP!! \n");
                 break;
             case SIMPLE_MOVE:
                 simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
@@ -143,16 +152,9 @@ void move_current_player(struct world_t* world, enum players player, struct posi
     }
 }
 
-// The game:
-int main(int argc, char *argv[]){
-   // int MAX_TURNS= atoi(argv[1]);
-    struct world_t* world = world_init();
-    struct positions_info infos;
-    srand(time(0));
-    init_infos(&infos);
-    init_players(world);
-    enum players current_player = get_random_player();
-    while(nobody_has_won(world, infos) && infos.TURNS < WORLD_SIZE) {
+
+int simple_win_game(struct world_t* world, struct positions_info infos , unsigned int MAX_TURNS, enum players current_player){
+    while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, current_player, &infos, p);
         move_current_player( world, current_player, &infos, random_move);
@@ -164,7 +166,7 @@ int main(int argc, char *argv[]){
         printf("_____________________________\n");
         if(simple_win(world, current_player, infos)){
             char *victor = (current_player == PLAYER_WHITE)? "PLAYER_WHITE" : "PLAYER_BLACK" ;
-            printf("the winner is : %s\n", victor);
+            printf("the winner for the simple game is : %s\n", victor);
             return 1;
         }
         // We leave this If funtion here, because it's usefull for fixing further problems
@@ -177,11 +179,104 @@ int main(int argc, char *argv[]){
         }
         else {
             current_player = next_player(current_player);
-        usleep(50 * 1000);
-        ++infos.MAX_TURNS;
+        usleep(50* 1000);
+        //++infos.MAX_TURNS;
+        }
+    }
+    printf("There is no Winner.\n");
+    return 0;
+}
+int complex_win_game(struct world_t* world, struct positions_info infos, unsigned int MAX_TURNS , enum players current_player){
+    while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
+        unsigned int p = choose_random_piece_belonging_to(infos, current_player);
+        struct move random_move = choose_random_move_for_piece(world, current_player, &infos, p);
+        move_current_player( world, current_player, &infos, random_move);
+        print_current_pieces(infos);
+        print_world(world);        
+        printf("\n");
+        printf("PLayed turns: %d\n", infos.TURNS);
+        printf("\n");
+        printf("_____________________________\n");
+        if(complex_win(world, current_player, infos)){
+            char *victor = (current_player == PLAYER_WHITE)? "PLAYER_WHITE" : "PLAYER_BLACK" ;
+            printf("the winner for the complex is : %s\n", victor);
+            return 1;
+        }
+        // We leave this If funtion here, because it's usefull for fixing further problems
+        // And helped us fixing old problems.
+        if (count_pieces(world) != 10) {
+            printf("ERROR!!!!!!!!!!!!!!!!!!!! \n");
+            printf("%d\n", count_pieces(world));
+            printf("Choosen peace was: %d\n", p);
+            return 1;
+        }
+        else {
+            current_player = next_player(current_player);
+        usleep(50* 1000);
+        //++infos.MAX_TURNS;
         }
     }
     printf("There is no Winner.");
+    return 0;
+}
+
+// The game:
+int main(int argc, const char *argv[]){
+   // int MAX_TURNS= atoi(argv[1]);
+    struct world_t* world = world_init();
+    struct positions_info infos;
+    srand(time(0));
+    init_infos(&infos);
+    init_players(world);
+    enum players current_player = get_random_player();
+    //unsigned int MAX_TURNS = (argc > 1) ? atoi(argv[1]) : 2*WORLD_SIZE ;
+    enum victory victory_type = SIMPLE_WIN;
+    unsigned int MAX_TURNS = 2*WORLD_SIZE;
+    int s = rand()%WORLD_SIZE;
+    int opt;
+    //we use getopt to take arguments -s -t -m from command line
+    while((opt = getopt(argc, argv, "s:m:t:")) != -1) 
+    { 
+        switch(opt) 
+        { 
+            case 's': 
+                //printf("optarg s :%s\n", optarg);
+                if(optarg == NULL){
+                    s=rand()%WORLD_SIZE;
+                }
+                else{
+                    s = atoi(optarg)%WORLD_SIZE ;
+                }
+                break;
+            case 'm':
+                //printf("optarg m :%s\n", optarg);
+                MAX_TURNS = (optarg != NULL) ? atoi(optarg) : 2*WORLD_SIZE ;
+                break;
+            case 't': 
+                //printf("optarg t:%s\n", optarg);
+                if(strlen(optarg)==1 && optarg[0] == 'c'){
+                    victory_type = COMPLEX_WIN;
+                }
+                else{
+                    victory_type = SIMPLE_WIN ;
+                }
+                break;
+            default:
+                break;
+        } 
+    } 
+    printf("s=%d\n", s);
+    printf("m = %d\n", MAX_TURNS );
+    printf("vic type %d\n", victory_type);
+    
+    switch (victory_type){
+        case COMPLEX_WIN:
+            complex_win_game(world, infos, MAX_TURNS, current_player);
+            break;
+        default:
+            simple_win_game(world, infos, MAX_TURNS, current_player);
+            break;
+    }
     destroyWorld(world);
     return 0;
 }
