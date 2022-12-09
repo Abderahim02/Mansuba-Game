@@ -5,29 +5,14 @@
 #include <string.h>
 #include "ensemble.h"
 
-
-
-// NOt working yet.
-// // Test if this file is working.
-// TEST(test, test1) {
-//     printf("Works\n");
-//     // ASSERT_EQ(0,0);
 // }
+//simple test function for get neighbors of the position 5
+void test_get_neighbors(struct world_t* world){
+    struct neighbors neighbors = get_neighbors(5);
+    for(int j; j<HEIGHT; ++j){
+        if(neighbors.n[j].i != UINT_MAX || neighbors.n[j].i ==4 || 14 || neighbors.n[j].i ==15 || neighbors.n[j].i ==16 || neighbors.n[j].i ==15 || neighbors.n[j].i ==6){
+            printf("%d is neighbor of 5 in direction %d\n test passed", neighbors.n[j].i, neighbors.n[j].d);
+        }
+    }
+}
 
-// Test for the init_infos function.
-// TEST(ensemble, init_infos) {
-//     struct positions_info infos;
-//     init_infos(&infos);
-//     int a = 0;
-//     int b = HEIGHT-1;
-//     for (int i = 0; i < HEIGHT ; ++i) {
-//         printf("%d = %d\n",b ,infos.current_pieces_BLACK[i]);
-//         printf("%d = %d\n",a ,infos.current_pieces_WHITE[i]);
-//         // ASSERT_EQ(b, infos.current_pieces_BLACK[i]);
-//         // ASSERT_EQ(a, infos.current_pieces_WHITE[i]);
-//         a = a + HEIGHT;
-//         b = b + HEIGHT;
-//     }
-//     // ASSERT_EQ(WORLD_SIZE, infos.MAX_TURNS);
-//     // ASSERT_EQ(0, infos.TURNS);
-// }
