@@ -5,29 +5,33 @@
 #include <string.h>
 #include "ensemble.h"
 
+// A test for the world_get() function.
+void test_world_get(struct world_t* world) {
+    if (world_get(world,20) == NO_COLOR && world_get_sort(world,10) == NO_SORT) {
+        printf("World_get_Test1 passed.\n");
+    }
+    if (world_get(world,20) != NO_COLOR || world_get_sort(world,10) != NO_SORT) {
+        printf("World_get_Test1 failed.\n");
+    }
+}
+
+// A test for the world_set function.
+void test_world_set(struct world_t* world) {
+    world_set(world, 15, BLACK);
+    world_set_sort(world, 18, PAWN);
+    if (world_get(world,15) == BLACK && world_get_sort(world,18) == PAWN) {
+        printf("World_get_Test1 passed.\n");
+    }
+    if (world_get(world,15) != BLACK || world_get_sort(world,18) != PAWN) {
+        printf("World_get_Test1 failed.\n");
+    }
+}
 
 
-// NOt working yet.
-// // Test if this file is working.
-// TEST(test, test1) {
-//     printf("Works\n");
-//     // ASSERT_EQ(0,0);
-// }
-
-// Test for the init_infos function.
-// TEST(ensemble, init_infos) {
-//     struct positions_info infos;
-//     init_infos(&infos);
-//     int a = 0;
-//     int b = HEIGHT-1;
-//     for (int i = 0; i < HEIGHT ; ++i) {
-//         printf("%d = %d\n",b ,infos.current_pieces_BLACK[i]);
-//         printf("%d = %d\n",a ,infos.current_pieces_WHITE[i]);
-//         // ASSERT_EQ(b, infos.current_pieces_BLACK[i]);
-//         // ASSERT_EQ(a, infos.current_pieces_WHITE[i]);
-//         a = a + HEIGHT;
-//         b = b + HEIGHT;
-//     }
-//     // ASSERT_EQ(WORLD_SIZE, infos.MAX_TURNS);
-//     // ASSERT_EQ(0, infos.TURNS);
-// }
+// The main function for the tests.
+int main() {
+    struct world_t* world = world_init();
+    test_world_get(world);
+    test_world_set(world);
+    return 0;
+}
