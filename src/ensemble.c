@@ -3,7 +3,7 @@
 #include <string.h>
 #include "world.h"
 #include "ensemble.h"
-#define UINT_MAX 100
+#define UINT_MAX WORLD_SIZE 
 // I think that "struct positions_info* init_infos()" was making a lot of problems.
 // If you use this function for the initializing, the update function works.
 void init_infos(struct positions_info* infos) {
