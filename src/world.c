@@ -16,17 +16,6 @@ struct world_t* world_init(){
   }
     return  monde;
 }
-//this function will destroy the allocated space in memory 
-void destroyWorld (struct world_t* world) {
-   // for (int i = 0; i < WORLD_SIZE; i++){
-        //git add ga  free(world->colors[i]);
-       // free(world->sorts[i]);
-     //   }
-    //free(world->sorts);
-    //free(world->colors);
-    free(world);
-}
-
 enum color_t world_get( const struct world_t* b, unsigned int idx){
   return b->colors[idx] ;
 }

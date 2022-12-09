@@ -24,6 +24,8 @@ struct positions_info {
   unsigned int MAX_TURNS; // Maximum allowed turns = WORLD SIZE
   unsigned int TURNS;  // Played turns in the game.
 };
+//to fix the valgrind problem
+void destroyWorld (struct world_t* world);
 
 // Furthermore it sets the world the beginning position.
 void init_players(struct world_t* b);
