@@ -224,7 +224,7 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
 }
 
 // The game:
-int main(int argc, const char *argv[]){
+int main(int argc, char *const argv[]){
    // int MAX_TURNS= atoi(argv[1]);
     struct world_t* world = world_init();
     struct positions_info infos;
@@ -273,14 +273,14 @@ int main(int argc, const char *argv[]){
     printf("m = %d\n", MAX_TURNS );
     printf("vic type %d\n", victory_type);
     
-    switch (victory_type){
+    /*switch (victory_type){
         case COMPLEX_WIN:
             complex_win_game(world, infos, MAX_TURNS, current_player);
             break;
         default:
             simple_win_game(world, infos, MAX_TURNS, current_player);
             break;
-    }
+    }*/
     destroyWorld(world); // we free the allocated memory space for world at the end
     return 0;
 }
