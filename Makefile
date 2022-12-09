@@ -27,7 +27,7 @@ test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o
 	$(GCC) $(CFLAGS)  -I src tst/test.c src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
 
 clean:
-	rm -f project test *.o *~
+	rm -f project tst/*.o  src/*.o *~
 
 
 
