@@ -158,13 +158,16 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
     while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, current_player, &infos, p);
-        move_current_player( world, current_player, &infos, random_move);
-        print_current_pieces(infos);
-        print_world(world);        
-        printf("\n");
-        printf("PLayed turns: %d\n", infos.TURNS);
-        printf("\n");
-        printf("_____________________________\n");
+        // We are using this if test because sometimes it gives us an unkown move.
+        if (random_move.type == 1 || random_move.type == 2 || random_move.type == 3) {
+            move_current_player( world, current_player, &infos, random_move);
+            print_current_pieces(infos);
+            print_world(world);        
+            printf("\n");
+            printf("PLayed turns: %d\n", infos.TURNS);
+            printf("\n");
+            printf("_____________________________\n");
+        }
         if(simple_win(world, current_player, infos)){
             char *victor = (current_player == PLAYER_WHITE)? "PLAYER_WHITE" : "PLAYER_BLACK" ;
             printf("the winner for the simple game is : %s\n", victor);
@@ -180,8 +183,8 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
         }
         else {
             current_player = next_player(current_player);
-        usleep(50* 1000);
-        ++infos.MAX_TURNS;
+            usleep(50* 1000);
+            ++infos.MAX_TURNS;
         }
     }
     printf("There is no Winner.\n");
@@ -193,13 +196,16 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
     while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
         struct move random_move = choose_random_move_for_piece(world, current_player, &infos, p);
-        move_current_player( world, current_player, &infos, random_move);
-        print_current_pieces(infos);
-        print_world(world);        
-        printf("\n");
-        printf("PLayed turns: %d\n", infos.TURNS);
-        printf("\n");
-        printf("_____________________________\n");
+        // We are using this if test because sometimes it gives us an unkown move.
+        if (random_move.type == 1 || random_move.type == 2 || random_move.type == 3) {
+            move_current_player( world, current_player, &infos, random_move);
+            print_current_pieces(infos);
+            print_world(world);        
+            printf("\n");
+            printf("PLayed turns: %d\n", infos.TURNS);
+            printf("\n");
+            printf("_____________________________\n");
+        }
         if(complex_win(world, current_player, infos)){
             char *victor = (current_player == PLAYER_WHITE)? "PLAYER_WHITE" : "PLAYER_BLACK" ;
             printf("the winner for the complex is : %s\n", victor);
@@ -283,7 +289,5 @@ int main(int argc, char *const argv[]){
             simple_win_game(world, infos, MAX_TURNS, current_player);
             break;
     }
-    //free(world);
-    //destroyWorld(world); // we free the allocated memory space for world at the end
     return 0;
 }
