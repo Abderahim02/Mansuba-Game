@@ -284,6 +284,6 @@ int main(int argc, char *const argv[]){
             break;
     }
     //free(world);
-    destroyWorld(world); // we free the allocated memory space for world at the end
+    //destroyWorld(world); // we free the allocated memory space for world at the end
     return 0;
 }

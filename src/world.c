@@ -8,20 +8,21 @@ struct world_t{
 };
 
 // We used malloc, because we can't return a pointer which we defined inside the function.
+struct world_t monde ;
 struct world_t* world_init(){
-  struct world_t* monde = malloc(sizeof(struct world_t));
+  //struct world_t* monde = malloc(sizeof(struct world_t));
   for(int i=0; i < WORLD_SIZE; ++i){ 
-      monde->colors[i] = NO_COLOR;   
-      monde->sorts[i] = NO_SORT;
+      monde.colors[i] = NO_COLOR;   
+      monde.sorts[i] = NO_SORT;
   }
-    return  monde;
+    return  &monde;
 }
-//this function will destroy the allocated space in memory 
-void destroyWorld (struct world_t* world) {
-    free(world->colors);   
-    free(world->sorts);
-    free(world);
-}
+// //this function will destroy the allocated space in memory 
+// void destroyWorld (struct world_t* world) {
+//     free(world->colors);   
+//     free(world->sorts);
+//     free(world);
+// }
 
 enum color_t world_get( const struct world_t* b, unsigned int idx){
   return b->colors[idx] ;
