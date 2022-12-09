@@ -82,9 +82,9 @@ struct move choose_random_move_for_piece(struct world_t* world, enum players pla
     move.ex_idx = ex_idx;
     unsigned int i = 45;
     while(is_allowed_simple_jump(world, ex_idx, i)==0 && is_allowed_to_simple_move(world, player, infos, ex_idx, i) == 0 
-        && is_multi_jump_allowed(world, player, infos, ex_idx) == 0){
+        && is_multi_jump_allowed(world, player, ex_idx) == 0){
         i = rand() % WORLD_SIZE;
-        if (is_multi_jump_allowed(world, player, infos, ex_idx)) { /*we favorises the multiple jump mouvement*/
+        if (is_multi_jump_allowed(world, player, ex_idx)) { /*we favorises the multiple jump mouvement*/
             move.type = MULTIPLE_JUMP;
             return move;
         }
@@ -131,7 +131,7 @@ void simple_move_current_player(struct world_t* world, enum players player, stru
 
 // This function does the move
 void move_current_player(struct world_t* world, enum players player, struct positions_info* infos, struct move move){
-    if (move.type != 0) {
+    if (move.type == 1 || move.type == 2 || move.type == 3) {
         switch (move.type){
             // Here we are favorising the Multiple Jump after it, the simple jump.
             case MULTIPLE_JUMP:
@@ -181,7 +181,7 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
         else {
             current_player = next_player(current_player);
         usleep(50* 1000);
-        //++infos.MAX_TURNS;
+        ++infos.MAX_TURNS;
         }
     }
     printf("There is no Winner.\n");
@@ -216,7 +216,7 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
         else {
             current_player = next_player(current_player);
         usleep(50* 1000);
-        //++infos.MAX_TURNS;
+        ++infos.MAX_TURNS;
         }
     }
     printf("There is no Winner.");

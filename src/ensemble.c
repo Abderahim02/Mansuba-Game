@@ -243,7 +243,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
 }
 
 // Test function is multiple jump is possible.
-unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx) {
+unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, unsigned int ex_idx) {
 unsigned int new_idx= ex_idx;
 int a = 1;
   switch (player) {
