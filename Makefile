@@ -24,7 +24,7 @@ game.o: src/game.c
 	gcc -c $(CFLAGS) src/game.c
 
 test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/game.o
-	$(GCC) $(CFLAGS)  tst/test.c src/game.o src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
+	$(GCC) $(CFLAGS)  -I src tst/test.c src/game.o src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
 
 clean:
 	rm -f project tst/*.o  src/*.o *~
