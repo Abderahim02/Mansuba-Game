@@ -223,6 +223,8 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
     return 0;
 }
 
+
+
 // The game:
 int main(int argc, char *const argv[]){
    // int MAX_TURNS= atoi(argv[1]);
@@ -281,7 +283,7 @@ int main(int argc, char *const argv[]){
             simple_win_game(world, infos, MAX_TURNS, current_player);
             break;
     }
-    free(world);
-    //destroyWorld(world); // we free the allocated memory space for world at the end
+    //free(world);
+    destroyWorld(world); // we free the allocated memory space for world at the end
     return 0;
 }
