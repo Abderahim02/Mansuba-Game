@@ -6,10 +6,10 @@
 #define UINT_MAX WORLD_SIZE 
 
 
-//this function will destroy the allocated space in memory 
-void destroyWorld (struct world_t* world) {
-    free(world);
-}
+// //this function will destroy the allocated space in memory 
+// void destroyWorld (struct world_t* world) {
+//     free(world);
+// }
 
 
 

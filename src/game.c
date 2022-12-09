@@ -281,6 +281,7 @@ int main(int argc, char *const argv[]){
             simple_win_game(world, infos, MAX_TURNS, current_player);
             break;
     }
-    destroyWorld(world); // we free the allocated memory space for world at the end
+    free(world);
+    //destroyWorld(world); // we free the allocated memory space for world at the end
     return 0;
 }
