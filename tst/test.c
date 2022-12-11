@@ -36,13 +36,25 @@ void test_world_set(struct world_t* world) {
     }
 }
 
+// void test_is_allowed_elephant_move( struct world_t* world, enum players player, struct positions_info* infos){
+//     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
+// }
 
 // The main function for the tests.
 int main() {
     struct world_t* world = world_init();
-    test_world_get(world);
+    struct positions_info infos;
+    init_infos(&infos);
+    init_players(world);
+    /*test_world_get(world);
     test_world_set(world);
     struct neighbors_t neighbors = get_neighbors(5);
     test_get_neighbors(neighbors);
+    */
+    //simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
+    print_world(world);
+    // test_is_allowed_elephant_move(world, PLAYER_WHITE, &infos );
+    //simple_move_player(world, PLAYER_WHITE, &infos, 20,21);
+    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 0, 2));
     return 0;
 }
