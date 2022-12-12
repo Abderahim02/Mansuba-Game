@@ -26,11 +26,12 @@ enum color_t {
 
 /** Enum defining the possible sorts of pieces in the world */
 enum sort_t {
-  NO_SORT  = 0,   // Default sort (i.e nothing)
-  PAWN     = 1,
-  TOWER    = 2,
-  ELEPHANT = 3,
-  MAX_SORT = 4,   // Total number of different sorts
+  NO_SORT   = 0,   // Default sort (i.e nothing)
+  PAWN      = 1,
+  TOWER     = 2,
+  ELEPHANT  = 3,
+  MAX_SORT  = 4, 
+    // Total number of different sorts
 };
 
 /** Enum defining the possible directions in the world

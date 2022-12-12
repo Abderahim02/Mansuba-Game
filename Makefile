@@ -23,8 +23,11 @@ project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o
 game.o: src/game.c
 	gcc -c $(CFLAGS) src/game.c
 
-test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o
-	$(GCC) $(CFLAGS)  -I src tst/test.c src/ensemble.o  src/neighbors.o src/geometry.o src/world.o -o test
+pawns.o: src/pawns.c
+	gcc -c $(CFLAGS) src/pawns.c
+
+test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o
+	$(GCC) $(CFLAGS)  -I src tst/test.c src/ensemble.o  src/pawns.o src/neighbors.o src/geometry.o src/world.o -o test
 
 clean:
 	rm -f project tst/*.o  src/*.o *~
