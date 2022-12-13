@@ -17,14 +17,16 @@ ensemble.o: src/ensemble.c
 geometry.o: src/geometry.c
 	gcc -c $(CFLAGS) src/geomerty.c
 
-project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o
-	$(GCC) $(CFLAGS) src/game.c src/ensemble.o  src/neighbors.o src/world.o src/geometry.o -o project
+pawns.o: src/pawns.c
+	gcc -c $(CFLAGS) src/pawns.c
+
+project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o
+	$(GCC) $(CFLAGS) src/game.c src/ensemble.o  src/neighbors.o src/world.o src/geometry.o src/pawns.o -o project
 
 game.o: src/game.c
 	gcc -c $(CFLAGS) src/game.c
 
-pawns.o: src/pawns.c
-	gcc -c $(CFLAGS) src/pawns.c
+
 
 test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o
 	$(GCC) $(CFLAGS)  -I src tst/test.c src/ensemble.o  src/pawns.o src/neighbors.o src/geometry.o src/world.o -o test

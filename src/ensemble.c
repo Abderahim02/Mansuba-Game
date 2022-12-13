@@ -357,13 +357,34 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
 void print_world( struct world_t* world) {
   for (int i=0; i< WORLD_SIZE ; ++i){
     if( i%HEIGHT == 0 && i != 0 ){
-      printf("\n%d ", world->colors[i]);    
+      //printf("\n%d ", world->colors[i]);
+      //printf("\n \033%d", world->colors[i]);    
+      if(world->colors[i]==WHITE ){ //with red 
+        printf("\n\033[31m%d ", world->colors[i]);
+      }
+      else if(world->colors[i]==BLACK ){
+        printf("\n\033[32m%d ", world->colors[i]);
+      }
+      else{
+        printf("\n\033[37m%d ", world->colors[i]);
+      }
     }
     else {
-      printf("%d ", world->colors[i]);
-    
+      //printf("%d ", world->colors[i]);
+      // printf(" \033%d", world->colors[i]); 
+      //printf("\033[31m%d ", world->colors[i]);      
+      if(world->colors[i]==WHITE ){
+        printf("\033[31m%d ", world->colors[i]);
+      }
+      else if(world->colors[i]==BLACK ){
+        printf("\033[32m%d ", world->colors[i]);
+      }
+      else{
+        printf("\033[37m%d ", world->colors[i]);
+      }    
     }
   }
+  printf("\n");
 }
 
 // Test functions.
