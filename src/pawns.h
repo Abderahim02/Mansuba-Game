@@ -16,6 +16,6 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
 
 int give_end_position_x(enum players player, unsigned int ex_idx);
 
-int is_allowed_tower_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx);
+int is_allowed_tower_move(struct world_t* world, enum players player, unsigned int ex_idx);
 
 #endif // __ENSEMBLE_H__
