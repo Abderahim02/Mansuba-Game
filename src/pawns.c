@@ -106,6 +106,29 @@ void elephant_move(struct world_t* world, enum players player, struct positions_
   }
 }
 
+// Is tower allowed to move
+unsigned int is_allowed_elephant_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx) {
+    switch (player) {
+    case PLAYER_WHITE:
+        // Check if a forward or sideways move is possible. If the next field is free, the move is already possible.
+        if (world_get(world, ex_idx+1) == NO_COLOR || world_get(world, ex_idx - WIDTH) == NO_COLOR || world_get(world, ex_idx + WIDTH) == NO_COLOR) {
+            return 1;
+        }
+        return 0;        
+        break;
+    case PLAYER_BLACK:
+        // Almost same if function for Black, but in the other direction.
+        if (world_get(world, ex_idx-1) == NO_COLOR || world_get(world, ex_idx - WIDTH) == NO_COLOR || world_get(world, ex_idx + WIDTH) == NO_COLOR) {
+            return 1;
+        }
+        return 0;        
+        break;
+    default:
+        break;
+    }
+    return 0;
+}
+
 // To get the end position of the field on the x-axle.
 unsigned int give_end_position_x(enum players player, unsigned int ex_idx) {
     unsigned int a = ex_idx;
