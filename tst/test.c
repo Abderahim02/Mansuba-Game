@@ -140,13 +140,14 @@ int main() {
     struct positions_info infos;
     init_infos(&infos);
     init_players(world);
+    
     /*test_world_get(world);
     test_world_set(world);
     struct neighbors_t neighbors = get_neighbors(5);
     test_get_neighbors(neighbors);
     */
     //simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
-    // print_world(world);
+    print_world(world);
     // printf("\n");
 
 
