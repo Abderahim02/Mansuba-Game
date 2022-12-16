@@ -238,7 +238,7 @@ int main(int argc, char *const argv[]){
     struct positions_info infos;
     srand(time(0));
     init_infos(&infos);
-    init_players(world);
+    init_players_0(world);
     enum players current_player = get_random_player();
     //unsigned int MAX_TURNS = (argc > 1) ? atoi(argv[1]) : 2*WORLD_SIZE ;
     enum victory victory_type = SIMPLE_WIN; //we take by default a SIMPLE_WIN game

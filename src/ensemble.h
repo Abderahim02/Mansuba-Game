@@ -20,12 +20,11 @@ struct positions_info {
   unsigned int MAX_TURNS; // Maximum allowed turns = WORLD SIZE
   unsigned int TURNS;  // Played turns in the game.
 };
-//to fix the valgrind problem
-void destroyWorld (struct world_t* world);
 
 // Furthermore it sets the world the beginning position.
-void init_players(struct world_t* b);
-
+void init_players_0(struct world_t* b);
+//for the achievement 1
+void init_players_1(struct world_t* b);
 // Is a bool function and returns 1 if new_idx is a neighbor to ex_idx.
 int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx);
 

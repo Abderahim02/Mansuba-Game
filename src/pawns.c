@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "pawns.h"
-/*
+
 int is_cardinal_dir(enum dir_t dir){
     if( dir == EAST || dir == WEST || dir == NORTH || dir == SOUTH ){
         return 1;
@@ -54,10 +54,10 @@ int is_allowed_elephant_move(struct world_t* world, enum players player, struct 
                   }
                }
            }
-    }
+        }
+     }
   }
-    return 0;
-  }
+  return 0;
 }
 
 void elephant_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
@@ -305,4 +305,3 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
     }
     return 0;
 }
-*/

@@ -32,7 +32,7 @@ void init_infos(struct positions_info* infos) {
 
 /* it's the function that give for each player his initial positions , we suppose the initially the player with white pawns 
 will take the last column at the left edge and the other player will take the last column at the right edge */
-/*void init_players(struct world_t* b) {
+void init_players_1(struct world_t* b) {
     //struct positions_info positions_info;
     for (int i = 0; i < WORLD_SIZE; ++i) {
         // In the begin we put the white pieces to the left and the black pieces to the right.
@@ -66,9 +66,9 @@ will take the last column at the left edge and the other player will take the la
             // world_set_sort(b, i, 1);
         }
     }
-}*/
+}
 
-void init_players(struct world_t* b) {
+void init_players_0(struct world_t* b) {
     //struct positions_info positions_info;
     for (int i = 0; i < WORLD_SIZE; ++i) {
         // In the begin we put the white pieces to the left and the black pieces to the right.
@@ -259,10 +259,6 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
   switch (player){
     case PLAYER_WHITE:
       if(is_allowed_simple_jump(world, ex_idx, new_idx)){
-            // world->colors[new_idx] = WHITE;
-            // world->colors[ex_idx] = NO_COLOR ;
-            // world->sorts[ex_idx] = NO_SORT;
-            // world->sorts[new_idx] = PAWN;
             world_set(world, new_idx, WHITE);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
@@ -272,10 +268,6 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
       break;
     case PLAYER_BLACK:
         if(is_allowed_simple_jump(world, ex_idx, new_idx)){
-            // world->colors[new_idx] = BLACK;
-            // world->colors[ex_idx] = NO_COLOR ;
-            // world->sorts[ex_idx] = NO_SORT;
-            // world->sorts[new_idx] = PAWN;
             world_set(world, new_idx, BLACK);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
@@ -411,12 +403,12 @@ void print_world( struct world_t* world) {
           case PAWN:
               printf("\n\033[31m* \033[0m"); //we use the symbol * for pawn 
               break;
-          // case TOWER:
-          //     printf("\n\033[31m> \033[0m");//we use the symbol > for white tower 
-          //     break;
-          // case ELEPHANT:
-          //     printf("\n\033[31m& \033[0m"); //we use the symbol & for elephant 
-          //     break;
+          case TOWER:
+              printf("\n\033[31m> \033[0m");//we use the symbol > for white tower 
+              break;
+          case ELEPHANT:
+              printf("\n\033[31m& \033[0m"); //we use the symbol & for elephant 
+              break;
           default:
               break;
         }
@@ -426,12 +418,12 @@ void print_world( struct world_t* world) {
           case PAWN:
               printf("\n\033[1;32m* \033[0m");
               break;
-          // case TOWER:
-          //     printf("\n\033[1;32m< \033[0m");
-          //     break;
-          // case ELEPHANT:
-          //    printf("\n\033[1;32m& \033[0m");
-          //     break;
+          case TOWER:
+              printf("\n\033[1;32m< \033[0m");
+              break;
+          case ELEPHANT:
+             printf("\n\033[1;32m& \033[0m");
+              break;
           default:
               break;
         }
@@ -446,12 +438,12 @@ void print_world( struct world_t* world) {
           case PAWN:
               printf("\033[1;31m* \033[0m");
               break;
-          // case TOWER:
-          //     printf("\033[1;31m> \033[0m");
-          //     break;
-          // case ELEPHANT:
-          //    printf("\033[1;31m& \033[0m");
-          //     break;
+          case TOWER:
+              printf("\033[1;31m> \033[0m");
+              break;
+          case ELEPHANT:
+             printf("\033[1;31m& \033[0m");
+              break;
           default:
               break;
         }
@@ -462,12 +454,12 @@ void print_world( struct world_t* world) {
           case PAWN:
               printf("\033[1;32m* \033[0m");
               break;
-          // case TOWER:
-          //    printf("\033[1;32m< \033[0m");
-          //     break;
-          // case ELEPHANT:
-          //    printf("\033[1;32m& \033[0m");
-          //     break;
+          case TOWER:
+             printf("\033[1;32m< \033[0m");
+              break;
+          case ELEPHANT:
+             printf("\033[1;32m& \033[0m");
+              break;
           default:
               break;
         }
