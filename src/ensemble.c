@@ -360,13 +360,41 @@ void print_world( struct world_t* world) {
       //printf("\n%d ", world->colors[i]);
       //printf("\n \033%d", world->colors[i]);    
       if(world->colors[i]==WHITE ){ //with red 
-        printf("\n\033[31m%d ", world->colors[i]);
+        //printf("\n\033[31m%d \033[0m", world->colors[i]);
+        switch (world->sorts[i]){
+          case PAWN:
+              printf("\n\033[31m* \033[0m");
+              break;
+          case TOWER:
+              printf("\n\033[31m> \033[0m");
+              break;
+          case ELEPHANT:
+              printf("\n\033[31m& \033[0m");
+              break;
+          default:
+              break;
+        }
       }
       else if(world->colors[i]==BLACK ){
-        printf("\n\033[32m%d ", world->colors[i]);
+        //printf("\n\033[32m%d \033[0m", world->colors[i]);
+        //printf("\n\033[32m* \033[0m");
+        switch (world->sorts[i]){
+          case PAWN:
+              printf("\n\033[1;32m* \033[0m");
+              break;
+          case TOWER:
+              printf("\n\033[1;32m< \033[0m");
+              break;
+          case ELEPHANT:
+             printf("\n\033[1;32m& \033[0m");
+              break;
+          default:
+              break;
+        }
       }
       else{
-        printf("\n\033[37m%d ", world->colors[i]);
+        //printf("\n\033[37m%d \033[0m", world->colors[i]);
+        printf("\n\033[1;37m0 \033[0m");
       }
     }
     else {
@@ -374,13 +402,44 @@ void print_world( struct world_t* world) {
       // printf(" \033%d", world->colors[i]); 
       //printf("\033[31m%d ", world->colors[i]);      
       if(world->colors[i]==WHITE ){
-        printf("\033[31m%d ", world->colors[i]);
+        //printf("\033[31m%d \033[0m", world->colors[i]);
+        //printf("\033[31m* \033[0m");
+        switch (world->sorts[i]){
+          case PAWN:
+              printf("\033[1;31m* \033[0m");
+              break;
+          case TOWER:
+              printf("\033[1;31m> \033[0m");
+              break;
+          case ELEPHANT:
+             printf("\033[1;31m& \033[0m");
+              break;
+          default:
+              break;
+        }
+        
       }
       else if(world->colors[i]==BLACK ){
-        printf("\033[32m%d ", world->colors[i]);
+        //printf("\033[32m%d \033[0m", world->colors[i]);
+        //printf("\033[32m* \033[0m");
+        switch (world->sorts[i]){
+          case PAWN:
+              printf("\033[1;32m* \033[0m");
+              break;
+          case TOWER:
+             printf("\033[1;32m< \033[0m");
+              break;
+          case ELEPHANT:
+             printf("\033[1;32m& \033[0m");
+              break;
+          default:
+              break;
+        }
+        
       }
       else{
-        printf("\033[37m%d ", world->colors[i]);
+        //printf("\033[37m%d \033[0m", world->colors[i]);
+        printf("\033[1;37m0 \033[0m");
       }    
     }
   }

@@ -156,7 +156,7 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
     case PLAYER_BLACK:
         // We prefer the move on the x-axle.
         for (int i = p-1; i <= px; --i) {
-            printf("i is %d\n", i);
+            //printf("i is %d\n", i);
             // Checking where the next PAWN is.
             if (world_get(world, i) != NO_COLOR) {
                 world_set(world, i+1, BLACK);
@@ -209,7 +209,7 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
         for (int i = p+1; i <= px; ++i) {
             // Checking where the next PAWN is.
             if (world_get(world, i) != NO_COLOR) {
-                printf("Free position is %d\n", i-1);
+                //printf("Free position is %d\n", i-1);
                 world_set(world, i-1, WHITE);
                 world_set(world, ex_idx, NO_COLOR);
                 world_set_sort(world, i-1, TOWER);
@@ -218,7 +218,7 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                 return 1;
             }
             else if (i == px) {
-                printf("I go to %d", i);
+                //printf("I go to %d", i);
                 world_set(world, i, WHITE);
                 world_set(world, ex_idx, NO_COLOR);
                 world_set_sort(world, i, TOWER);

@@ -60,9 +60,9 @@ void test_move_tower(struct world_t* world, struct positions_info infos) {
     printf("\n");
 }
 
-// void test_is_allowed_elephant_move( struct world_t* world, enum players player, struct positions_info* infos){
-//     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
-// }
+void test_is_allowed_elephant_move( struct world_t* world, struct positions_info* infos){
+     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
+ }
 
 // The main function for the tests.
 int main() {
@@ -92,14 +92,14 @@ int main() {
     // }   printf("Postion 28 is %d\n", world_get_sort(world, 28));
     // ***********************************
 
+    // printf("\n");
+    // test_move_tower(world, infos);
+    // world_set(world,1,WHITE);
+    // world_set_sort(world, 0, PAWN);
+    // tower_move(world, PLAYER_WHITE, &infos, 0);
+    //print_world(world);
     printf("\n");
-    test_move_tower(world, infos);
-    world_set(world,1,WHITE);
-    world_set_sort(world, 0, PAWN);
-    tower_move(world, PLAYER_WHITE, &infos, 0);
-    print_world(world);
-    printf("\n");
-    // test_is_allowed_elephant_move(world, PLAYER_WHITE, &infos );
+   //test_is_allowed_elephant_move(world, &infos );
     //simple_move_player(world, PLAYER_WHITE, &infos, 20,21);
     printf("\n");
     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 0, 2));
@@ -107,12 +107,12 @@ int main() {
     printf("\n");
     print_world(world);
 
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 2, 22));
-    elephant_move(world, PLAYER_WHITE, &infos, 2,22);
+    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_BLACK, &infos , 19,8 ));
+    elephant_move(world, PLAYER_BLACK, &infos, 19,8);
     print_world(world);
 
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 22, 33));
-    elephant_move(world, PLAYER_WHITE, &infos, 22,33);
+   // printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 22, 33));
+    tower_move(world, PLAYER_WHITE, &infos, 10);
     print_world(world);
     return 0;
 }
