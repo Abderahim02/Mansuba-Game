@@ -181,9 +181,6 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
     int px = give_end_position_x(player, p);
     int py_top = give_top_position_y(ex_idx);
     int py_down = give_down_position_y(ex_idx);
-    // a and b help us to fix a problem.
-    // int a = 1;
-    // int b = 0;
     switch (player) {    
     case PLAYER_BLACK:
         if (p != px) {

@@ -38,14 +38,46 @@ void init_players(struct world_t* b) {
         // In the begin we put the white pieces to the left and the black pieces to the right.
         if (i % WIDTH == 0) {
             world_set(b,i,WHITE);
-            world_set_sort(b,i,1);
+            // Two towers in the edge of the world.
+            if (i == 0 || i == WORLD_SIZE-WIDTH) {
+              world_set_sort(b,i,TOWER);
+            }
+            // Two elephants next to the towers.
+            else if (i == WIDTH || i == WORLD_SIZE-(WIDTH*2)) {
+              world_set_sort(b, i, ELEPHANT);
+            }
+            else {
+              world_set_sort(b,i,PAWN);  
+            }
+            // world_set_sort(b,i,1);
         }
         else if ((i% WIDTH)  == WIDTH - 1) {
             world_set(b, i, BLACK);
-            world_set_sort(b, i, 1);
+            if (i == WIDTH-1 || i == WORLD_SIZE-1) {
+              world_set_sort(b,i,TOWER);
+            }
+            // Two elephants next to the towers.
+            else if (i == WIDTH*2-1 || i == WORLD_SIZE-WIDTH-1) {
+              world_set_sort(b, i, ELEPHANT);
+            }
+            else {
+              world_set_sort(b,i,PAWN);  
+            }
+            // world_set_sort(b, i, 1);
         }
     }
 }
+
+// // To add the tower and the elephant to the game. Every player will get two tower and two elephants.
+// void init_tower_elephant(struct world_t* b) {
+//   for (int i = 0; i < WORLD_SIZE; ++i) {
+//     if (i % WIDTH == 0) {
+//       if (i == 0 || i = WORLD_SIZE-HEIGHT) {
+
+//       }
+//     }
+//   }
+// }
 
 // A list of functions that will help us for the move_player function :
 // this one verify if new_idx is a neighbor of ex_idx.

@@ -16,10 +16,11 @@ void test_get_neighbors( struct neighbors_t neighbors){
 
 // A test for the world_get() function.
 void test_world_get(struct world_t* world) {
-    if (world_get(world,20) == NO_COLOR && world_get_sort(world,10) == NO_SORT) {
+    // We know in the beginning in the middle of the world there are no PAWNS.
+    if (world_get(world,WIDTH+(WIDTH/2)) == NO_COLOR && world_get_sort(world,WIDTH+(WIDTH/2)) == NO_SORT) {
         printf("World_get_Test1 passed.\n");
     }
-    if (world_get(world,20) != NO_COLOR || world_get_sort(world,10) != NO_SORT) {
+    if (world_get(world,WIDTH+(WIDTH/2)) != NO_COLOR || world_get_sort(world,WIDTH+(WIDTH/2)) != NO_SORT) {
         printf("World_get_Test1 failed.\n");
     }
 }
@@ -130,6 +131,27 @@ void test_move_tower_black_1(struct world_t* world, struct positions_info infos)
 }
 
 
+test_init_tower_elephant(struct world_t* world) {
+    for (int i = 0; i < WORLD_SIZE; ++i) {
+        if (i == 0 || i == WORLD_SIZE-WIDTH || i == WIDTH-1 || i == WORLD_SIZE-1) {
+            if (world_get_sort(world, i) == TOWER) {
+                printf("Test tower passed.\n");
+            }
+            else {
+                printf("Test tower failed.\n");
+            }
+        }
+        if (i == WIDTH || i == WORLD_SIZE-(WIDTH*2) || i == WIDTH*2-1 || i == WORLD_SIZE-WIDTH-1) {
+            if (world_get_sort(world, i) == ELEPHANT) {
+                printf("Test elephant passed.\n");
+            }
+            else {
+                printf("Test elephant failed.\n");
+            } 
+        }
+    }
+}
+
 // void test_is_allowed_elephant_move( struct world_t* world, enum players player, struct positions_info* infos){
 //     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
 // }
@@ -140,16 +162,16 @@ int main() {
     struct positions_info infos;
     init_infos(&infos);
     init_players(world);
-    
-    /*test_world_get(world);
-    test_world_set(world);
-    struct neighbors_t neighbors = get_neighbors(5);
-    test_get_neighbors(neighbors);
-    */
+    // test_world_get(world);
+    // test_world_set(world);
+    // struct neighbors_t neighbors = get_neighbors(5);
+    // test_get_neighbors(neighbors);
+
     //simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
     print_world(world);
     // printf("\n");
 
+    test_init_tower_elephant(world);
 
     // ***********************************
     test_move_tower_white_1(world, infos);
