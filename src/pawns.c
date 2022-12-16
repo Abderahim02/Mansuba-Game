@@ -148,6 +148,84 @@ int give_down_position_y(unsigned int ex_idx) {
     return a;
 }
 
+//.......................
+int tower_move(struct world_t* world, enum players player, struct positions_info* infos, int ex_idx) {
+    int p = ex_idx;
+    int px = give_end_position_x(player, p);
+    switch (player) {    
+    case PLAYER_BLACK:
+        // We prefer the move on the x-axle.
+        for (int i = p-1; i <= px; --i) {
+            //printf("i is %d\n", i);
+            // Checking where the next PAWN is.
+            if (world_get(world, i) != NO_COLOR) {
+                world_set(world, i+1, BLACK);
+                world_set(world, ex_idx, NO_COLOR);
+                world_set_sort(world, i+1, TOWER);
+                world_set_sort(world, ex_idx, NO_SORT);
+                update_current_pieces(player, infos, ex_idx, i+1);
+                return 1;
+            }
+            else if (i == px) {
+                world_set(world, i, BLACK);
+                world_set(world, ex_idx, NO_COLOR);
+                world_set_sort(world, i, TOWER);
+                world_set_sort(world, ex_idx, NO_SORT);
+                update_current_pieces(player, infos, ex_idx, i);
+                return 1;
+            }
+        }
+        // After we prefer the move to the top.
+        int py = give_top_position_y(ex_idx);
+        for (int i = p; i > py; i = i - WIDTH) {
+            // Checking where the next PAWN is.
+            if (world_get(world, i) != NO_COLOR) {
+                world_set(world, i+1, BLACK);
+                world_set(world, ex_idx, NO_COLOR);
+                world_set_sort(world, i+1, TOWER);
+                world_set_sort(world, ex_idx, NO_SORT);
+                update_current_pieces(player, infos, ex_idx, i+1);
+                return 1;
+            }
+        }
+        // Move downwards.
+        py = give_down_position_y(ex_idx);
+        for (int i = p; i < py; i = i + WIDTH) {
+            // Checking where the next PAWN is.
+            if (world_get(world, i) != NO_COLOR) {
+                world_set(world, i+1, BLACK);
+                world_set(world, ex_idx, NO_COLOR);
+                world_set_sort(world, i+1, TOWER);
+                world_set_sort(world, ex_idx, NO_SORT);
+                update_current_pieces(player, infos, ex_idx, i+1);
+                return 1;
+            }
+        }
+        break;
+    case PLAYER_WHITE:
+        // px = give_end_position_x(player, ex_idx);
+        printf("px is %d\n", px);
+        // We prefer the move on the x-axle.
+        for (int i = p+1; i <= px; ++i) {
+            // Checking where the next PAWN is.
+            if (world_get(world, i) != NO_COLOR) {
+                //printf("Free position is %d\n", i-1);
+                world_set(world, i-1, WHITE);
+                world_set(world, ex_idx, NO_COLOR);
+                world_set_sort(world, i-1, TOWER);
+                world_set_sort(world, ex_idx, NO_SORT);
+                update_current_pieces(player, infos, ex_idx, i-1);
+                return 1;
+            }
+            else if (i == px) {
+                //printf("I go to %d", i);
+                world_set(world, i, WHITE);
+                world_set(world, ex_idx, NO_COLOR);
+                world_set_sort(world, i, TOWER);
+                world_set_sort(world, ex_idx, NO_SORT);
+                update_current_pieces(player, infos, ex_idx, i);
+                return 1;
+            }
 // Is tower allowed to move
 int is_allowed_tower_move(struct world_t* world, enum players player, unsigned int ex_idx) {
     // int top = give_top_position_y(ex_idx);
