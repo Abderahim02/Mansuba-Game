@@ -32,7 +32,7 @@ void init_infos(struct positions_info* infos) {
 
 /* it's the function that give for each player his initial positions , we suppose the initially the player with white pawns 
 will take the last column at the left edge and the other player will take the last column at the right edge */
-void init_players(struct world_t* b) {
+/*void init_players(struct world_t* b) {
     //struct positions_info positions_info;
     for (int i = 0; i < WORLD_SIZE; ++i) {
         // In the begin we put the white pieces to the left and the black pieces to the right.
@@ -66,18 +66,22 @@ void init_players(struct world_t* b) {
             // world_set_sort(b, i, 1);
         }
     }
+}*/
+
+void init_players(struct world_t* b) {
+    //struct positions_info positions_info;
+    for (int i = 0; i < WORLD_SIZE; ++i) {
+        // In the begin we put the white pieces to the left and the black pieces to the right.
+        if (i % WIDTH == 0) {
+            world_set(b,i,WHITE);
+            world_set_sort(b,i,PAWN);
+        }
+        else if ((i% WIDTH)  == WIDTH - 1) {
+              world_set(b, i, BLACK);
+              world_set_sort(b,i,PAWN); 
+        }
+    }
 }
-
-// // To add the tower and the elephant to the game. Every player will get two tower and two elephants.
-// void init_tower_elephant(struct world_t* b) {
-//   for (int i = 0; i < WORLD_SIZE; ++i) {
-//     if (i % WIDTH == 0) {
-//       if (i == 0 || i = WORLD_SIZE-HEIGHT) {
-
-//       }
-//     }
-//   }
-// }
 
 // A list of functions that will help us for the move_player function :
 // this one verify if new_idx is a neighbor of ex_idx.
@@ -133,7 +137,8 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   case PLAYER_WHITE:
     if (is_current_piece_White(*infos, ex_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx) && is_neighbor_white(ex_idx, new_idx)) { // we check if new_ex is a neighbor 
-        if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+        // world->sorts[new_idx] == 0
+        if( world_get_sort(world, new_idx)==0 ){ //we check if new_ex is a free position
         return 1;
         }
       }
@@ -142,7 +147,8 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   case PLAYER_BLACK:
     if (is_current_piece_Black(*infos, ex_idx) && is_neighbor_black(ex_idx, new_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-        if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+        //world->sorts[new_idx] == 0
+        if(world_get_sort(world, new_idx) == 0 ){ //we check if new_ex is a free position
         return 1;
         }
       }
@@ -232,11 +238,11 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
       for(int j=0; j < num_ex_idx_neighbors ; ++j){  //we see all existants neighbors of ex_idx 
             unsigned int tmp_position = neighbors.n[j].i; // we use tmporary variables to reduce complexity
             enum dir_t tmp_dir = neighbors.n[j].d;
-            if(world->sorts[tmp_position] == PAWN){  //if the neighbor position is filled with a pawn
+            if(world_get_sort(world,tmp_position) == PAWN){  //if the neighbor position is filled with a pawn
                 // struct neighbors_t neighbors_of_tmp = get_neighbors(tmp_position); // we get neighbors of this tmp_position
                 unsigned int neighbor_in_same_dir = get_neighbor(tmp_position, tmp_dir); // we get the position that is a neighbor of this tmp_neighbor in the 
                       //same direction that tmp_neighbor is neighbor of ex_idx (we got the neighbor of the neighbor of ex_idx in the same direction)
-                if((neighbor_in_same_dir == new_idx)  && (world->sorts[neighbor_in_same_dir] == 0) ){ /*we check if it is the position that we want to go in 
+                if((neighbor_in_same_dir == new_idx)  && (world_get_sort(world, neighbor_in_same_dir) == NO_SORT) ){ /*we check if it is the position that we want to go in 
                 and if it is empty so that we can jump there */
                   return 1;
                }
@@ -253,19 +259,27 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
   switch (player){
     case PLAYER_WHITE:
       if(is_allowed_simple_jump(world, ex_idx, new_idx)){
-            world->colors[new_idx] = WHITE;
-            world->colors[ex_idx] = NO_COLOR ;
-            world->sorts[ex_idx] = NO_SORT;
-            world->sorts[new_idx] = PAWN;
+            // world->colors[new_idx] = WHITE;
+            // world->colors[ex_idx] = NO_COLOR ;
+            // world->sorts[ex_idx] = NO_SORT;
+            // world->sorts[new_idx] = PAWN;
+            world_set(world, new_idx, WHITE);
+            world_set(world, ex_idx, NO_COLOR);
+            world_set_sort(world, ex_idx, NO_SORT);
+            world_set_sort(world, new_idx, PAWN);
             update_current_pieces(player, infos, ex_idx, new_idx);   
       }
       break;
     case PLAYER_BLACK:
         if(is_allowed_simple_jump(world, ex_idx, new_idx)){
-            world->colors[new_idx] = BLACK;
-            world->colors[ex_idx] = NO_COLOR ;
-            world->sorts[ex_idx] = NO_SORT;
-            world->sorts[new_idx] = PAWN;
+            // world->colors[new_idx] = BLACK;
+            // world->colors[ex_idx] = NO_COLOR ;
+            // world->sorts[ex_idx] = NO_SORT;
+            // world->sorts[new_idx] = PAWN;
+            world_set(world, new_idx, BLACK);
+            world_set(world, ex_idx, NO_COLOR);
+            world_set_sort(world, ex_idx, NO_SORT);
+            world_set_sort(world, new_idx, PAWN);
             update_current_pieces(player, infos, ex_idx, new_idx);
       }
       break;
@@ -387,90 +401,78 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
 
 // This one print our world so we that we can see changes every time
 void print_world( struct world_t* world) {
+  printf("\n");
   for (int i=0; i< WORLD_SIZE ; ++i){
     if( i%HEIGHT == 0 && i != 0 ){
-      //printf("\n%d ", world->colors[i]);
-      //printf("\n \033%d", world->colors[i]);    
-      if(world->colors[i]==WHITE ){ //with red 
-        //printf("\n\033[31m%d \033[0m", world->colors[i]);
-        switch (world->sorts[i]){
+      //world->colors[i]==WHITE
+      if( world_get(world, i) == WHITE ){ // we use green color for white pieces 
+        //world->sorts[i]
+        switch (world_get_sort(world,i)){
           case PAWN:
-              printf("\n\033[31m* \033[0m");
+              printf("\n\033[31m* \033[0m"); //we use the symbol * for pawn 
               break;
-          case TOWER:
-              printf("\n\033[31m> \033[0m");
-              break;
-          case ELEPHANT:
-              printf("\n\033[31m& \033[0m");
-              break;
+          // case TOWER:
+          //     printf("\n\033[31m> \033[0m");//we use the symbol > for white tower 
+          //     break;
+          // case ELEPHANT:
+          //     printf("\n\033[31m& \033[0m"); //we use the symbol & for elephant 
+          //     break;
           default:
               break;
         }
       }
-      else if(world->colors[i]==BLACK ){
-        //printf("\n\033[32m%d \033[0m", world->colors[i]);
-        //printf("\n\033[32m* \033[0m");
-        switch (world->sorts[i]){
+      else if(world_get(world, i) ==BLACK ){ // we use red color for white pieces 
+        switch (world_get_sort(world,i)){
           case PAWN:
               printf("\n\033[1;32m* \033[0m");
               break;
-          case TOWER:
-              printf("\n\033[1;32m< \033[0m");
-              break;
-          case ELEPHANT:
-             printf("\n\033[1;32m& \033[0m");
-              break;
+          // case TOWER:
+          //     printf("\n\033[1;32m< \033[0m");
+          //     break;
+          // case ELEPHANT:
+          //    printf("\n\033[1;32m& \033[0m");
+          //     break;
           default:
               break;
         }
       }
       else{
-        //printf("\n\033[37m%d \033[0m", world->colors[i]);
         printf("\n\033[1;37m0 \033[0m");
       }
     }
-    else {
-      //printf("%d ", world->colors[i]);
-      // printf(" \033%d", world->colors[i]); 
-      //printf("\033[31m%d ", world->colors[i]);      
-      if(world->colors[i]==WHITE ){
-        //printf("\033[31m%d \033[0m", world->colors[i]);
-        //printf("\033[31m* \033[0m");
-        switch (world->sorts[i]){
+    else {   
+      if(world_get(world, i) == WHITE ){
+        switch (world_get_sort(world,i)){
           case PAWN:
               printf("\033[1;31m* \033[0m");
               break;
-          case TOWER:
-              printf("\033[1;31m> \033[0m");
-              break;
-          case ELEPHANT:
-             printf("\033[1;31m& \033[0m");
-              break;
+          // case TOWER:
+          //     printf("\033[1;31m> \033[0m");
+          //     break;
+          // case ELEPHANT:
+          //    printf("\033[1;31m& \033[0m");
+          //     break;
           default:
               break;
         }
         
       }
-      else if(world->colors[i]==BLACK ){
-        //printf("\033[32m%d \033[0m", world->colors[i]);
-        //printf("\033[32m* \033[0m");
-        switch (world->sorts[i]){
+      else if(world_get(world, i) == BLACK ){
+        switch (world_get_sort(world,i)){
           case PAWN:
               printf("\033[1;32m* \033[0m");
               break;
-          case TOWER:
-             printf("\033[1;32m< \033[0m");
-              break;
-          case ELEPHANT:
-             printf("\033[1;32m& \033[0m");
-              break;
+          // case TOWER:
+          //    printf("\033[1;32m< \033[0m");
+          //     break;
+          // case ELEPHANT:
+          //    printf("\033[1;32m& \033[0m");
+          //     break;
           default:
               break;
         }
-        
       }
       else{
-        //printf("\033[37m%d \033[0m", world->colors[i]);
         printf("\033[1;37m0 \033[0m");
       }    
     }
@@ -501,7 +503,7 @@ int simple_win(struct world_t* world, enum players player, struct positions_info
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach init_position of PLAYER_BLACK to win.
       for (int i = 1; i < HEIGHT; ++i) {
-        if (world->colors[infos.initial_BLACK[i]] == WHITE) {
+        if (world_get(world, infos.initial_BLACK[i]) == WHITE) {
           return 1;
         }
       }
@@ -509,7 +511,7 @@ int simple_win(struct world_t* world, enum players player, struct positions_info
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach init_position of PLAYER_WHITE to win.
       for (int i = 0; i < HEIGHT; ++i) {
-        if (world->colors[infos.initial_WHITE[i]] == BLACK) {
+        if (world_get(world, infos.initial_WHITE[i]) == BLACK) {
           return 1;
         }
       } 
@@ -530,7 +532,7 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
     case PLAYER_WHITE:
       // PLAYER_WHITE has to reach all init_position of PLAYER_BLACK to win.
       for (int i = 1; i < WORLD_SIZE; ++i) {
-        if (world->colors[infos.initial_BLACK[i]] != WHITE) {
+        if (world_get(world, infos.initial_BLACK[i]) != WHITE) {
           return 0;
         }
       } 
@@ -538,7 +540,7 @@ int complex_win(struct world_t* world, enum players player, struct positions_inf
     case PLAYER_BLACK:
       // PLAYER_BLACK has to reach all init_position of PLAYER_WHITE to win.
       for (int i = 0; i < WORLD_SIZE; ++i) {
-        if (world->colors[infos.initial_WHITE[i]] != BLACK) {
+        if (world_get(world, infos.initial_WHITE[i]) != BLACK) {
           return 0;
         }
       } 
@@ -557,10 +559,10 @@ int count_pieces(struct world_t* world) {
     int b = 0;
     int w = 0;
     for (int i = 0; i < WORLD_SIZE; ++i) {
-        if (world->colors[i] == BLACK) {
+        if (world_get(world,i) == BLACK) {
           ++b;
         }
-        if (world->colors[i] == WHITE) {
+        if (world_get(world,i) == WHITE) {
           ++w;
         }
     }

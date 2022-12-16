@@ -3,10 +3,6 @@
 
 #include "world.h"
 #include "neighbors.h"
-struct world_t{ 
-  enum color_t colors[WORLD_SIZE];
-  enum sort_t sorts[WORLD_SIZE];
-};
 
 enum players{
   PLAYER_WHITE = 2 ,

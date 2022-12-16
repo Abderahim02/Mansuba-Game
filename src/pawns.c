@@ -14,14 +14,14 @@ int is_allowed_to_simple_move_aux(struct world_t* world, enum players player, un
   switch (player) {
   case PLAYER_WHITE:
       if (is_new_ex_neighbor(ex_idx, new_idx)) { // we check if new_ex is a neighbor 
-        if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+        if( world_get_sort(world, new_idx) == 0){ //we check if new_ex is a free position
         return 1;
         }
     }
     break;
   case PLAYER_BLACK:
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-        if( world->sorts[new_idx] == 0){ //we check if new_ex is a free position
+        if( world_get_sort(world, new_idx) == 0){ //we check if new_ex is a free position
         return 1;
         }
       }

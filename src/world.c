@@ -2,9 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include "world.h"
+// enum status_t {
+//   PLAYABLE  = 1,
+//   NOT_PLAYABLE = 0,
+
+// };
+
 struct world_t{ 
   enum color_t colors[WORLD_SIZE];
   enum sort_t sorts[WORLD_SIZE];
+  //enum status_t status[WORLD_SIZE];
 };
 
 // We used malloc, because we can't return a pointer which we defined inside the function.
@@ -39,3 +46,4 @@ enum sort_t world_get_sort(const struct world_t* b, unsigned int idx){
 void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c){
   b->sorts[idx] = c;
 }
+//enum world_get_status(struct world_t* b, unsigned int idx, enum sort_t c);
