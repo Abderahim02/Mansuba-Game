@@ -24,7 +24,7 @@ int give_down_position_y(unsigned int ex_idx);
 // Return 1 if the tower is allowed to move else 0.
 int is_allowed_tower_move(struct world_t* world, enum players player, unsigned int ex_idx);
 
-// Check if a move for tower is possible.
+// Move the tower.
 int tower_move(struct world_t* world, enum players player, struct positions_info* infos, int ex_idx);
 
 #endif // __ENSEMBLE_H__
