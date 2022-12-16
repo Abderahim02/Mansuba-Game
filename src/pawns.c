@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "ensemble.h"
-#include "geometry.h"
 #include "pawns.h"
 
 int is_cardinal_dir(enum dir_t dir){
