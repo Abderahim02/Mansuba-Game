@@ -15,11 +15,16 @@ int is_allowed_elephant_move(struct world_t* world, enum players player, struct 
 //this function is the move elephant main function
 void elephant_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
+
+// Help functions for the tower move. 
+int give_end_position_x(enum players player, unsigned int ex_idx);
+int give_top_position_y(unsigned int ex_idx);
+int give_down_position_y(unsigned int ex_idx);
+
+// Return 1 if the tower is allowed to move else 0.
+int is_allowed_tower_move(struct world_t* world, enum players player, unsigned int ex_idx);
+
 // Check if a move for tower is possible.
 int tower_move(struct world_t* world, enum players player, struct positions_info* infos, int ex_idx);
-
-int give_end_position_x(enum players player, unsigned int ex_idx);
-
-int is_allowed_tower_move(struct world_t* world, enum players player, unsigned int ex_idx);
 
 #endif // __ENSEMBLE_H__
