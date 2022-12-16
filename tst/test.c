@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ensemble.h"
-#include "triangular_world.h"
+//#include "triangular_world.h"
 #define UINT_MAX WORLD_SIZE 
 
 //simple test function for get neighbors of the position 5
@@ -37,7 +37,7 @@ void test_world_set(struct world_t* world) {
         printf("World_get_Test1 failed.\n");
     }
 }
-
+/*
 void test_move_tower_white_1(struct world_t* world, struct positions_info infos) {
     // Check forward move with tower
     int a = 20;
@@ -156,21 +156,21 @@ test_init_tower_elephant(struct world_t* world) {
 // void test_is_allowed_elephant_move( struct world_t* world, enum players player, struct positions_info* infos){
 //     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
 // }
-
+*/
 // The main function for the tests.
 int main() {
-    struct world_t* world = world_init_2();
+    struct world_t* world = world_init();
     struct positions_info infos;
-    // init_infos(&infos);
-    // init_players(world);
-    // test_world_get(world);
-    // test_world_set(world);
-    // struct neighbors_t neighbors = get_neighbors(5);
-    // test_get_neighbors(neighbors);
+    init_infos(&infos);
+    init_players(world);
+    test_world_get(world);
+    test_world_set(world);
+    struct neighbors_t neighbors = get_neighbors(5);
+    test_get_neighbors(neighbors);
 
-    //simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
-    print_world(world);
-    // printf("\n");
+    simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
+    //print_world(world);
+     printf("\n");
 
     // test_init_tower_elephant(world);
 
@@ -212,13 +212,13 @@ int main() {
     // printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 22, 33));
     // elephant_move(world, PLAYER_WHITE, &infos, 22,33);
     // print_world(world);
-    for(int i=0; i < WORLD_SIZE; ++i ){
+    /*for(int i=0; i < WORLD_SIZE; ++i ){
         if(i%WIDTH = WIDTH -1){
             printf("%d\n", world->status[i]);
         }
         else{
             printf(" %d", world->status[i]);
         }
-    }
+    }*/
     return 0;
 }
