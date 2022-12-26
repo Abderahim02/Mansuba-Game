@@ -9,6 +9,9 @@ enum players{
   PLAYER_BLACK = 1 ,
 };
 
+struct world_t* world_init_2();
+enum status_t world_get_status(struct world_t* b, unsigned int idx);
+void world_set_status(struct world_t* b, unsigned int idx, enum status_t s);
 // The position_info includes the positions in the begin (initial)
 // the allowed moves and the where the peaces are at the moment
 struct positions_info { 

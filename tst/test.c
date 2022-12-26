@@ -2,9 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "pawns.h"
-
-//#include "triangular_world.h"
+#include "triangular_world.h"
 #define UINT_MAX WORLD_SIZE 
 
 //simple test function for get neighbors of the position 5
@@ -151,6 +149,30 @@ void test_init_tower_elephant(struct world_t* world) {
         }
     }
 }
+void test_print_triangular_world(struct world_t* world){
+     for(int i=0; i < WORLD_SIZE; ++i ){
+        if(i%WIDTH == WIDTH -1){
+            if(world_get(world ,i) < MAX_COLOR){
+                printf(" %d\n", world_get(world ,i));
+            }
+            else{
+                printf("  \n");
+            }
+        }
+        else{
+            //printf(" %d", world_get_sort(world ,i));
+            if(world_get(world ,i) < MAX_COLOR){
+                printf(" %d", world_get(world ,i));
+            }
+            else{
+                printf("  ");
+            }
+        }
+    }
+}
+void test_world_init_2(struct world_t* world){
+    print_triangular_world(world);
+}
 
 // void test_is_allowed_elephant_move( struct world_t* world, enum players player, struct positions_info* infos){
 //     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
@@ -158,11 +180,11 @@ void test_init_tower_elephant(struct world_t* world) {
 
 // The main function for the tests.
 int main() {
-    struct world_t* world = world_init();
+    struct world_t* world = world_init_2();
     struct positions_info infos;
     init_infos(&infos);
-    init_players_1(world);
-    test_world_get(world);
+    //init_players_1(world);
+    /*test_world_get(world);
     test_world_set(world);
     struct neighbors_t neighbors = get_neighbors(5);
     test_get_neighbors(neighbors);
@@ -200,14 +222,9 @@ int main() {
 
     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 22, 33));
     elephant_move(world, PLAYER_WHITE, &infos, 22,33);
-    print_world(world);
-    /*for(int i=0; i < WORLD_SIZE; ++i ){
-        if(i%WIDTH = WIDTH -1){
-            printf("%d\n", world->status[i]);
-        }
-        else{
-            printf(" %d", world->status[i]);
-        }
-    }*/
+    print_world(world);*/
+    test_print_triangular_world(world);
+    test_world_init_2(world);
+    //print_triangular_world(world);
     return 0;
 }
