@@ -204,23 +204,23 @@ int main() {
     simple_move_player(world, PLAYER_WHITE, &infos, 20,21);
     printf("\n");
     print_world(world);
-    //printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 0, 2));
+    //printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, 0, 2));
     elephant_move(world, PLAYER_WHITE, &infos, 0,2);
     printf("\n");
     print_world(world);
 
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_BLACK, &infos , 19,8 ));
+    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_BLACK, 19,8 ));
     elephant_move(world, PLAYER_BLACK, &infos, 19,8);
     print_world(world);
 
-   printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 22, 33));
+   printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 22, 33));
     tower_move(world, PLAYER_WHITE, &infos, 10);
     print_world(world);
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 2, 22));
+    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 2, 22));
     elephant_move(world, PLAYER_WHITE, &infos, 2,22);
     print_world(world);
 
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, &infos , 22, 33));
+    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, 22, 33));
     elephant_move(world, PLAYER_WHITE, &infos, 22,33);
     print_world(world);*/
     test_print_triangular_world(world);
