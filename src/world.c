@@ -8,10 +8,10 @@
 
 };
 */
+
 struct world_t{ 
   enum color_t colors[WORLD_SIZE];
   enum sort_t sorts[WORLD_SIZE];
-  //enum status_t status[WORLD_SIZE];
 };
 
 // We used malloc, because we can't return a pointer which we defined inside the function.
