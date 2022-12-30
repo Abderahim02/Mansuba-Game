@@ -226,5 +226,10 @@ int main() {
     test_print_triangular_world(world);
     test_world_init_2(world);
     //print_triangular_world(world);
+    printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
+    struct neighbors_t neighbors = get_neighbors_triangular(76);
+    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
+        printf("%d est voisin de 76 dans la direction %s\n", neighbors.n[j].i, dir_to_string(neighbors.n[j].d));
+    }
     return 0;
 }

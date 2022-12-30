@@ -3,7 +3,6 @@
 
 #include "world.h"
 #include "neighbors.h"
-
 enum players{
   PLAYER_WHITE = 2 ,
   PLAYER_BLACK = 1 ,
