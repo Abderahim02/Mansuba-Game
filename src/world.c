@@ -32,11 +32,6 @@ struct world_t* world_init_2(){
     for(int i=1; i <= HEIGHT; ++i){
         if(i%2==0){
             for(int j = start; j < i*WIDTH ;){
-                // world_set_status(&world_2, j, PLAYABLE);
-                // world_set_sort(&world_2, j, NO_SORT);
-                // world_set(&world_2, j, NO_COLOR);
-                // world_set_status(&world_2, j+1, NOT_PLAYABLE);
-                //world_set_sort(&world_2, j, MAX_SORT);
                 world_set_sort(&world_2, j, NO_SORT);
                 world_set(&world_2, j, NO_COLOR);
                 world_set_sort(&world_2, j+1, MAX_SORT); // id its not playable its sorts = MAX_SORTS
@@ -46,10 +41,6 @@ struct world_t* world_init_2(){
         }
         else{
             for(int j = start; j < i*WIDTH;){
-                // world_set_status(&world_2,j, NOT_PLAYABLE);
-                // world_set_status(&world_2,j+1 , PLAYABLE);
-                // world_set_sort(&world_2, j+1, NO_SORT);
-                // world_set(&world_2, j+1, NO_COLOR);
                 world_set_sort(&world_2, j+1, NO_SORT);
                 world_set(&world_2, j+1, NO_COLOR);
                 world_set_sort(&world_2, j, MAX_SORT); // id its not playable its sorts = MAX_SORTS
@@ -61,12 +52,7 @@ struct world_t* world_init_2(){
     }
     return &world_2;
 }
-// //this function will destroy the allocated space in memory 
-// void destroyWorld (struct world_t* world) {
-//     free(world->colors);   
-//     free(world->sorts);
-//     free(world);
-// }
+
 
 enum color_t world_get( const struct world_t* b, unsigned int idx){
   return b->colors[idx] ;
@@ -83,11 +69,3 @@ enum sort_t world_get_sort(const struct world_t* b, unsigned int idx){
 void world_set_sort(struct world_t* b, unsigned int idx, enum sort_t c){
   b->sorts[idx] = c;
 }
-/*enum status_t world_get_status(struct world_t* b, unsigned int idx){
-  return b->status[idx] ;
-};
-
-void world_set_status(struct world_t* b, unsigned int idx, enum status_t s){
-  b->status[idx] = s;
-}
-*/

@@ -170,6 +170,15 @@ void test_print_triangular_world(struct world_t* world){
         }
     }
 }
+
+
+void print_neighbors(struct neighbors_t neighbors){
+    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
+        printf("%d est voisin de 76 dans la direction %s\n", neighbors.n[j].i, dir_to_string(neighbors.n[j].d));
+    }
+}
+
+
 void test_world_init_2(struct world_t* world){
     print_triangular_world(world);
 }
@@ -183,6 +192,7 @@ int main() {
     struct world_t* world = world_init_2();
     struct positions_info infos;
     init_infos(&infos);
+    init_players_triangular(world);
     //init_players_1(world);
     /*test_world_get(world);
     test_world_set(world);
@@ -223,13 +233,11 @@ int main() {
     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, 22, 33));
     elephant_move(world, PLAYER_WHITE, &infos, 22,33);
     print_world(world);*/
-    test_print_triangular_world(world);
-    test_world_init_2(world);
+    print_triangular_world(world);
+    //test_world_init_2(world);
     //print_triangular_world(world);
     printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
     struct neighbors_t neighbors = get_neighbors_triangular(76);
-    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
-        printf("%d est voisin de 76 dans la direction %s\n", neighbors.n[j].i, dir_to_string(neighbors.n[j].d));
-    }
+    print_neighbors(neighbors);
     return 0;
 }
