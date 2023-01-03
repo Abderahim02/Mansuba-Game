@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "triangular_world.h"
+#include "chess_world.h"
+
 #define UINT_MAX WORLD_SIZE 
 
 //simple test function for get neighbors of the position 5
@@ -246,20 +247,22 @@ void test_simple_jump_triangular_world(struct world_t* world, struct positions_i
 
 // The main function for the tests.
 int main() {
-    struct world_t* world = world_init_2();
+    struct world_t* world = world_init();
     struct positions_info infos;
     init_infos(&infos);
-    init_players_triangular(world);
-    test_simple_move_triangular_world(world, infos);
-    test_simple_jump_triangular_world(world, infos);
-    //init_players_1(world);
+    //init_players_triangular(world);
+    // test_simple_move_triangular_world(world, infos);
+    // test_simple_jump_triangular_world(world, infos);
+    init_players_1(world);
+    elephant_move(world, PLAYER_WHITE, &infos, 0,2);
+    print_world_chess(world);
     /*test_world_get(world);
     test_world_set(world);
     struct neighbors_t neighbors = get_neighbors(5);
     test_get_neighbors(neighbors);
 
     simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
-    //print_world(world);
+    
      printf("\n");
 
     // ***********************************
@@ -294,16 +297,16 @@ int main() {
     print_world(world);*/
     //print_triangular_world(world);
     //test_world_init_2(world);
-    print_triangular_world(world);
+    //print_triangular_world(world);
    // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
     //print_neighbors(76);
     //printf("bishpo movt is %d\n", is_allowed_bishop_move(world, PLAYER_BLACK, 9, 18, SWEST ));
-    bishop_move(world, PLAYER_BLACK, &infos, 9, 18, SWEST );
-    print_triangular_world(world);
-    bishop_move(world, PLAYER_WHITE, &infos, 10, 54, SEAST );
-    print_triangular_world(world);
-    bishop_move(world, PLAYER_BLACK, &infos, 89, 98, SWEST );
-    print_triangular_world(world);
+    // bishop_move(world, PLAYER_BLACK, &infos, 9, 18, SWEST );
+    // print_triangular_world(world);
+    // bishop_move(world, PLAYER_WHITE, &infos, 10, 54, SEAST );
+    // print_triangular_world(world);
+    // bishop_move(world, PLAYER_BLACK, &infos, 89, 98, SWEST );
+    // print_triangular_world(world);
     // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
     // struct neighbors_t neighbors = get_neighbors_triangular(76);
     // print_neighbors(neighbors);

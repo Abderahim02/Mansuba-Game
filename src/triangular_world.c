@@ -23,7 +23,7 @@ void print_triangular_world(struct world_t* world){
                     printf("\n\033[1;31m& \033[0m"); //we use the symbol & for elephant 
                     break;
                 case BISHOP:
-                    printf("\n\033[1;31m# \033[0m"); //we use the symbol & for elephant 
+                    printf("\n\033[1;31m# \033[0m"); //we use the symbol & for bishop
                     break;
                 default:
                     break;
@@ -191,12 +191,9 @@ void init_players_triangular(struct world_t* b) {
             world_set(b,i,WHITE);
             // Two towers in the edge of the world.
             if (i == WIDTH || i == WORLD_SIZE-WIDTH) {
-              world_set_sort(b,i,BISHOP);
+              world_set_sort(b,i,BISHOP); // we put 2 bishops one in the left down corner and one in the left up corner
             }
-            // Two elephants next to the towers.
-            // else if (i == 3*WIDTH || i == WORLD_SIZE-3*WIDTH ) {
-            //   world_set_sort(b, i, ELEPHANT);
-            // }
+
             else {
               world_set_sort(b,i,PAWN);  
             }
@@ -206,10 +203,7 @@ void init_players_triangular(struct world_t* b) {
             if (i == WIDTH-1 || i == WORLD_SIZE - WIDTH - 1) {
               world_set_sort(b,i,BISHOP);
             }
-            // Two elephants next to the towers.
-            // else if (i == WIDTH*3 - 1 || i == WORLD_SIZE- 3*WIDTH - 1) {
-            //   world_set_sort(b, i, ELEPHANT);
-            // }
+            //we put 2 bishops one in the right down corner and one in the right up corner  
             else {
               world_set_sort(b,i,PAWN);  
             }
@@ -235,30 +229,29 @@ int is_valid_cardinal_dir(enum dir_t dir){
     return 0;
 }
 
-//Im not sure about this ............................. there is a problem with the elephant move in this world
+// this is a function telling if the simple move from ex_idx to new_idx is possible 
 int is_allowed_to_simple_move_aux_triangular(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx){
   //if(is_playable_position(new_idx)){ // the new position must be playable
         switch (player) {
         case PLAYER_WHITE:
             if (is_new_ex_neighbor_triangular(ex_idx, new_idx)) { // we check if new_ex is a neighbor 
-                if( world_get_sort(world, new_idx) == 0){ //we check if new_ex is a free position
+                if( world_get_sort(world, new_idx) == NO_SORT){ //we check if new_ex is a free position
                 return 1;
                 }
             }
             break;
         case PLAYER_BLACK:
             if (is_new_ex_neighbor_triangular(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-                if( world_get_sort(world, new_idx) == 0){ //we check if new_ex is a free position
+                if( world_get_sort(world, new_idx) == NO_SORT){ //we check if new_ex is a free position
                 return 1;
                 }
             }
         default:
             break;
         }
- // }
   return 0;
 }
-
+//a booleen function returng a positive int if the bishop mouvement frome ex_idx to new_idx is possible, -1 else.
 int is_allowed_bishop_move(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx, enum dir_t dir){
     switch (player){
       case PLAYER_WHITE:
@@ -300,7 +293,7 @@ int is_allowed_bishop_move(struct world_t* world, enum players player, unsigned 
           break;
       }
 }
-
+//the bishop move function
 void bishop_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx, enum dir_t dir){
   switch (player){
     case PLAYER_WHITE:
