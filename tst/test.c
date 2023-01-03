@@ -189,17 +189,17 @@ void test_world_init_2(struct world_t* world){
 
 // Test for the simple move triangular world.
 void test_simple_move_triangular_world(struct world_t* world, struct positions_info infos) {
-    world_set_sort(world, 44, PAWN);
-    world_set(world, 44, WHITE);
-    world_set_sort(world, 35, PAWN);
-    world_set(world, 35, BLACK);
-    world_set_sort(world, 24, PAWN);
-    world_set(world, 24, BLACK);
-    world_set_sort(world, 55, PAWN);
-    world_set(world, 55, BLACK);
-    world_set_sort(world, 64, PAWN);
-    world_set(world, 64, BLACK);
-    if (is_allowed_simple_move_triangular_world(world, PLAYER_BLACK, 44, 55) == 0) {
+    world_set_sort(world, 34, PAWN);
+    world_set(world, 34, WHITE);
+    world_set_sort(world, 25, PAWN);
+    world_set(world, 25, BLACK);
+    world_set_sort(world, 14, PAWN);
+    world_set(world, 14, BLACK);
+    world_set_sort(world, 45, PAWN);
+    world_set(world, 45, BLACK);
+    world_set_sort(world, 54, PAWN);
+    world_set(world, 54, BLACK);
+    if (is_allowed_simple_move_triangular_world(world, PLAYER_BLACK, 34, 45) == 0) {
         printf("Test1 for simple move triangular world passed!\n");
     }
     if (is_allowed_simple_move_triangular_world(world, PLAYER_WHITE, 21, 32)) {
@@ -213,6 +213,36 @@ void test_simple_move_triangular_world(struct world_t* world, struct positions_i
     }
 }
 
+// Test for the simple jump in the triangular world.
+void test_simple_jump_triangular_world(struct world_t* world, struct positions_info infos) {
+    world_set_sort(world, 34, PAWN);
+    world_set(world, 34, WHITE);
+    world_set_sort(world, 25, PAWN);
+    world_set(world, 25, BLACK);
+    world_set_sort(world, 14, PAWN);
+    world_set(world, 14, BLACK);
+    world_set_sort(world, 45, PAWN);
+    world_set(world, 45, BLACK);
+    world_set_sort(world, 54, PAWN);
+    world_set(world, 54, BLACK);
+    if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, 34, 16)) {
+        printf("Test 1 simple jump triangular world PASSED!\n");
+    }
+    if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, 34, 56)) {
+        printf("Test 2 simple jump triangular world PASSED!\n");
+    }
+    if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, 34, 74)) {
+        printf("Test 3 simple jump triangular world PASSED!\n");
+    }
+    if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, 34, 14) == 0) {
+        printf("Test 4 simple jump triangular world PASSED!\n");
+    }
+    else {
+        printf("One or more test of simple jump triangular world FAILED!\n");
+    }
+}
+
+
 // The main function for the tests.
 int main() {
     struct world_t* world = world_init_2();
@@ -220,6 +250,7 @@ int main() {
     init_infos(&infos);
     init_players_triangular(world);
     test_simple_move_triangular_world(world, infos);
+    test_simple_jump_triangular_world(world, infos);
     //init_players_1(world);
     /*test_world_get(world);
     test_world_set(world);

@@ -359,3 +359,60 @@ void simple_move_triangular(struct world_t* world, enum players player, struct p
     break;
   }
 }
+
+// Is allowed function for simple move.
+int is_allowed_simple_jump_triangular_world(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx) {
+  switch (player)
+  {
+  case PLAYER_BLACK:
+    if (get_neighbor_triangular(get_neighbor_triangular(ex_idx,SWEST), SWEST) == new_idx ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,NEAST), NWEST) == new_idx ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,NORTH), NORTH) == new_idx ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx) {
+          if (world_get_sort(world, new_idx) == NO_SORT) {
+            return 1;
+          }
+    }
+    break;
+  case PLAYER_WHITE:
+    if (get_neighbor_triangular(get_neighbor_triangular(ex_idx,SEAST), SEAST) == new_idx ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,NEAST), NEAST) == new_idx ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,NORTH), NORTH) == new_idx ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx) {
+      if (world_get_sort(world, new_idx) == NO_SORT) {
+        return 1;
+      }
+    }
+  default:
+    break;
+  }
+  return 0;
+}
+
+
+// Simple jump function for the triangular world.
+void simple_jump_triangular(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
+  switch (player)
+  {
+  case PLAYER_WHITE:
+    if (is_allowed_simple_jump_triangular_world(world, player, ex_idx, new_idx)) {
+      world_set(world, new_idx, WHITE);
+      world_set(world, ex_idx, NO_COLOR);
+      world_set_sort(world, ex_idx, NO_SORT);
+      world_set_sort(world, new_idx, PAWN);
+      update_current_pieces(player, infos, ex_idx, new_idx);
+    }
+    break;
+  case PLAYER_BLACK:
+    if (is_allowed_simple_jump_triangular_world(world, player, ex_idx, new_idx)) {
+      world_set(world, new_idx, BLACK);
+      world_set(world, ex_idx, NO_COLOR);
+      world_set_sort(world, ex_idx, NO_SORT);
+      world_set_sort(world, new_idx, PAWN);
+      update_current_pieces(player, infos, ex_idx, new_idx);
+    }
+    break;    
+  default:
+    break;
+  }
+}
