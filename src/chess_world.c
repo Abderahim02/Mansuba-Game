@@ -81,13 +81,13 @@ void print_world_chess( struct world_t* world) {
         }
         else{
             for(int j = start; j < i*WIDTH;){
-                // printf("\033[0;40m\033[1;31m  \033[0m");
-                // printf("\033[0;47m\033[1;31m  \033[0m");
                 enum sort_t sort_1 = world_get_sort(world,j);
+                enum color_t color_1 = world_get(world, j);
                 switch (sort_1){
+                    
                     case PAWN:
                         //printf("\033[0;40m\033[1;31m *  \033[0m");
-                        if(world_get(world, j) == WHITE){
+                        if( color_1 == WHITE){
                             printf("\033[0;40m\033[1;31m *  \033[0m");
                         }
                         else{
@@ -96,7 +96,7 @@ void print_world_chess( struct world_t* world) {
                         break;
                     case TOWER:
                         //printf("\033[0;40m\033[1;31m &  \033[0m");
-                        if(world_get(world, j) == WHITE){
+                        if(color_1 == WHITE){
                             printf("\033[0;40m\033[1;31m &  \033[0m");
                         }
                         else{
@@ -105,7 +105,7 @@ void print_world_chess( struct world_t* world) {
                         break;
                     case ELEPHANT:
                         //printf("\033[0;40m\033[1;31m <  \033[0m");
-                        if(world_get(world, j) == WHITE){
+                        if(color_1 == WHITE){
                             printf("\033[0;40m\033[1;31m >  \033[0m");
                         }
                         else{
@@ -117,10 +117,12 @@ void print_world_chess( struct world_t* world) {
                         break;
                 }
                 enum sort_t  sort_2 = world_get_sort(world,j+1);
+                enum color_t color_2 = world_get(world, j+1);
                 switch (sort_2){
+                    
                     case PAWN:
                         //printf("\033[0;47m\033[1;31m *  \033[0m");
-                        if(world_get(world, j+1) == WHITE){
+                        if( color_2 == WHITE){
                             printf("\033[0;47m\033[1;31m *  \033[0m");
                         }
                         else{
@@ -130,7 +132,7 @@ void print_world_chess( struct world_t* world) {
 
                     case TOWER:
                         //printf("\033[0;47m\033[1;31m &  \033[0m");
-                        if(world_get(world, j+1) == WHITE){
+                        if(color_2 == WHITE){
                             printf("\033[0;47m\033[1;31m &  \033[0m");
                         }
                         else{
@@ -140,7 +142,7 @@ void print_world_chess( struct world_t* world) {
 
                     case ELEPHANT:
                         //printf("\033[0;47m\033[1;31m <  \033[0m");
-                        if(world_get(world, j+1) == WHITE){
+                        if(color_2 == WHITE){
                             printf("\033[0;47m\033[1;31m >  \033[0m");
                         }
                         else{
@@ -153,7 +155,6 @@ void print_world_chess( struct world_t* world) {
                         break;
                 }
                 j=j+2; 
-                // id its not playable its color = MAX_color
             }
         }
         start = start + WIDTH ;

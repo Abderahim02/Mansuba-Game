@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include "chess_world.h"
 #include "triangular_world.h"
-//#define UINT_MAX 1000
 
+//a function printing the chess_world
 void print_world_chess( struct world_t* world) ;
 
 #endif 
