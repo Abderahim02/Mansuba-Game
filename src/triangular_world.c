@@ -14,13 +14,16 @@ void print_triangular_world(struct world_t* world){
             if( color == WHITE ){ // we use green color for white pieces 
                 switch (world_get_sort(world,i)){
                 case PAWN:
-                    printf("\n\033[31m* \033[0m"); //we use the symbol * for pawn 
+                    printf("\n\033[1;31m* \033[0m"); //we use the symbol * for pawn 
                     break;
                 case TOWER:
-                    printf("\n\033[31m> \033[0m");//we use the symbol > for white tower 
+                    printf("\n\033[1;31m> \033[0m");//we use the symbol > for white tower 
                     break;
                 case ELEPHANT:
-                    printf("\n\033[31m& \033[0m"); //we use the symbol & for elephant 
+                    printf("\n\033[1;31m& \033[0m"); //we use the symbol & for elephant 
+                    break;
+                case BISHOP:
+                    printf("\n\033[1;31m# \033[0m"); //we use the symbol & for elephant 
                     break;
                 default:
                     break;
@@ -36,6 +39,9 @@ void print_triangular_world(struct world_t* world){
                     break;
                 case ELEPHANT:
                     printf("\n\033[1;32m& \033[0m");
+                    break;
+                case BISHOP:
+                    printf("\n\033[1;32m# \033[0m");
                     break;
                 default:
                     break;
@@ -60,6 +66,9 @@ void print_triangular_world(struct world_t* world){
                 case ELEPHANT:
                     printf("\033[1;31m& \033[0m");
                     break;
+                case BISHOP:
+                    printf("\033[1;31m# \033[0m");
+                    break;
                 default:
                     break;
                 }
@@ -75,6 +84,9 @@ void print_triangular_world(struct world_t* world){
                     break;
                 case ELEPHANT:
                     printf("\033[1;32m& \033[0m");
+                    break;
+                case BISHOP:
+                    printf("\033[1;32m# \033[0m");
                     break;
                 default:
                     break;
@@ -179,12 +191,12 @@ void init_players_triangular(struct world_t* b) {
             world_set(b,i,WHITE);
             // Two towers in the edge of the world.
             if (i == WIDTH || i == WORLD_SIZE-WIDTH) {
-              world_set_sort(b,i,TOWER);
+              world_set_sort(b,i,BISHOP);
             }
             // Two elephants next to the towers.
-            else if (i == 3*WIDTH || i == WORLD_SIZE-3*WIDTH ) {
-              world_set_sort(b, i, ELEPHANT);
-            }
+            // else if (i == 3*WIDTH || i == WORLD_SIZE-3*WIDTH ) {
+            //   world_set_sort(b, i, ELEPHANT);
+            // }
             else {
               world_set_sort(b,i,PAWN);  
             }
@@ -192,12 +204,12 @@ void init_players_triangular(struct world_t* b) {
         else if ((i% WIDTH)  == WIDTH - 1 && is_playable_position(b, i)) {
             world_set(b, i, BLACK);
             if (i == WIDTH-1 || i == WORLD_SIZE - WIDTH - 1) {
-              world_set_sort(b,i,TOWER);
+              world_set_sort(b,i,BISHOP);
             }
             // Two elephants next to the towers.
-            else if (i == WIDTH*3 - 1 || i == WORLD_SIZE- 3*WIDTH - 1) {
-              world_set_sort(b, i, ELEPHANT);
-            }
+            // else if (i == WIDTH*3 - 1 || i == WORLD_SIZE- 3*WIDTH - 1) {
+            //   world_set_sort(b, i, ELEPHANT);
+            // }
             else {
               world_set_sort(b,i,PAWN);  
             }
@@ -247,57 +259,69 @@ int is_allowed_to_simple_move_aux_triangular(struct world_t* world, enum players
   return 0;
 }
 
-//we can add is_elephant(unsigned int ex_idx); 
-int is_allowed_elephant_move_triangular(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx){
-  if (is_new_ex_neighbor_triangular(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't do elephant move , simple move only 
-    struct neighbors_t neighbors = get_neighbors_triangular(ex_idx); // we get the neighbors of ex_idx  
-    int num_ex_idx_neighbors = number_of_neighbors(neighbors); // we get their number
-    if(num_ex_idx_neighbors > 0 ){ // we check if it has no neighbors , in this case the jump is impossible, just to prevent possible bugs
-      for(int j=0; j < num_ex_idx_neighbors ; ++j){  //we see all existants neighbors of ex_idx 
-            unsigned int tmp_position = neighbors.n[j].i; 
-            enum dir_t tmp_dir = neighbors.n[j].d;;
-            if(is_valid_cardinal_dir( tmp_dir)){ 
-                  //printf("tumber of neighbors de %d : %d\n",tmp_position, num_tmp_position_neighbors);
-                  struct neighbors_t tmp_neighbors = get_neighbors_triangular(tmp_position);
-                  int num_tmp_position_neighbors = number_of_neighbors(tmp_neighbors); 
-                  //printf("le num de voisins %d\n", num_tmp_position_neighbors);
-                  for(int k=0; k < num_tmp_position_neighbors ; ++k){
-                        enum dir_t tmp_dir_2 = tmp_neighbors.n[k].d ;
-                        if(is_valid_cardinal_dir(tmp_dir_2 )){
-                          if(is_allowed_to_simple_move_aux_triangular(world, player, tmp_position ,tmp_neighbors.n[k].i) && tmp_neighbors.n[k].i == new_idx){
-                                  return 1;
-                      }
-                  }
-               }
-           }
-        }
-     }
-  }
-  return 0;
+int is_allowed_bishop_move(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx, enum dir_t dir){
+    switch (player){
+      case PLAYER_WHITE:
+          if(dir == SEAST || dir == NEAST){
+            unsigned int start = get_neighbor_triangular( ex_idx, dir);
+            unsigned int copy = ex_idx;
+            while(is_allowed_to_simple_move_aux_triangular(world, player, copy, start)){
+              if(start == new_idx ){
+              return start;
+              } 
+              int tmp = start;
+              start = get_neighbor_triangular(start, dir);
+              copy = tmp;
+            }
+          }
+            return -1; 
+          break;
+      case PLAYER_BLACK:
+            if(dir == SWEST || dir == NWEST){
+            unsigned int start = get_neighbor_triangular( ex_idx, dir);
+            unsigned int copy = ex_idx;
+            while(is_allowed_to_simple_move_aux_triangular(world, player, copy, start)){
+            //   printf("start = %d\n", start);
+            //   print_neighbors(start); 
+              if(start == new_idx ){
+              return start;
+              } 
+              //printf("\n");
+              int tmp = start;
+              start = get_neighbor_triangular(start, dir);
+              //printf("new_start = %d\n", start);
+              copy = tmp;
+            }
+          }
+          return -1;
+          break;
+      default:
+          return -1;
+          break;
+      }
 }
 
-void elephant_move_triangular(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
+void bishop_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx, enum dir_t dir){
   switch (player){
     case PLAYER_WHITE:
-      if(is_allowed_elephant_move(world , player, ex_idx, new_idx)){
+      if(is_allowed_bishop_move(world, player,ex_idx, new_idx, dir) ){
             world_set(world, new_idx, WHITE);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
-            world_set_sort(world, new_idx, ELEPHANT);
-            update_current_pieces(player, infos, ex_idx, new_idx);  
-            }
+            world_set_sort(world, new_idx, BISHOP);
+            update_current_pieces(player, infos, ex_idx, new_idx);   
+      }
       break;
     case PLAYER_BLACK:
-        if(is_allowed_elephant_move(world,player, ex_idx, new_idx)){
+        if(is_allowed_bishop_move(world,player, ex_idx, new_idx, dir)){
             world_set(world, new_idx, BLACK);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
-            world_set_sort(world, new_idx,ELEPHANT);
-            update_current_pieces(player, infos, ex_idx, new_idx);  
+            world_set_sort(world, new_idx, BISHOP);
+            update_current_pieces(player, infos, ex_idx, new_idx);
       }
       break;
     default:
       break;
   }
 }
-

@@ -397,17 +397,17 @@ void print_world( struct world_t* world) {
   for (int i=0; i< WORLD_SIZE ; ++i){
     if( i%HEIGHT == 0 && i != 0 ){
       //world->colors[i]==WHITE
-      if( world_get(world, i) == WHITE ){ // we use green color for white pieces 
+      if( world_get(world, i) == WHITE ){ // we use green color for black pieces 
         //world->sorts[i]
         switch (world_get_sort(world,i)){
           case PAWN:
-              printf("\n\033[31m* \033[0m"); //we use the symbol * for pawn 
+              printf("\n\033[1;31m* \033[0m"); //we use the symbol * for pawn 
               break;
           case TOWER:
-              printf("\n\033[31m> \033[0m");//we use the symbol > for white tower 
+              printf("\n\033[1;31m> \033[0m");//we use the symbol > for white tower 
               break;
           case ELEPHANT:
-              printf("\n\033[31m& \033[0m"); //we use the symbol & for elephant 
+              printf("\n\033[1;31m& \033[0m"); //we use the symbol & for elephant 
               break;
           default:
               break;

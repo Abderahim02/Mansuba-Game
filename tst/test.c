@@ -172,9 +172,10 @@ void test_print_triangular_world(struct world_t* world){
 }
 
 
-void print_neighbors(struct neighbors_t neighbors){
+void print_neighbors(unsigned int idx){
+    struct neighbors_t neighbors= get_neighbors_triangular(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
-        printf("%d est voisin de 76 dans la direction %s\n", neighbors.n[j].i, dir_to_string(neighbors.n[j].d));
+        printf("%d est voisin de %d dans la direction %s\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
     }
 }
 
@@ -223,7 +224,7 @@ int main() {
     elephant_move(world, PLAYER_BLACK, &infos, 19,8);
     print_world(world);
 
-   printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 22, 33));
+    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 22, 33));
     tower_move(world, PLAYER_WHITE, &infos, 10);
     print_world(world);
     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 2, 22));
@@ -233,11 +234,17 @@ int main() {
     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, 22, 33));
     elephant_move(world, PLAYER_WHITE, &infos, 22,33);
     print_world(world);*/
-    print_triangular_world(world);
-    //test_world_init_2(world);
     //print_triangular_world(world);
-    printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
-    struct neighbors_t neighbors = get_neighbors_triangular(76);
-    print_neighbors(neighbors);
+    //test_world_init_2(world);
+    print_triangular_world(world);
+   // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
+    //print_neighbors(76);
+    //printf("bishpo movt is %d\n", is_allowed_bishop_move(world, PLAYER_BLACK, 9, 18, SWEST ));
+    bishop_move(world, PLAYER_BLACK, &infos, 9, 18, SWEST );
+    print_triangular_world(world);
+    bishop_move(world, PLAYER_WHITE, &infos, 10, 54, SEAST );
+    print_triangular_world(world);
+    bishop_move(world, PLAYER_BLACK, &infos, 89, 98, SWEST );
+    print_triangular_world(world);
     return 0;
 }
