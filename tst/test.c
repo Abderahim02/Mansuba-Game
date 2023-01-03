@@ -187,12 +187,39 @@ void test_world_init_2(struct world_t* world){
 //     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
 // }
 
+// Test for the simple move triangular world.
+void test_simple_move_triangular_world(struct world_t* world, struct positions_info infos) {
+    world_set_sort(world, 44, PAWN);
+    world_set(world, 44, WHITE);
+    world_set_sort(world, 35, PAWN);
+    world_set(world, 35, BLACK);
+    world_set_sort(world, 24, PAWN);
+    world_set(world, 24, BLACK);
+    world_set_sort(world, 55, PAWN);
+    world_set(world, 55, BLACK);
+    world_set_sort(world, 64, PAWN);
+    world_set(world, 64, BLACK);
+    if (is_allowed_simple_move_triangular_world(world, PLAYER_BLACK, 44, 55) == 0) {
+        printf("Test1 for simple move triangular world passed!\n");
+    }
+    if (is_allowed_simple_move_triangular_world(world, PLAYER_WHITE, 21, 32)) {
+        simple_move_triangular(world, PLAYER_WHITE, &infos, 21, 32);
+        if (world_get(world, 32) == WHITE) {
+            printf("Test2 for simple move triangular world passed!\n");
+        }
+        else {
+            printf("Test2 for simple move triangular world failed!\n");
+        }
+    }
+}
+
 // The main function for the tests.
 int main() {
     struct world_t* world = world_init_2();
     struct positions_info infos;
     init_infos(&infos);
     init_players_triangular(world);
+    test_simple_move_triangular_world(world, infos);
     //init_players_1(world);
     /*test_world_get(world);
     test_world_set(world);
@@ -236,8 +263,8 @@ int main() {
     print_triangular_world(world);
     //test_world_init_2(world);
     //print_triangular_world(world);
-    printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
-    struct neighbors_t neighbors = get_neighbors_triangular(76);
-    print_neighbors(neighbors);
+    // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
+    // struct neighbors_t neighbors = get_neighbors_triangular(76);
+    // print_neighbors(neighbors);
     return 0;
 }
