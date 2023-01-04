@@ -383,20 +383,30 @@ int is_allowed_simple_jump_triangular_world(struct world_t* world, enum players 
   switch (player)
   {
   case PLAYER_BLACK:
+    // Checking if ex_idx has a neighbour and the new_idx is empty.
     if (get_neighbor_triangular(get_neighbor_triangular(ex_idx,SWEST), SWEST) == new_idx ||
+        world_get_sort(world, get_neighbor_triangular(ex_idx,SWEST)) != NO_SORT ||
         get_neighbor_triangular(get_neighbor_triangular(ex_idx,NEAST), NWEST) == new_idx ||
+        world_get_sort(world, get_neighbor_triangular(ex_idx,NEAST)) != NO_SORT ||
         get_neighbor_triangular(get_neighbor_triangular(ex_idx,NORTH), NORTH) == new_idx ||
-        get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx) {
+        world_get_sort(world, get_neighbor_triangular(ex_idx,NORTH)) != NO_SORT ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx ||
+        world_get_sort(world, get_neighbor_triangular(ex_idx,SOUTH)) != NO_SORT) {
           if (world_get_sort(world, new_idx) == NO_SORT) {
             return 1;
           }
     }
     break;
   case PLAYER_WHITE:
+    // Checking if ex_idx has a neighbour and the new_idx is empty.
     if (get_neighbor_triangular(get_neighbor_triangular(ex_idx,SEAST), SEAST) == new_idx ||
+        world_get_sort(world, get_neighbor_triangular(ex_idx,SEAST)) != NO_SORT ||
         get_neighbor_triangular(get_neighbor_triangular(ex_idx,NEAST), NEAST) == new_idx ||
+        world_get_sort(world, get_neighbor_triangular(ex_idx,NEAST)) != NO_SORT ||
         get_neighbor_triangular(get_neighbor_triangular(ex_idx,NORTH), NORTH) == new_idx ||
-        get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx) {
+        world_get_sort(world, get_neighbor_triangular(ex_idx,NORTH)) != NO_SORT ||
+        get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx ||
+        world_get_sort(world, get_neighbor_triangular(ex_idx,SOUTH)) != NO_SORT) {
       if (world_get_sort(world, new_idx) == NO_SORT) {
         return 1;
       }
