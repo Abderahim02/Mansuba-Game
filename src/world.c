@@ -14,7 +14,6 @@ struct world_t{
   enum sort_t sorts[WORLD_SIZE];
 };
 
-// We used malloc, because we can't return a pointer which we defined inside the function.
 struct world_t monde ;
 struct world_t* world_init(){
   //struct world_t* monde = malloc(sizeof(struct world_t));
@@ -24,7 +23,7 @@ struct world_t* world_init(){
   }
     return  &monde;
 }
-
+//function returning a pointer to a triangular world
 struct world_t world_2;
 
 struct world_t* world_init_triangular(){

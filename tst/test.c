@@ -173,12 +173,7 @@ void test_print_triangular_world(struct world_t* world){
 }
 
 
-void print_neighbors(unsigned int idx){
-    struct neighbors_t neighbors= get_neighbors_triangular(idx);
-    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
-        printf("%d est voisin de %d dans la direction %s\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
-    }
-}
+
 
 
 void test_world_init_2(struct world_t* world){
@@ -244,6 +239,42 @@ void test_simple_jump_triangular_world(struct world_t* world, struct positions_i
     }
 }
 
+void print_neighbors(unsigned int idx){
+    struct neighbors_t neighbors= get_neighbors_triangular(idx);
+    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
+        if(neighbors.n[j].i != UINT_MAX){
+        printf("%d est voisin de %d dans la direction %s\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+         }
+    }
+}
+
+void test_get_neighbors_triangular(){
+    int idx = 1;
+    struct neighbors_t neighbors= get_neighbors_triangular(idx);
+    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
+        if(neighbors.n[j].i == 11 || neighbors.n[j].i == 10){
+            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+        }
+        
+    }
+    printf("\n");
+    idx = 56;
+    neighbors= get_neighbors_triangular(idx);
+    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
+        if(neighbors.n[j].i == 65 || neighbors.n[j].i == 76 || neighbors.n[j].i == 67 || neighbors.n[j].i == 45 || neighbors.n[j].i == 36|| neighbors.n[j].i == 47 ){
+            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+        }
+    }
+     printf("\n");
+    idx = 49;
+    neighbors= get_neighbors_triangular(idx);
+    for(int j=0; j< MAX_NEIGHBORS ; ++j ){
+        if(neighbors.n[j].i == 29 || neighbors.n[j].i == 38 || neighbors.n[j].i == 58|| neighbors.n[j].i == 69 ){
+            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+        }
+    }
+
+}
 
 // The main function for the tests.
 int main() {
@@ -253,8 +284,8 @@ int main() {
     //init_players_triangular(world);
     // test_simple_move_triangular_world(world, infos);
     // test_simple_jump_triangular_world(world, infos);
-    init_players_1(world);
-    elephant_move(world, PLAYER_WHITE, &infos, 0,2);
+    init_players_chess(world);
+    //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
     print_world_chess(world);
     /*test_world_get(world);
     test_world_set(world);
@@ -308,7 +339,11 @@ int main() {
     // bishop_move(world, PLAYER_BLACK, &infos, 89, 98, SWEST );
     // print_triangular_world(world);
     // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
-    // struct neighbors_t neighbors = get_neighbors_triangular(76);
-    // print_neighbors(neighbors);
+    //struct neighbors_t neighbors = get_neighbors_chess(0);
+    //print_neighbors(56);
+    printf("bishpo movt in chess_world is %d\n", is_allowed_bishop_move_chess(world, PLAYER_BLACK, 19, 73, SWEST ));
+    test_get_neighbors_triangular();
+    bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 73, SWEST);
+    print_world_chess(world);
     return 0;
 }
