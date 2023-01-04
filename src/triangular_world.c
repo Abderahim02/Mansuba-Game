@@ -444,3 +444,117 @@ void simple_jump_triangular(struct world_t* world, enum players player, struct p
     break;
   }
 }
+
+
+// Is allowed function for multiply jump triangular world.
+int is_allowed_multi_jump_triangular_world(struct world_t* world, enum players player, unsigned int ex_idx) {
+  int new_idx = ex_idx;
+  // a is a bool true (1) or false (0)
+  int a = 1;
+  switch (player) {
+  case PLAYER_WHITE:
+    // We check if two jumps are possible to return true or false.
+    for (int b = 0; b < 2; ++b) {
+      a = 0;
+      // Forward move: For white it means to jump +2
+      if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + 4)) {
+        a = 1;
+        new_idx = new_idx + 4;
+      }
+      // Forward left move: means to jump 2*width-2.
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
+        a = 1;
+        new_idx = new_idx- (2*WIDTH-2);
+      }
+      // Forward right move: means to jumo 2*width+2.
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
+        a = 1;
+        new_idx = new_idx + (2*WIDTH+2);
+      }
+    }
+    return a;
+    break;
+  case PLAYER_BLACK:
+    for (int b = 0; b < 2; ++b) {
+      a = 0;
+      // Forward move: is the same as with player white only mirror-inverted. 
+      if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx - 4)) {
+        a = 1;
+        new_idx = new_idx - 4;
+      }
+      // Forward left move
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, ex_idx, ex_idx + (2*WIDTH-2))) {
+        a = 1;
+        new_idx = new_idx + (2*WIDTH-2);
+      }
+      // Forward right move
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx- (2*WIDTH+2))) {
+        a = 1;
+        new_idx = new_idx - (2*WIDTH+2);
+      }
+    }
+    return a;
+    break;
+  default:
+    break;
+  }
+  return a;
+}
+
+// Multiply jump function for triangular world. Returns the end position of the multiply jump.
+int multi_jump_triangular_world(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx) {
+  int new_idx = ex_idx;
+  int a = 1;
+  switch (player) {
+  case PLAYER_WHITE:
+    // Will jump as long as it is possible.
+    while (a) {
+      a = 0;
+      // Forward move: For white it means to jump +4.
+      if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + 4)) {
+        simple_jump_triangular(world, PLAYER_WHITE, infos, new_idx, new_idx + 4);
+        a = 1;
+        new_idx = new_idx + 4;
+      }
+      // Forward left move: means to jump 2*width-2.
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
+        simple_jump_triangular(world, PLAYER_WHITE, infos, new_idx, new_idx - (2*WIDTH-2));
+        a = 1;
+        new_idx = new_idx - (2*WIDTH-2);
+      }
+      // Forward right move: means to jumo 2*width+2.
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
+        simple_jump_triangular(world, PLAYER_WHITE, infos, new_idx, new_idx + (2*WIDTH+2));
+        a = 1;
+        new_idx = new_idx + (2*WIDTH+2);
+      }
+    }
+    break;
+  case PLAYER_BLACK:
+    while (a) {
+      a = 0;
+      // Forward move: Is the same as with player white only mirror-inverted. 
+      if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx - 4)) {
+        simple_jump_triangular(world, PLAYER_BLACK, infos, new_idx, new_idx - 4);
+        a = 1;
+        new_idx = new_idx - 4;
+      }
+      // Forward left move.
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx + (2*WIDTH-2))) {
+        simple_jump_triangular(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2));
+        a = 1;
+        new_idx = new_idx + (2*WIDTH-2);
+      }
+      // Forward right move.
+      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx - (2*WIDTH+2))) {
+        simple_jump_triangular(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2));
+        a = 1;
+        new_idx= new_idx - (2*WIDTH+2);
+      }
+    }
+    break;
+  default:
+    break;
+  }
+  return new_idx;
+}
