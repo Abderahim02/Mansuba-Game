@@ -239,7 +239,7 @@ void test_simple_jump_triangular_world(struct world_t* world, struct positions_i
     }
 }
 
-void print_neighbors(unsigned int idx){
+void print_neighbors(unsigned int idx) {
     struct neighbors_t neighbors= get_neighbors_triangular(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i != UINT_MAX){
@@ -248,7 +248,7 @@ void print_neighbors(unsigned int idx){
     }
 }
 
-void test_get_neighbors_triangular(){
+void test_get_neighbors_triangular() {
     int idx = 1;
     struct neighbors_t neighbors= get_neighbors_triangular(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
@@ -275,6 +275,45 @@ void test_get_neighbors_triangular(){
     }
 
 }
+
+// A test for simple move in the chess world.
+void test_simple_move_chess(struct world_t* world, struct positions_info infos) {
+    // In the beginning at position 30 is a simple pawn.
+    if (is_allowed_simple_move_chess(world, PLAYER_WHITE, 30, 41)) {
+        printf("Test1 simple move chess PASSED.\n");
+        simple_move_chess(world, PLAYER_WHITE, &infos, 30, 41);
+        if (world_get(world, 30) == NO_COLOR && world_get_sort(world, 30) == NO_SORT &&
+            world_get(world, 41) == WHITE && world_get_sort(world, 41) == PAWN) {
+                printf("Test2 simple move chess PASSED. \n");
+            }
+        else {
+            printf("Test2 simple move chess FAILED. \n");
+        }
+    }
+    else {
+            printf("Test1 simple move chess FAILED. \n");
+    }
+}
+
+// A test for simple jump in the chess world.
+// It is nessacery that the "test_simple move_chess" runs before, otherwise this test is not working.
+void test_simple_jump_chess(struct world_t* world, struct positions_info infos) {
+    if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, 50, 32)) {
+        printf("Test1 simple jump chess PASSED.\n");
+        simple_jump_chess(world, PLAYER_WHITE, &infos, 50, 32);
+        if (world_get(world, 50) == NO_COLOR && world_get_sort(world, 50) == NO_SORT &&
+            world_get(world, 32) == WHITE && world_get_sort(world, 32) == PAWN) {
+                printf("Test2 simple jump chess PASSED. \n");
+            }
+        else {
+            printf("Test2 simple jump chess FAILED. \n");
+        }
+    }
+    else {
+            printf("Test1 simple jump chess FAILED. \n");
+    }
+}
+
 
 // The main function for the tests.
 int main() {
@@ -341,9 +380,11 @@ int main() {
     // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
     //struct neighbors_t neighbors = get_neighbors_chess(0);
     //print_neighbors(56);
-    printf("bishpo movt in chess_world is %d\n", is_allowed_bishop_move_chess(world, PLAYER_BLACK, 19, 73, SWEST ));
-    test_get_neighbors_triangular();
-    bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 73, SWEST);
+    // printf("bishpo movt in chess_world is %d\n", is_allowed_bishop_move_chess(world, PLAYER_BLACK, 19, 73, SWEST ));
+    // test_get_neighbors_triangular();
+    // bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 73, SWEST);
+    test_simple_move_chess(world, infos);
+    test_simple_jump_chess(world, infos);
     print_world_chess(world);
     return 0;
 }
