@@ -25,19 +25,19 @@ void init_players_chess(struct world_t* b);
 unsigned int get_neighbor_chess(unsigned int idx, enum dir_t d);
 
 // A bool function returns if a simple move for pawn is possible or not.
-int is_allowed_simple_move_chess(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx);
+int is_allowed_simple_move_chess(struct world_t* world, struct positions_info* infos, enum players player, unsigned int ex_idx, unsigned int new_idx);
 
 // The simple move function for a Pawn in chess world.
 void simple_move_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // A bool function which returns if a simple jump in chess world is allowed or not.
-int is_allowed_simple_jump_chess(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx);
+int is_allowed_simple_jump_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // Simple jump function for the chess world.
 void simple_jump_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
 // A bool function which returns if a multiply jump in chess world is allowed or not.
-int is_allowed_multi_jump_chess(struct world_t* world, enum players player, unsigned int ex_idx);
+int is_allowed_multi_jump_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx);
 
 // Multiply jump function for chess world. Returns the end position of the multiply jump.
 int multi_jump_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx);

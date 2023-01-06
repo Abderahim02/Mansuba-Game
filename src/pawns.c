@@ -124,23 +124,25 @@ int give_down_position_y(unsigned int ex_idx) {
 
 // Is tower allowed to move
 int is_allowed_tower_move(struct world_t* world, enum players player, unsigned int ex_idx) {
-    switch (player) {
-    case PLAYER_WHITE:
-        // Check if a forward or sideways move is possible. If the next field is free, the move is already possible.
-        if (world_get(world, ex_idx+1) == NO_COLOR || world_get(world, ex_idx - WIDTH) == NO_COLOR || world_get(world, ex_idx + WIDTH) == NO_COLOR) {
-            return 1;
+    if (world_get_sort(world, ex_idx) == TOWER) {
+        switch (player) {
+        case PLAYER_WHITE:
+            // Check if a forward or sideways move is possible. If the next field is free, the move is already possible.
+            if (world_get(world, ex_idx+1) == NO_COLOR || world_get(world, ex_idx - WIDTH) == NO_COLOR || world_get(world, ex_idx + WIDTH) == NO_COLOR) {
+                return 1;
+            }
+            return 0;        
+            break;
+        case PLAYER_BLACK:
+            // Almost same if function for Black, but in the other direction.
+            if (world_get(world, ex_idx-1) == NO_COLOR || world_get(world, ex_idx - WIDTH) == NO_COLOR || world_get(world, ex_idx + WIDTH) == NO_COLOR) {
+                return 1;
+            }
+            return 0;        
+            break;
+        default:
+            break;
         }
-        return 0;        
-        break;
-    case PLAYER_BLACK:
-        // Almost same if function for Black, but in the other direction.
-        if (world_get(world, ex_idx-1) == NO_COLOR || world_get(world, ex_idx - WIDTH) == NO_COLOR || world_get(world, ex_idx + WIDTH) == NO_COLOR) {
-            return 1;
-        }
-        return 0;        
-        break;
-    default:
-        break;
     }
     return 0;
 }

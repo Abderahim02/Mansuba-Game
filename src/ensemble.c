@@ -184,7 +184,7 @@ switch (player){
           if (world_get(world, new_idx) == WHITE && is_prisoner(PLAYER_WHITE, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
               if (infos->current_pieces_WHITE[j] == new_idx) {
-                infos->status_pieces_WHITE[j] == PRISONER;
+                infos->status_pieces_WHITE[j] = PRISONER;
               }
             }
           }
@@ -199,7 +199,7 @@ switch (player){
           if (world_get(world, new_idx) == BLACK && is_prisoner(PLAYER_BLACK, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
               if (infos->current_pieces_BLACK[j] == new_idx) {
-                infos->status_pieces_BLACK[j] == PRISONER;
+                infos->status_pieces_BLACK[j] = PRISONER;
               }
             }
           }
