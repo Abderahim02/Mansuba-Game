@@ -4,10 +4,30 @@
 #include "neighbors.h"
 #define UINT_MAX WORLD_SIZE
 
+
+// We used other functions for initializing the diffrent types of world.
 void init_neighbors(unsigned int seed) {
-    // For the first it should does nothing.
-    
-   }
+  switch (seed)
+  {
+  case 8:
+    printf("We are in the normal world.\n");
+    // a = 1;
+    // MAX_NEIGHBORS = 8;
+    break;
+  case 6:
+    printf("We are in the triangular world.\n");
+    // a = 2;
+    // MAX_NEIGHBORS = 6;
+    break;
+  case 4:
+    printf("We are in the chess world.\n");
+    // a = 3;
+    // MAX_NEIGHBORS = 4;
+    break;
+  default:
+    break;
+  }
+}
 
 
 unsigned int get_neighbor(unsigned int idx, enum dir_t d) {

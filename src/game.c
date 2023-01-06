@@ -10,7 +10,6 @@
 // For creating a real random number.
 #include <time.h>
 
-#define UINT_MAX 100
 
 enum move_types{ 
 SIMPLE_MOVE = 1,
