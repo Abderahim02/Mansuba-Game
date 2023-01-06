@@ -212,7 +212,7 @@ void test_simple_move_triangular_world(struct world_t* world, struct positions_i
 }
 
 // Test for the simple jump in the triangular world.
-void test_simple_jump_triangular_world(struct world_t* world, struct positions_info infos) {
+void test_simple_jump_triangular_world(struct world_t* world) {
     world_set_sort(world, 34, PAWN);
     world_set(world, 34, WHITE);
     world_set_sort(world, 25, PAWN);
