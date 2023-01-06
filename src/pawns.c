@@ -295,12 +295,12 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                 for (int j = p - WIDTH; j >= py_top; j = j - WIDTH) {
 
                     // For achiev 2: The tower can take another Tower of the opponent as a prisoner.
-                    if (world_get(world, i) == BLACK && world_get_sort(world, i) == TOWER) {
-                        world_set(world, i, WHITE);
+                    if (world_get(world, j) == BLACK && world_get_sort(world, j) == TOWER) {
+                        world_set(world, j, WHITE);
                         world_set(world, ex_idx, NO_COLOR);
-                        world_set_sort(world, i, TOWER);
+                        world_set_sort(world, j, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        update_current_pieces(world, player, infos, ex_idx, i);
+                        update_current_pieces(world, player, infos, ex_idx, j);
                     }
 
                     // Checking where the next PAWN is.
