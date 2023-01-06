@@ -123,7 +123,7 @@ number of pieces increasing*/
 void simple_move_current_player(struct world_t* world, enum players player, struct positions_info* infos, struct move move){
     if(move.type ==SIMPLE_MOVE){
             simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
-            //update_current_pieces(current_player, &infos, move.ex_idx, move.new_idx);
+            //update_current_pieces(world, current_player, &infos, move.ex_idx, move.new_idx);
     }
     }
 
