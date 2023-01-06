@@ -330,6 +330,7 @@ int main() {
     print_world_chess(world);
     test_simple_move_chess(world, infos);
     test_simple_jump_chess(world, infos);
+    bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 82, SWEST);
     print_world_chess(world);
     return 0;
 }

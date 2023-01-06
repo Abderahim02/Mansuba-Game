@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "neighbors.h"
-#define UINT_MAX 1000
+#define UINT_MAX WORLD_SIZE
 
 void init_neighbors(unsigned int seed) {
     // For the first it should does nothing.
+    
    }
 
 

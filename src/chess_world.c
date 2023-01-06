@@ -147,7 +147,8 @@ void init_players_chess(struct world_t* world) {
 
 //a booleen function returng a positive int if the bishop mouvement frome ex_idx to new_idx is possible, -1 else.
 int is_allowed_bishop_move_chess(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx, enum dir_t dir){
-    switch (player){
+   if(world_get_sort(world, ex_idx) == BISHOP){
+     switch (player){
       case PLAYER_WHITE:
           if(dir == SEAST || dir == NEAST){
             unsigned int start = get_neighbor( ex_idx, dir);
@@ -182,7 +183,10 @@ int is_allowed_bishop_move_chess(struct world_t* world, enum players player, uns
           return -1;
           break;
       }
+   }
+   return -1;
 }
+
 //the bishop move function
 void bishop_move_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx, enum dir_t dir){
   switch (player){
