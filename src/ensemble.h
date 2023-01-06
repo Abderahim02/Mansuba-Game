@@ -10,6 +10,12 @@ enum players{
   PLAYER_BLACK = 1 ,
 };
 
+// Use this enum to verify if a piece is a prisoner or not.
+enum status{
+  NON_PRISONER = 0,
+  PRISONER = 1,
+};
+
 struct world_t* world_init_2();
 enum status_t world_get_status(struct world_t* b, unsigned int idx);
 void world_set_status(struct world_t* b, unsigned int idx, enum status_t s);
@@ -19,8 +25,10 @@ struct positions_info {
   /*  at this poin we don't have to define a structure for possible mouvements of each player */
   unsigned int initial_WHITE[HEIGHT]; // initial positions of the player with white pawns
   unsigned int current_pieces_WHITE[HEIGHT]; // current positions of the player with white pawns
+  enum status status_pieces_WHITE[HEIGHT]; // Tells us if a piece of white is a prisoner (1) or not (0).
   unsigned int initial_BLACK[HEIGHT];  // initial positions of he player with black pawns
   unsigned int current_pieces_BLACK[HEIGHT]; //current positions of the player with black pawns
+  enum status status_pieces_BLACK[HEIGHT]; // Tells us if a piece of black is a prisoner (1) or not (0).
   unsigned int MAX_TURNS; // Maximum allowed turns = WORLD SIZE
   unsigned int TURNS;  // Played turns in the game.
 };
