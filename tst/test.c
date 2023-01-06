@@ -212,7 +212,7 @@ void test_simple_move_triangular_world(struct world_t* world, struct positions_i
 }
 
 // Test for the simple jump in the triangular world.
-void test_simple_jump_triangular_world(struct world_t* world) {
+void test_simple_jump_triangular_world(struct world_t* world, struct positions_info infos) {
     world_set_sort(world, 34, PAWN);
     world_set(world, 34, WHITE);
     world_set_sort(world, 25, PAWN);
@@ -281,7 +281,7 @@ void test_get_neighbors_triangular() {
 // A test for simple move in the chess world.
 void test_simple_move_chess(struct world_t* world, struct positions_info infos) {
     // In the beginning at position 30 is a simple pawn.
-    if (is_allowed_simple_move_chess(world, PLAYER_WHITE, 30, 41)) {
+    if (is_allowed_simple_move_chess(world, &infos, PLAYER_WHITE, 30, 41)) {
         printf("Test1 simple move chess PASSED.\n");
         simple_move_chess(world, PLAYER_WHITE, &infos, 30, 41);
         if (world_get(world, 30) == NO_COLOR && world_get_sort(world, 30) == NO_SORT &&
@@ -300,7 +300,7 @@ void test_simple_move_chess(struct world_t* world, struct positions_info infos) 
 // A test for simple jump in the chess world.
 // It is nessacery that the "test_simple move_chess" runs before, otherwise this test is not working.
 void test_simple_jump_chess(struct world_t* world, struct positions_info infos) {
-    if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, 50, 32)) {
+    if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, &infos, 50, 32)) {
         printf("Test1 simple jump chess PASSED.\n");
         simple_jump_chess(world, PLAYER_WHITE, &infos, 50, 32);
         if (world_get(world, 50) == NO_COLOR && world_get_sort(world, 50) == NO_SORT &&
@@ -315,6 +315,7 @@ void test_simple_jump_chess(struct world_t* world, struct positions_info infos) 
             printf("Test1 simple jump chess FAILED. \n");
     }
 }
+
 
 // The main function for the tests.
 int main() {

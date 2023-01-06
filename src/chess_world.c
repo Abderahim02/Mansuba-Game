@@ -252,15 +252,22 @@ unsigned int get_neighbor_chess(unsigned int idx, enum dir_t d) {
 
 
 // A bool function returns if a simple move for pawn is possible or not.
-int is_allowed_simple_move_chess(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx) {
+int is_allowed_simple_move_chess(struct world_t* world, struct positions_info* infos, enum players player, unsigned int ex_idx, unsigned int new_idx) {
     switch (player)
     {
     case PLAYER_WHITE:
         // White player is not allowed to move in any west direction.
         if (get_neighbor_chess(ex_idx, NEAST) == new_idx || get_neighbor_chess(ex_idx, SEAST) == new_idx) {
-            // New position must be empty.
             if (world_get(world, new_idx) == NO_COLOR) {
                 return 1;
+            }
+            // For achiev 2 the new position must be empty or taken by the opponent with the same sort.
+            else if (world_get(world, new_idx) == BLACK && world_get_sort(world, new_idx) == PAWN) {
+              for (int i = 0; i < HEIGHT; ++i) {
+                if (infos->current_pieces_BLACK[i] == new_idx && infos->status_pieces_BLACK[i] == NON_PRISONER) {
+                  return 1;
+                }
+              }
             }
         }
         break;
@@ -268,8 +275,15 @@ int is_allowed_simple_move_chess(struct world_t* world, enum players player, uns
         // Black player is not allowed to move in any east direction.
         if (get_neighbor_chess(ex_idx, NWEST) == new_idx || get_neighbor_chess(ex_idx, SWEST) == new_idx) {
             // New position must be empty.
-            if (world_get(world, new_idx) == NO_COLOR) {
+            if (world_get(world, new_idx) == NO_COLOR || (world_get(world, new_idx) == WHITE && world_get_sort (world, new_idx) == PAWN)) {
                 return 1;
+            }
+            else if (world_get(world, new_idx) == WHITE && world_get_sort(world, new_idx) == PAWN) {
+              for (int i = 0; i < HEIGHT; ++i) {
+                if (infos->current_pieces_WHITE[i] == new_idx && infos->status_pieces_WHITE[i] == NON_PRISONER) {
+                  return 1;
+                }
+              }
             }
         }
         break;
@@ -284,7 +298,7 @@ void simple_move_chess(struct world_t* world, enum players player, struct positi
   switch (player)
   {
   case PLAYER_WHITE:
-    if (is_allowed_simple_move_chess(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_move_chess(world, infos, player, ex_idx, new_idx)) {
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -293,7 +307,7 @@ void simple_move_chess(struct world_t* world, enum players player, struct positi
     }
     break;
   case PLAYER_BLACK:
-    if (is_allowed_simple_move_chess(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_move_chess(world, infos, player, ex_idx, new_idx)) {
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -308,7 +322,7 @@ void simple_move_chess(struct world_t* world, enum players player, struct positi
 
 
 // A bool function which returns if a simple jump in chess world is allowed or not.
-int is_allowed_simple_jump_chess(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx) {
+int is_allowed_simple_jump_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
   switch (player)
   {
   case PLAYER_BLACK:
@@ -317,9 +331,17 @@ int is_allowed_simple_jump_chess(struct world_t* world, enum players player, uns
         world_get_sort(world, get_neighbor_chess(ex_idx,SWEST)) != NO_SORT ||
         get_neighbor_chess(get_neighbor_chess(ex_idx,NEAST), NWEST) == new_idx ||
         world_get_sort(world, get_neighbor_chess(ex_idx,NEAST)) != NO_SORT) {
-            if (world_get_sort(world, new_idx) == NO_SORT) {
-                return 1;
+        if (world_get_sort(world, new_idx) == NO_SORT) {
+          return 1;
+        }
+        // For achiev2 new_idx can also be taken by the opponent but must be a Pawn.
+        else if (world_get(world, new_idx) == WHITE && world_get_sort(world, new_idx) == PAWN) {
+          for (int i = 0; i < HEIGHT; ++i) {
+            if (infos->current_pieces_WHITE[i] == new_idx && infos->status_pieces_WHITE[i] == NON_PRISONER) {
+              return 1;
             }
+          }
+        }
     }
     break;
   case PLAYER_WHITE:
@@ -330,6 +352,14 @@ int is_allowed_simple_jump_chess(struct world_t* world, enum players player, uns
         world_get_sort(world, get_neighbor_chess(ex_idx,NEAST)) != NO_SORT) {
         if (world_get_sort(world, new_idx) == NO_SORT) {
             return 1;
+        }
+        // For achiev2 new_idx can also be taken by the opponent but must be a Pawn.
+        else if (world_get(world, new_idx) == BLACK && world_get_sort(world, new_idx) == PAWN) {
+          for (int i = 0; i < HEIGHT; ++i) {
+            if (infos->current_pieces_BLACK[i] == new_idx && infos->status_pieces_BLACK[i] == NON_PRISONER) {
+              return 1;
+            }
+          }
         }
     }
   default:
@@ -343,7 +373,7 @@ void simple_jump_chess(struct world_t* world, enum players player, struct positi
   switch (player)
   {
   case PLAYER_WHITE:
-    if (is_allowed_simple_jump_chess(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_jump_chess(world, player, infos, ex_idx, new_idx)) {
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -352,7 +382,7 @@ void simple_jump_chess(struct world_t* world, enum players player, struct positi
     }
     break;
   case PLAYER_BLACK:
-    if (is_allowed_simple_jump_chess(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_jump_chess(world, player, infos, ex_idx, new_idx)) {
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -368,7 +398,7 @@ void simple_jump_chess(struct world_t* world, enum players player, struct positi
 
 // A bool function which returns if a multiply jump in chess world is allowed or not.
 // Black and White can only jump in two possible directions.
-int is_allowed_multi_jump_chess(struct world_t* world, enum players player, unsigned int ex_idx) {
+int is_allowed_multi_jump_chess(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx) {
   int new_idx = ex_idx;
   // a is a bool true (1) or false (0)
   int a = 1;
@@ -378,12 +408,12 @@ int is_allowed_multi_jump_chess(struct world_t* world, enum players player, unsi
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward left move: means to jump 2*width-2.
-      if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
+      if (is_allowed_simple_jump_chess(world, player, infos, new_idx, new_idx - (2*WIDTH-2))) {
         a = 1;
         new_idx = new_idx- (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_chess(world, player, infos, new_idx, new_idx + (2*WIDTH+2))) {
         a = 1;
         new_idx = new_idx + (2*WIDTH+2);
       }
@@ -394,12 +424,12 @@ int is_allowed_multi_jump_chess(struct world_t* world, enum players player, unsi
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward left move
-      if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, ex_idx, ex_idx + (2*WIDTH-2))) {
+      if (is_allowed_simple_jump_chess(world, player, infos, ex_idx, ex_idx + (2*WIDTH-2))) {
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move
-      else if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, new_idx, new_idx- (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_chess(world, player, infos, new_idx, new_idx- (2*WIDTH+2))) {
         a = 1;
         new_idx = new_idx - (2*WIDTH+2);
       }
@@ -422,13 +452,13 @@ int multi_jump_chess(struct world_t* world, enum players player, struct position
     while (a) {
       a = 0;
       // Forward left move: means to jump 2*width-2.
-      if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
+      if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, infos, new_idx, new_idx - (2*WIDTH-2))) {
         simple_jump_chess(world, PLAYER_WHITE, infos, new_idx, new_idx - (2*WIDTH-2));
         a = 1;
         new_idx = new_idx - (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, infos, new_idx, new_idx + (2*WIDTH+2))) {
         simple_jump_chess(world, PLAYER_WHITE, infos, new_idx, new_idx + (2*WIDTH+2));
         a = 1;
         new_idx = new_idx + (2*WIDTH+2);
@@ -439,19 +469,19 @@ int multi_jump_chess(struct world_t* world, enum players player, struct position
     while (a) {
       a = 0;
       // Forward move: Is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, new_idx, new_idx - 4)) {
+      if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, infos, new_idx, new_idx - 4)) {
         simple_jump_chess(world, PLAYER_BLACK, infos, new_idx, new_idx - 4);
         a = 1;
         new_idx = new_idx - 4;
       }
       // Forward left move.
-      else if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, new_idx, new_idx + (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2))) {
         simple_jump_chess(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2));
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move.
-      else if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, new_idx, new_idx - (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_chess(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2))) {
         simple_jump_chess(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2));
         a = 1;
         new_idx= new_idx - (2*WIDTH+2);
