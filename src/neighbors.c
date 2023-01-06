@@ -4,9 +4,11 @@
 #include "neighbors.h"
 #define UINT_MAX WORLD_SIZE
 
+static unsigned int s;
 
 // We used other functions for initializing the diffrent types of world.
 void init_neighbors(unsigned int seed) {
+  s = seed;
   switch (seed)
   {
   case 8:

@@ -14,8 +14,10 @@ void init_infos(struct positions_info* infos) {
   for (int i = 0; i < HEIGHT ; ++i){
     infos->current_pieces_BLACK[i] = b;
     infos->initial_BLACK[i] = b;
+    infos->status_pieces_BLACK[i] = NON_PRISONER; // Achiev2: In the begin no one is a prisoner.
     infos->current_pieces_WHITE[i] = a;
     infos->initial_WHITE[i] = a;
+    infos->status_pieces_WHITE[i] = NON_PRISONER;
     a = a + HEIGHT;
     b = b + HEIGHT;
   }
@@ -154,12 +156,19 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
 }
 
 // This function update player's information after every move.
-void update_current_pieces(enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
+void update_current_pieces(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
 switch (player){
   case PLAYER_BLACK:
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_BLACK[i] == ex_idx ){
 	        infos->current_pieces_BLACK[i] = new_idx;
+          if (world_get(world, new_idx) == WHITE && is_prisoner(PLAYER_WHITE, infos, new_idx) != 1) {
+            for (int j = 0; j < HEIGHT; ++j) {
+              if (infos->current_pieces_WHITE[j] == new_idx) {
+                infos->status_pieces_WHITE[j] == PRISONER;
+              }
+            }
+          }
           ++infos->TURNS;
         }
       }
@@ -168,6 +177,13 @@ switch (player){
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
 	        infos->current_pieces_WHITE[i] = new_idx;
+          if (world_get(world, new_idx) == BLACK && is_prisoner(PLAYER_BLACK, infos, new_idx) != 1) {
+            for (int j = 0; j < HEIGHT; ++j) {
+              if (infos->current_pieces_BLACK[j] == new_idx) {
+                infos->status_pieces_BLACK[j] == PRISONER;
+              }
+            }
+          }
           ++infos->TURNS;
        }
     }
@@ -192,7 +208,7 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(player, infos, ex_idx, new_idx);
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
@@ -202,7 +218,7 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(player, infos, ex_idx, new_idx);
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
     }
     break;
   default:
@@ -256,7 +272,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
             world_set_sort(world, new_idx, PAWN);
-            update_current_pieces(player, infos, ex_idx, new_idx);   
+            update_current_pieces(world, player, infos, ex_idx, new_idx);   
       }
       break;
     case PLAYER_BLACK:
@@ -265,7 +281,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
             world_set_sort(world, new_idx, PAWN);
-            update_current_pieces(player, infos, ex_idx, new_idx);
+            update_current_pieces(world, player, infos, ex_idx, new_idx);
       }
       break;
     default:
