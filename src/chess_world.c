@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "chess_world.h"
-#define UINT_MAX 1000
 // This one print our chess_world so we that we can see changes every time
 void print_world_chess( struct world_t* world) {
   printf("\n");
@@ -21,7 +20,6 @@ void print_world_chess( struct world_t* world) {
                          }
                         break;
                     case BISHOP:
-                        //printf("\033[0;47m\033[1;31m &  \033[0m");
                         if(world_get(world, j) == WHITE){
                             printf("\033[0;47m\033[1;31m #  \033[0m");
                          }
@@ -36,7 +34,6 @@ void print_world_chess( struct world_t* world) {
                 enum sort_t sort_2 = world_get_sort(world,j+1);
                 switch (sort_2){
                     case PAWN:
-                        //printf("\033[0;40m\033[1;31m *  \033[0m");
                         if(world_get(world, j+1) == WHITE){
                             printf("\033[0;40m\033[1;31m *  \033[0m");
                          }
@@ -45,7 +42,6 @@ void print_world_chess( struct world_t* world) {
                          }
                         break;
                     case BISHOP:
-                        //printf("\033[0;40m\033[1;31m &  \033[0m");
                         if(world_get(world, j+1) == WHITE){
                             printf("\033[0;40m\033[1;31m #  \033[0m");
                          }
@@ -68,7 +64,6 @@ void print_world_chess( struct world_t* world) {
                 switch (sort_1){
                     
                     case PAWN:
-                        //printf("\033[0;40m\033[1;31m *  \033[0m");
                         if( color_1 == WHITE){
                             printf("\033[0;40m\033[1;31m *  \033[0m");
                         }
@@ -77,7 +72,6 @@ void print_world_chess( struct world_t* world) {
                         }
                         break;
                     case BISHOP:
-                        //printf("\033[0;40m\033[1;31m &  \033[0m");
                         if(color_1 == WHITE){
                             printf("\033[0;40m\033[1;31m #  \033[0m");
                         }
@@ -94,7 +88,6 @@ void print_world_chess( struct world_t* world) {
                 switch (sort_2){
                     
                     case PAWN:
-                        //printf("\033[0;47m\033[1;31m *  \033[0m");
                         if( color_2 == WHITE){
                             printf("\033[0;47m\033[1;31m *  \033[0m");
                         }
@@ -104,7 +97,6 @@ void print_world_chess( struct world_t* world) {
                         break;
 
                     case BISHOP:
-                        //printf("\033[0;47m\033[1;31m &  \033[0m");
                         if(color_2 == WHITE){
                             printf("\033[0;47m\033[1;31m #  \033[0m");
                         }
@@ -149,7 +141,7 @@ void init_players_chess(struct world_t* world) {
         white += 2*WIDTH;
         black += 2*WIDTH;
     }
-    //la boucle s arrete avant de remplir la derniere position start donc il faut le faire manuellement
+    //The while loop ends before putting the last bishop in start so we need to do it manually
     world_set_sort(world, WORLD_SIZE - WIDTH, BISHOP );
 }
 
@@ -176,15 +168,11 @@ int is_allowed_bishop_move_chess(struct world_t* world, enum players player, uns
             unsigned int start = get_neighbor( ex_idx, dir);
             unsigned int copy = ex_idx;
             while(is_allowed_to_simple_move_aux(world, player, copy, start)){
-            //   printf("start = %d\n", start);
-            //   print_neighbors(start); 
               if(start == new_idx ){
               return start;
               } 
-              //printf("\n");
               int tmp = start;
               start = get_neighbor(start, dir);
-              //printf("new_start = %d\n", start);
               copy = tmp;
             }
           }

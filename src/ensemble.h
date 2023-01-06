@@ -3,6 +3,8 @@
 
 #include "world.h"
 #include "neighbors.h"
+#define UINT_MAX WORLD_SIZE
+
 enum players{
   PLAYER_WHITE = 2 ,
   PLAYER_BLACK = 1 ,

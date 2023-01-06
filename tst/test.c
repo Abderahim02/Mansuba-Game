@@ -61,7 +61,7 @@ void test_move_tower_white_1(struct world_t* world, struct positions_info infos)
     // printf("\n");
 }
 
-
+//a function doing a test for the auxilary function move_tower_white_2
 void test_move_tower_white_2(struct world_t* world, struct positions_info infos) {
     // Check forward move with tower
     int a = 29;
@@ -150,6 +150,7 @@ void test_init_tower_elephant(struct world_t* world) {
         }
     }
 }
+//a function 
 void test_print_triangular_world(struct world_t* world){
      for(int i=0; i < WORLD_SIZE; ++i ){
         if(i%WIDTH == WIDTH -1){
@@ -248,6 +249,7 @@ void print_neighbors(unsigned int idx) {
     }
 }
 
+//a function test for 
 void test_get_neighbors_triangular() {
     int idx = 1;
     struct neighbors_t neighbors= get_neighbors_triangular(idx);
@@ -326,63 +328,6 @@ int main() {
     init_players_chess(world);
     //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
     print_world_chess(world);
-    /*test_world_get(world);
-    test_world_set(world);
-    struct neighbors_t neighbors = get_neighbors(5);
-    test_get_neighbors(neighbors);
-
-    simple_move_player(world, PLAYER_WHITE, &infos, 0, 1);
-    
-     printf("\n");
-
-    // ***********************************
-    test_move_tower_white_1(world, infos);
-    test_move_tower_white_2(world, infos);
-    test_move_tower_white_y(world, infos);
-    test_move_tower_black_1(world, infos);
-    // ***********************************
-    print_world(world);
-    printf("\n");
-    simple_move_player(world, PLAYER_WHITE, &infos, 20,21);
-    printf("\n");
-    print_world(world);
-    //printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, 0, 2));
-    elephant_move(world, PLAYER_WHITE, &infos, 0,2);
-    printf("\n");
-    print_world(world);
-
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_BLACK, 19,8 ));
-    elephant_move(world, PLAYER_BLACK, &infos, 19,8);
-    print_world(world);
-
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 22, 33));
-    tower_move(world, PLAYER_WHITE, &infos, 10);
-    print_world(world);
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE , 2, 22));
-    elephant_move(world, PLAYER_WHITE, &infos, 2,22);
-    print_world(world);
-
-    printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, PLAYER_WHITE, 22, 33));
-    elephant_move(world, PLAYER_WHITE, &infos, 22,33);
-    print_world(world);*/
-    //print_triangular_world(world);
-    //test_world_init_2(world);
-    //print_triangular_world(world);
-   // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
-    //print_neighbors(76);
-    //printf("bishpo movt is %d\n", is_allowed_bishop_move(world, PLAYER_BLACK, 9, 18, SWEST ));
-    // bishop_move(world, PLAYER_BLACK, &infos, 9, 18, SWEST );
-    // print_triangular_world(world);
-    // bishop_move(world, PLAYER_WHITE, &infos, 10, 54, SEAST );
-    // print_triangular_world(world);
-    // bishop_move(world, PLAYER_BLACK, &infos, 89, 98, SWEST );
-    // print_triangular_world(world);
-    // printf("le voisin de 12 est   %d\n", get_neighbor_triangular(12,SOUTH));
-    //struct neighbors_t neighbors = get_neighbors_chess(0);
-    //print_neighbors(56);
-    // printf("bishpo movt in chess_world is %d\n", is_allowed_bishop_move_chess(world, PLAYER_BLACK, 19, 73, SWEST ));
-    // test_get_neighbors_triangular();
-    // bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 73, SWEST);
     test_simple_move_chess(world, infos);
     test_simple_jump_chess(world, infos);
     print_world_chess(world);

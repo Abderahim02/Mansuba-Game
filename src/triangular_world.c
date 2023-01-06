@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "triangular_world.h"
-#define UINT_MAX 1000
 
 //A function printing the triangular world 
 void print_triangular_world(struct world_t* world){

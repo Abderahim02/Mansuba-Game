@@ -2,12 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "world.h"
-/*enum status_t {
-  PLAYABLE  = 1,
-  NOT_PLAYABLE = 0,
 
-};
-*/
 
 struct world_t{ 
   enum color_t colors[WORLD_SIZE];
@@ -25,7 +20,6 @@ struct world_t* world_init(){
 }
 //function returning a pointer to a triangular world
 struct world_t world_2;
-
 struct world_t* world_init_triangular(){
     unsigned int start = 0;
     for(int i=1; i <= HEIGHT; ++i){
