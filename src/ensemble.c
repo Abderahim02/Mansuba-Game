@@ -153,8 +153,15 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   case PLAYER_WHITE:
     if (is_current_piece_White(*infos, ex_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx) && is_neighbor_white(ex_idx, new_idx)) { // we check if new_ex is a neighbor 
-        if( world_get_sort(world, new_idx)==0 && is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1 ){ //we check if new_ex is a free position
-        return 1;
+        if( is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1 ){ //we check if new_ex is a not a prisoner of both players
+          if(world_get_sort(world, new_idx) == NO_SORT ){ //if its an empty position we can go there 
+                return 1;
+            }
+            else{ //if its not the case , we see if we can make new_idx a prisoner, we see if the pieces have the same weight(same sort)
+              if(world_get(world, new_idx) != WHITE && world_get_sort(world,ex_idx) == world_get_sort(world,new_idx)){
+                  return 1;
+              }
+            }
         }
       }
     }
@@ -162,8 +169,16 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   case PLAYER_BLACK:
     if (is_current_piece_Black(*infos, ex_idx) && is_neighbor_black(ex_idx, new_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-        if(world_get_sort(world, new_idx) == 0 && is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1  ){ //we check if new_ex is a free position
-        return 1;
+        if( is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1  ){ 
+          if(world_get_sort(world, new_idx) == NO_SORT ){
+                return 1;
+            }
+            else{
+              if(world_get(world, new_idx) != BLACK && world_get_sort(world,ex_idx) == world_get_sort(world,new_idx)){ 
+                  return 1;
+              }
+            }
+          
         }
       }
     }
@@ -183,8 +198,8 @@ switch (player){
 	        infos->current_pieces_BLACK[i] = new_idx;
           if (world_get(world, new_idx) == WHITE && is_prisoner(PLAYER_WHITE, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
-              if (infos->current_pieces_WHITE[j] == new_idx) {
-                infos->status_pieces_WHITE[j] == PRISONER;
+              if (infos->current_pieces_WHITE[j] == new_idx ) {
+                infos->status_pieces_WHITE[j] = PRISONER;
               }
             }
           }
@@ -198,8 +213,8 @@ switch (player){
 	        infos->current_pieces_WHITE[i] = new_idx;
           if (world_get(world, new_idx) == BLACK && is_prisoner(PLAYER_BLACK, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
-              if (infos->current_pieces_BLACK[j] == new_idx) {
-                infos->status_pieces_BLACK[j] == PRISONER;
+              if (infos->current_pieces_BLACK[j] == new_idx ) {
+                infos->status_pieces_BLACK[j] = PRISONER; //we make the piece prisoner
               }
             }
           }
@@ -258,12 +273,14 @@ int number_of_neighbors(struct neighbors_t neighbors) {
 }
 
 // This one tells us if the jump is possible
-int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned int new_idx){
+int is_allowed_simple_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
   if (is_new_ex_neighbor(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't jump on it only simple move 
     struct neighbors_t neighbors = get_neighbors(ex_idx); // we get the neighbors of ex_idx  
     int num_ex_idx_neighbors = number_of_neighbors(neighbors); // we get their number
     if(num_ex_idx_neighbors > 0){ // we check if it has no neighbors , in this case the jump is impossible
-      for(int j=0; j < num_ex_idx_neighbors ; ++j){  //we see all existants neighbors of ex_idx 
+      switch (player){
+        case PLAYER_WHITE:
+            for(int j=0; j < num_ex_idx_neighbors ; ++j){  //we see all existants neighbors of ex_idx 
             unsigned int tmp_position = neighbors.n[j].i; // we use tmporary variables to reduce complexity
             enum dir_t tmp_dir = neighbors.n[j].d;
             if(world_get_sort(world,tmp_position) == PAWN){  //if the neighbor position is filled with a pawn
@@ -272,10 +289,50 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
                       //same direction that tmp_neighbor is neighbor of ex_idx (we got the neighbor of the neighbor of ex_idx in the same direction)
                 if((neighbor_in_same_dir == new_idx)  && (world_get_sort(world, neighbor_in_same_dir) == NO_SORT) ){ /*we check if it is the position that we want to go in 
                 and if it is empty so that we can jump there */
-                  return 1;
+                  if(world_get_sort(world, neighbor_in_same_dir) == NO_SORT){
+                    return 1;
+                  }
+                  else{
+                    if(world_get_sort(world, new_idx) == world_get_sort(world, ex_idx) && is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1 ){
+                        if(world_get(world,new_idx ) == BLACK){
+                            return 1;
+                        }   
+                    }
+                  }
+                  
                }
             }
     
+      }
+      break;
+        case PLAYER_BLACK:
+              for(int j=0; j < num_ex_idx_neighbors ; ++j){  //we see all existants neighbors of ex_idx 
+            unsigned int tmp_position = neighbors.n[j].i; // we use tmporary variables to reduce complexity
+            enum dir_t tmp_dir = neighbors.n[j].d;
+            if(world_get_sort(world,tmp_position) == PAWN){  //if the neighbor position is filled with a pawn
+                // struct neighbors_t neighbors_of_tmp = get_neighbors(tmp_position); // we get neighbors of this tmp_position
+                unsigned int neighbor_in_same_dir = get_neighbor(tmp_position, tmp_dir); // we get the position that is a neighbor of this tmp_neighbor in the 
+                      //same direction that tmp_neighbor is neighbor of ex_idx (we got the neighbor of the neighbor of ex_idx in the same direction)
+                if((neighbor_in_same_dir == new_idx)  && (world_get_sort(world, neighbor_in_same_dir) == NO_SORT) ){ /*we check if it is the position that we want to go in 
+                and if it is empty so that we can jump there */
+                  if(world_get_sort(world, neighbor_in_same_dir) == NO_SORT){
+                    return 1;
+                  }
+                  else{
+                    if(world_get_sort(world, new_idx) == world_get_sort(world, ex_idx) && is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1 ){
+                        if(world_get(world,new_idx ) == WHITE){
+                            return 1;
+                        }   
+                    }
+                  }
+                  
+               }
+            }
+    
+      }
+      break;
+      default:
+          break;
       }
     }
   }
@@ -286,7 +343,7 @@ int is_allowed_simple_jump(struct world_t* world, unsigned int ex_idx, unsigned 
 void simple_jump(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
   switch (player){
     case PLAYER_WHITE:
-      if(is_allowed_simple_jump(world, ex_idx, new_idx)){
+      if(is_allowed_simple_jump(world,player, infos, ex_idx, new_idx)){
             world_set(world, new_idx, WHITE);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
@@ -295,7 +352,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
       }
       break;
     case PLAYER_BLACK:
-        if(is_allowed_simple_jump(world, ex_idx, new_idx)){
+        if(is_allowed_simple_jump(world,player, infos, ex_idx, new_idx)){
             world_set(world, new_idx, BLACK);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
@@ -309,7 +366,7 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
 }
 
 // Test function is multiple jump is possible.
-unsigned int is_multi_jump_allowed(struct world_t* world, enum players player, unsigned int ex_idx) {
+unsigned int is_multi_jump_allowed(struct world_t* world, enum players player,struct positions_info* infos, unsigned int ex_idx) {
 unsigned int new_idx= ex_idx;
 int a = 1;
   switch (player) {
@@ -318,17 +375,17 @@ int a = 1;
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward move: For white it means to jump +2
-      if (is_allowed_simple_jump(world, new_idx, new_idx+ 2)) {
+      if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx+ 2)) {
         a = 1;
         new_idx = new_idx + 2;
       }
       // Forward left move: means to jump 2*width-2.
-      else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump(world,player, infos, new_idx, new_idx - (2*WIDTH-2))) {
         a = 1;
         new_idx = new_idx- (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump(world, player, infos ,new_idx, new_idx + (2*WIDTH+2))) {
         a = 1;
         new_idx = new_idx + (2*WIDTH+2);
       }
@@ -339,17 +396,17 @@ int a = 1;
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward move: is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump(world, new_idx, new_idx - 2)) {
+      if (is_allowed_simple_jump(world,player, infos, new_idx, new_idx - 2)) {
         a = 1;
         new_idx = new_idx - 2;
       }
       // Forward left move
-      else if (is_allowed_simple_jump(world, ex_idx, ex_idx + (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump(world,player, infos, ex_idx, ex_idx + (2*WIDTH-2))) {
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move
-      else if (is_allowed_simple_jump(world, new_idx, new_idx- (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx- (2*WIDTH+2))) {
         a = 1;
         new_idx = new_idx - (2*WIDTH+2);
       }
@@ -371,19 +428,19 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
     while (a) {
       a = 0;
       // Forward move: For white it means to jump +2.
-      if (is_allowed_simple_jump(world, new_idx, new_idx + 2)) {
+      if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx + 2)) {
         simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx + 2);
         a = 1;
         new_idx = new_idx + 2;
       }
       // Forward left move: means to jump 2*width-2.
-      else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx - (2*WIDTH-2))) {
         simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx - (2*WIDTH-2));
         a = 1;
         new_idx = new_idx - (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx + (2*WIDTH+2))) {
         simple_jump(world, PLAYER_WHITE, infos, new_idx, new_idx + (2*WIDTH+2));
         a = 1;
         new_idx = new_idx + (2*WIDTH+2);
@@ -394,19 +451,19 @@ unsigned int multi_jump(struct world_t* world, enum players player, struct posit
     while (a) {
       a = 0;
       // Forward move: Is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump(world, new_idx, new_idx - 2)) {
+      if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx - 2)) {
         simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx - 2);
         a = 1;
         new_idx = new_idx - 2;
       }
       // Forward left move.
-      else if (is_allowed_simple_jump(world, new_idx, new_idx + (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx + (2*WIDTH-2))) {
         simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2));
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move.
-      else if (is_allowed_simple_jump(world, new_idx, new_idx - (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump(world, player, infos, new_idx, new_idx - (2*WIDTH+2))) {
         simple_jump(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2));
         a = 1;
         new_idx= new_idx - (2*WIDTH+2);

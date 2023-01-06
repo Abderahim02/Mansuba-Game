@@ -322,16 +322,21 @@ int main() {
     struct positions_info infos;
     init_infos(&infos);
     int a=90;
+    //bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 91, SWEST);
     printf("la case %d est prisoniere? %d", a, is_prisoner(PLAYER_WHITE, &infos, a ));
     //init_players_triangular(world);
     // test_simple_move_triangular_world(world, infos);
     // test_simple_jump_triangular_world(world, infos);
-    init_players_chess(world);
+    init_players_0(world);
     //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
-    print_world_chess(world);
-    test_simple_move_chess(world, infos);
-    test_simple_jump_chess(world, infos);
-    bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 82, SWEST);
-    print_world_chess(world);
+    print_world(world);
+    //test_simple_move_chess(world, infos);
+    //test_simple_jump_chess(world, infos);
+    print_world(world);
+    //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 99,98));
+    tower_move(world, PLAYER_BLACK, &infos,99 );
+    world_set_sort(world, 91, PAWN);
+    printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
+    print_world(world);
     return 0;
 }

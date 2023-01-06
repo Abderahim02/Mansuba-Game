@@ -33,7 +33,8 @@ int is_allowed_to_simple_move_aux(struct world_t* world, enum players player, un
 
 //we can add is_elephant(unsigned int ex_idx); 
 int is_allowed_elephant_move(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx){
-  if (is_new_ex_neighbor(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't do elephant move , simple move only 
+  if(world_get_sort(world, ex_idx)){
+        if (is_new_ex_neighbor(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't do elephant move , simple move only 
     struct neighbors_t neighbors = get_neighbors(ex_idx); // we get the neighbors of ex_idx  
     int num_ex_idx_neighbors = number_of_neighbors(neighbors); // we get their number
     if(num_ex_idx_neighbors > 0 ){ // we check if it has no neighbors , in this case the jump is impossible, just to prevent possible bugs
@@ -41,10 +42,8 @@ int is_allowed_elephant_move(struct world_t* world, enum players player, unsigne
             unsigned int tmp_position = neighbors.n[j].i; 
             enum dir_t tmp_dir = neighbors.n[j].d;;
             if(is_cardinal_dir( tmp_dir)){ 
-                  //printf("tumber of neighbors de %d : %d\n",tmp_position, num_tmp_position_neighbors);
                   struct neighbors_t tmp_neighbors = get_neighbors(tmp_position);
                   int num_tmp_position_neighbors = number_of_neighbors(tmp_neighbors); 
-                  //printf("le num de voisins %d\n", num_tmp_position_neighbors);
                   for(int k=0; k < num_tmp_position_neighbors ; ++k){
                         enum dir_t tmp_dir_2 = tmp_neighbors.n[k].d ;
                         if(is_cardinal_dir(tmp_dir_2 )){
@@ -56,6 +55,7 @@ int is_allowed_elephant_move(struct world_t* world, enum players player, unsigne
            }
         }
      }
+  }
   }
   return 0;
 }

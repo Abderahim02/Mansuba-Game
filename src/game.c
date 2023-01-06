@@ -80,14 +80,14 @@ struct move choose_random_move_for_piece(struct world_t* world, enum players pla
     struct move move; 
     move.ex_idx = ex_idx;
     unsigned int i = 45;
-    while(is_allowed_simple_jump(world, ex_idx, i)==0 && is_allowed_to_simple_move(world, player, infos, ex_idx, i) == 0 
-        && is_multi_jump_allowed(world, player, ex_idx) == 0){
+    while(is_allowed_simple_jump(world, player, infos, ex_idx, i)==0 && is_allowed_to_simple_move(world, player, infos, ex_idx, i) == 0 
+        && is_multi_jump_allowed(world, player, infos, ex_idx) == 0){
         i = rand() % WORLD_SIZE;
-        if (is_multi_jump_allowed(world, player, ex_idx)) { /*we favorises the multiple jump mouvement*/
+        if (is_multi_jump_allowed(world, player,infos,  ex_idx)) { /*we favorises the multiple jump mouvement*/
             move.type = MULTIPLE_JUMP;
             return move;
         }
-        else if(is_allowed_simple_jump(world, ex_idx, i)){ /*if it's not possible we go for the simple jump*/
+        else if(is_allowed_simple_jump(world, player, infos, ex_idx, i)){ /*if it's not possible we go for the simple jump*/
             move.new_idx = i;
             move.type = SIMPLE_JUMP;
             return move;
@@ -174,7 +174,7 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
         }
         // We leave this If funtion here, because it's usefull for fixing further problems
         // And helped us fixing old problems.
-        if (count_pieces(world) != 10) {
+        if (count_pieces(world) > HEIGHT) {
             printf("ERROR!!!!!!!!!!!!!!!!!!!! \n");
             printf("%d\n", count_pieces(world));
             printf("Choosen peace was: %d\n", p);
@@ -212,7 +212,7 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
         }
         // We leave this If funtion here, because it's usefull for fixing further problems
         // And helped us fixing old problems.
-        if (count_pieces(world) != 10) {
+        if (count_pieces(world) > HEIGHT) {
             printf("ERROR!!!!!!!!!!!!!!!!!!!! \n");
             printf("%d\n", count_pieces(world));
             printf("Choosen peace was: %d\n", p);
