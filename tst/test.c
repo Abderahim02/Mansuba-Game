@@ -316,12 +316,13 @@ void test_simple_jump_chess(struct world_t* world, struct positions_info infos) 
     }
 }
 
-
 // The main function for the tests.
 int main() {
     struct world_t* world = world_init();
     struct positions_info infos;
     init_infos(&infos);
+    int a=90;
+    printf("la case %d est prisoniere? %d", a, is_prisoner(PLAYER_WHITE, &infos, a ));
     //init_players_triangular(world);
     // test_simple_move_triangular_world(world, infos);
     // test_simple_jump_triangular_world(world, infos);

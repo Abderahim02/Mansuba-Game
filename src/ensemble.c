@@ -123,6 +123,27 @@ int is_current_piece_Black( struct positions_info infos, unsigned int ex_idx) {
   return 0;
 }
 
+//a function testing if a pièce is proisoner 
+int is_prisoner(enum players player, struct positions_info* infos, unsigned int idx ){
+  switch (player){
+    case WHITE:
+        for(int i=0; i<HEIGHT; ++i){ //we must check if its a real current position
+          if(infos->current_pieces_WHITE[i] == idx && infos->status_pieces_WHITE[i] == PRISONER ){
+              return 1;
+          }
+        }
+        break;
+    case BLACK:
+        for(int i=0; i<HEIGHT; ++i){
+          if(infos->current_pieces_BLACK[i] == idx && infos->status_pieces_BLACK[i] == PRISONER ){
+              return 1;
+          }
+        }
+    default:
+        break;
+  }
+  return -1;
+}
 
 // This one verify if it is an allowed simple move.
 int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
@@ -130,8 +151,7 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   case PLAYER_WHITE:
     if (is_current_piece_White(*infos, ex_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx) && is_neighbor_white(ex_idx, new_idx)) { // we check if new_ex is a neighbor 
-        // world->sorts[new_idx] == 0
-        if( world_get_sort(world, new_idx)==0 ){ //we check if new_ex is a free position
+        if( world_get_sort(world, new_idx)==0 && is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1 ){ //we check if new_ex is a free position
         return 1;
         }
       }
@@ -140,8 +160,7 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   case PLAYER_BLACK:
     if (is_current_piece_Black(*infos, ex_idx) && is_neighbor_black(ex_idx, new_idx)) {
       if (is_new_ex_neighbor(ex_idx, new_idx)){ // we check if new_ex is a neighbor 
-        //world->sorts[new_idx] == 0
-        if(world_get_sort(world, new_idx) == 0 ){ //we check if new_ex is a free position
+        if(world_get_sort(world, new_idx) == 0 && is_prisoner(PLAYER_BLACK, infos, new_idx) !=1 && is_prisoner(PLAYER_WHITE, infos, new_idx) !=1  ){ //we check if new_ex is a free position
         return 1;
         }
       }
