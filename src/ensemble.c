@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "world.h"
 #include "ensemble.h"
 //#define UINT_MAX WORLD_SIZE 
 
@@ -125,27 +124,6 @@ int is_current_piece_Black( struct positions_info infos, unsigned int ex_idx) {
   return 0;
 }
 
-//a function testing if a pièce is proisoner 
-int is_prisoner(enum players player, struct positions_info* infos, unsigned int idx ){
-  switch (player){
-    case WHITE:
-        for(int i=0; i<HEIGHT; ++i){ //we must check if its a real current position
-          if(infos->current_pieces_WHITE[i] == idx && infos->status_pieces_WHITE[i] == PRISONER ){
-              return 1;
-          }
-        }
-        break;
-    case BLACK:
-        for(int i=0; i<HEIGHT; ++i){
-          if(infos->current_pieces_BLACK[i] == idx && infos->status_pieces_BLACK[i] == PRISONER ){
-              return 1;
-          }
-        }
-    default:
-        break;
-  }
-  return -1;
-}
 
 // This one verify if it is an allowed simple move.
 int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
@@ -189,6 +167,7 @@ int is_allowed_to_simple_move(struct world_t* world, enum players player, struct
   return 0;
 }
 
+
 // This function update player's information after every move.
 void update_current_pieces(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
 switch (player){
@@ -200,6 +179,7 @@ switch (player){
             for (int j = 0; j < HEIGHT; ++j) {
               if (infos->current_pieces_WHITE[j] == new_idx ) {
                 infos->status_pieces_WHITE[j] = PRISONER;
+                break;
               }
             }
           }
@@ -214,7 +194,8 @@ switch (player){
           if (world_get(world, new_idx) == BLACK && is_prisoner(PLAYER_BLACK, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
               if (infos->current_pieces_BLACK[j] == new_idx ) {
-                infos->status_pieces_BLACK[j] = PRISONER; //we make the piece prisoner
+                infos->status_pieces_BLACK[j] = PRISONER;
+                break; //we make the piece prisoner
               }
             }
           }
@@ -226,7 +207,7 @@ switch (player){
     break;
   }
 }
-
+//A function printing current pieces for each player
 void print_current_pieces(struct positions_info infos){
     for(int i=0 ; i < HEIGHT; ++i){
           printf("%d   %d\n \n", infos.current_pieces_BLACK[i], infos.current_pieces_WHITE[i]);
@@ -238,21 +219,23 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
   switch (player){
   case PLAYER_BLACK : //player with black_pawns
     if(is_allowed_to_simple_move(world, player, infos, ex_idx, new_idx)){
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(world, player, infos, ex_idx, new_idx);
+      
       // We update the information about the current pieces here, because there is a problem with the index.
     }
     break;
   case PLAYER_WHITE: //player with white_pawn
     if(is_allowed_to_simple_move(world, player, infos, ex_idx, new_idx)){
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(world, player, infos, ex_idx, new_idx);
+      
     }
     break;
   default:
@@ -344,20 +327,22 @@ void simple_jump(struct world_t* world, enum players player, struct positions_in
   switch (player){
     case PLAYER_WHITE:
       if(is_allowed_simple_jump(world,player, infos, ex_idx, new_idx)){
+            update_current_pieces(world, player, infos, ex_idx, new_idx); 
             world_set(world, new_idx, WHITE);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
             world_set_sort(world, new_idx, PAWN);
-            update_current_pieces(world, player, infos, ex_idx, new_idx);   
+              
       }
       break;
     case PLAYER_BLACK:
         if(is_allowed_simple_jump(world,player, infos, ex_idx, new_idx)){
+            update_current_pieces(world, player, infos, ex_idx, new_idx);
             world_set(world, new_idx, BLACK);
             world_set(world, ex_idx, NO_COLOR);
             world_set_sort(world, ex_idx, NO_SORT);
             world_set_sort(world, new_idx, PAWN);
-            update_current_pieces(world, player, infos, ex_idx, new_idx);
+            
       }
       break;
     default:

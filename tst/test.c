@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "chess_world.h"
-
-#define UINT_MAX WORLD_SIZE 
+#include "complement_ensemble.h"
+//#define UINT_MAX WORLD_SIZE 
 
 //simple test function for get neighbors of the position 5
 void test_get_neighbors( struct neighbors_t neighbors){
@@ -333,11 +333,27 @@ int main() {
     print_world(world);
     //test_simple_move_chess(world, infos);
     //test_simple_jump_chess(world, infos);
-    print_world(world);
+    //print_world(world);
     //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 99,98));
-    tower_move(world, PLAYER_BLACK, &infos,99 );
-    world_set_sort(world, 91, PAWN);
-    printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
+    //tower_move(world, PLAYER_BLACK, &infos,99 );
+    //world_set_sort(world, 91, PAWN);
+    printf("la couleur de la case 91 est %d\n", world_get(world, 91));
+    a=91;
+    //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
+    simple_move_player(world, PLAYER_BLACK, &infos, 99,98);
+    simple_move_player(world, PLAYER_BLACK, &infos, 98,97);
+    simple_move_player(world, PLAYER_BLACK, &infos, 97,96);
+    simple_move_player(world, PLAYER_BLACK, &infos, 96,95);
+    simple_move_player(world, PLAYER_BLACK, &infos, 95,94);
+    simple_move_player(world, PLAYER_BLACK, &infos, 94,93);
+    simple_move_player(world, PLAYER_BLACK, &infos, 93,92);
+    simple_move_player(world, PLAYER_BLACK, &infos, 92,91);
+    simple_move_player(world, PLAYER_WHITE, &infos, 90,91);
+
+    //printf("is allowed to simple jump ?%d", is_allowed_simple_jump(world, PLAYER_WHITE, &infos, 90,92));
+    printf("la case %d est prisoniere? %d", 91, is_prisoner(PLAYER_BLACK, &infos, 91 ));
     print_world(world);
+    escape_piece(PLAYER_BLACK, &infos, 91);
+    printf("la case %d est prisoniere? %d\n", 91, is_prisoner(PLAYER_BLACK, &infos, 91 ));
     return 0;
 }

@@ -28,11 +28,14 @@ game.o: src/game.c
 chess_world.o: src/chess_world.c
 	gcc -c $(CFLAGS) src/chess_world.c
 
-project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o src/triangular_world.o src/chess_world.o
-	$(GCC) $(CFLAGS) src/game.c src/ensemble.o  src/neighbors.o src/world.o src/geometry.o src/triangular_world.o src/pawns.o src/chess_world.o -o project
+complement_ensemble.o: src/complement_ensemble.c
+	gcc -c $(CFLAGS) src/complement_ensemble.c
 
-test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o src/triangular_world.o src/chess_world.o
-	$(GCC) $(CFLAGS)  -I src tst/test.c src/ensemble.o  src/pawns.o src/neighbors.o  src/triangular_world.o src/chess_world.o src/geometry.o src/world.o -o test
+project: src/game.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o src/triangular_world.o src/chess_world.o src/complement_ensemble.o
+	$(GCC) $(CFLAGS) src/game.c src/ensemble.o  src/neighbors.o src/world.o src/geometry.o src/triangular_world.o src/pawns.o src/chess_world.o src/complement_ensemble.o -o project
+
+test: tst/test.c src/ensemble.o src/neighbors.o src/world.o src/geometry.o src/pawns.o src/triangular_world.o src/chess_world.o src/complement_ensemble.o
+	$(GCC) $(CFLAGS)  -I src tst/test.c src/ensemble.o  src/pawns.o src/neighbors.o  src/triangular_world.o src/chess_world.o src/geometry.o src/world.o src/complement_ensemble.o -o test
 
 clean:
 	rm -f project tst/*.o  src/*.o *~
