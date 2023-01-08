@@ -320,7 +320,7 @@ void bishop_move(struct world_t* world, enum players player, struct positions_in
 
 
 // Is allowed function for the simple move triangular world.
-int is_allowed_simple_move_triangular_world(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx) {
+int is_allowed_simple_move_triangular_world(struct world_t* world, struct positions_info* infos, enum players player, unsigned int ex_idx, unsigned int new_idx) {
  switch (player)
   {
   case PLAYER_WHITE:
@@ -328,8 +328,17 @@ int is_allowed_simple_move_triangular_world(struct world_t* world, enum players 
     if (get_neighbor_triangular(ex_idx,SEAST) == new_idx || get_neighbor_triangular(ex_idx,NEAST) == new_idx ||
         get_neighbor_triangular(ex_idx,NORTH) == new_idx || get_neighbor_triangular(ex_idx,SOUTH) == new_idx) {
       // Of course the next position must be emty.
+      // printf("world get: %d \n world get sort %d \n", world_get(world, new_idx), world_get_sort(world, new_idx));
       if ((world_get(world, new_idx) == NO_COLOR)) {
         return 1;
+      }
+      // For achiev 2 the next position can be taken by a opponent which is not a prisoner.
+      else if (world_get(world, new_idx) == BLACK && world_get_sort(world, new_idx) == PAWN) {
+        for (int i = 0; i < HEIGHT; ++i) {
+          if (infos->current_pieces_BLACK[i] == new_idx && infos->status_pieces_BLACK[i] == NON_PRISONER) {
+            return 1;
+          }
+        }
       }
     }
     break;
@@ -338,8 +347,17 @@ int is_allowed_simple_move_triangular_world(struct world_t* world, enum players 
     if (get_neighbor_triangular(ex_idx,SWEST) == new_idx || get_neighbor_triangular(ex_idx,NWEST) == new_idx ||
         get_neighbor_triangular(ex_idx,NORTH) == new_idx || get_neighbor_triangular(ex_idx,SOUTH) == new_idx) {
       // Of course the next position must be emty.
+      // printf("world get: %d \n world get sort %d \n", world_get(world, new_idx), world_get_sort(world, new_idx));
       if ((world_get(world, new_idx) == NO_COLOR)) {
         return 1;
+      }
+      // For achiev 2 the next position can be taken by a opponent which is not a prisoner.
+      else if (world_get(world, new_idx) == WHITE && world_get_sort(world, new_idx) == PAWN) {
+        for (int i = 0; i < HEIGHT; ++i) {
+          if (infos->current_pieces_WHITE[i] == new_idx && infos->status_pieces_WHITE[i] == NON_PRISONER) {
+            return 1;
+          }
+        }
       }
     }
     break;    
@@ -355,7 +373,7 @@ void simple_move_triangular(struct world_t* world, enum players player, struct p
   switch (player)
   {
   case PLAYER_WHITE:
-    if (is_allowed_simple_move_triangular_world(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_move_triangular_world(world, infos, player, ex_idx, new_idx)) {
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -364,7 +382,7 @@ void simple_move_triangular(struct world_t* world, enum players player, struct p
     }
     break;
   case PLAYER_BLACK:
-    if (is_allowed_simple_move_triangular_world(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_move_triangular_world(world, infos, player, ex_idx, new_idx)) {
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -378,7 +396,7 @@ void simple_move_triangular(struct world_t* world, enum players player, struct p
 }
 
 // Is allowed function for simple move.
-int is_allowed_simple_jump_triangular_world(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx) {
+int is_allowed_simple_jump_triangular_world(struct world_t* world, struct positions_info* infos, enum players player, unsigned int ex_idx, unsigned int new_idx) {
   switch (player)
   {
   case PLAYER_BLACK:
@@ -391,9 +409,19 @@ int is_allowed_simple_jump_triangular_world(struct world_t* world, enum players 
         world_get_sort(world, get_neighbor_triangular(ex_idx,NORTH)) != NO_SORT ||
         get_neighbor_triangular(get_neighbor_triangular(ex_idx,SOUTH), SOUTH) == new_idx ||
         world_get_sort(world, get_neighbor_triangular(ex_idx,SOUTH)) != NO_SORT) {
+          // New position must be empty 
           if (world_get_sort(world, new_idx) == NO_SORT) {
             return 1;
           }
+          // Or the new position can be taken by the opponent with a pawn who is not a prisoner.
+          else if (world_get(world, new_idx) == WHITE && world_get_sort(world, new_idx) == PAWN) {
+            for (int i = 0; i < HEIGHT; ++i) {
+              if (infos->current_pieces_WHITE[i] == new_idx && infos->status_pieces_WHITE[i] == NON_PRISONER) {
+                return 1;
+              }
+            }
+          }
+
     }
     break;
   case PLAYER_WHITE:
@@ -409,6 +437,14 @@ int is_allowed_simple_jump_triangular_world(struct world_t* world, enum players 
       if (world_get_sort(world, new_idx) == NO_SORT) {
         return 1;
       }
+      // For achiev 2.
+      else if (world_get(world, new_idx) == BLACK && world_get_sort(world, new_idx) == PAWN) {
+        for (int i = 0; i < HEIGHT; ++i) {
+          if (infos->current_pieces_BLACK[i] == new_idx && infos->status_pieces_BLACK[i] == NON_PRISONER) {
+            return 1;
+          }
+        }
+      }
     }
   default:
     break;
@@ -422,7 +458,7 @@ void simple_jump_triangular(struct world_t* world, enum players player, struct p
   switch (player)
   {
   case PLAYER_WHITE:
-    if (is_allowed_simple_jump_triangular_world(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_jump_triangular_world(world, infos, player, ex_idx, new_idx)) {
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -431,7 +467,7 @@ void simple_jump_triangular(struct world_t* world, enum players player, struct p
     }
     break;
   case PLAYER_BLACK:
-    if (is_allowed_simple_jump_triangular_world(world, player, ex_idx, new_idx)) {
+    if (is_allowed_simple_jump_triangular_world(world, infos, player, ex_idx, new_idx)) {
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
@@ -446,7 +482,7 @@ void simple_jump_triangular(struct world_t* world, enum players player, struct p
 
 
 // Is allowed function for multiply jump triangular world.
-int is_allowed_multi_jump_triangular_world(struct world_t* world, enum players player, unsigned int ex_idx) {
+int is_allowed_multi_jump_triangular_world(struct world_t* world, struct positions_info* infos, enum players player, unsigned int ex_idx) {
   int new_idx = ex_idx;
   // a is a bool true (1) or false (0)
   int a = 1;
@@ -456,17 +492,17 @@ int is_allowed_multi_jump_triangular_world(struct world_t* world, enum players p
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward move: For white it means to jump +2
-      if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + 4)) {
+      if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_WHITE, new_idx, new_idx + 4)) {
         a = 1;
         new_idx = new_idx + 4;
       }
       // Forward left move: means to jump 2*width-2.
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
         a = 1;
         new_idx = new_idx- (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
         a = 1;
         new_idx = new_idx + (2*WIDTH+2);
       }
@@ -477,17 +513,17 @@ int is_allowed_multi_jump_triangular_world(struct world_t* world, enum players p
     for (int b = 0; b < 2; ++b) {
       a = 0;
       // Forward move: is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx - 4)) {
+      if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_BLACK, new_idx, new_idx - 4)) {
         a = 1;
         new_idx = new_idx - 4;
       }
       // Forward left move
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, ex_idx, ex_idx + (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_BLACK, ex_idx, ex_idx + (2*WIDTH-2))) {
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx- (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_BLACK, new_idx, new_idx- (2*WIDTH+2))) {
         a = 1;
         new_idx = new_idx - (2*WIDTH+2);
       }
@@ -510,19 +546,19 @@ int multi_jump_triangular_world(struct world_t* world, enum players player, stru
     while (a) {
       a = 0;
       // Forward move: For white it means to jump +4.
-      if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + 4)) {
+      if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_WHITE, new_idx, new_idx + 4)) {
         simple_jump_triangular(world, PLAYER_WHITE, infos, new_idx, new_idx + 4);
         a = 1;
         new_idx = new_idx + 4;
       }
       // Forward left move: means to jump 2*width-2.
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_WHITE, new_idx, new_idx - (2*WIDTH-2))) {
         simple_jump_triangular(world, PLAYER_WHITE, infos, new_idx, new_idx - (2*WIDTH-2));
         a = 1;
         new_idx = new_idx - (2*WIDTH-2);
       }
       // Forward right move: means to jumo 2*width+2.
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_WHITE, new_idx, new_idx + (2*WIDTH+2))) {
         simple_jump_triangular(world, PLAYER_WHITE, infos, new_idx, new_idx + (2*WIDTH+2));
         a = 1;
         new_idx = new_idx + (2*WIDTH+2);
@@ -533,19 +569,19 @@ int multi_jump_triangular_world(struct world_t* world, enum players player, stru
     while (a) {
       a = 0;
       // Forward move: Is the same as with player white only mirror-inverted. 
-      if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx - 4)) {
+      if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_BLACK, new_idx, new_idx - 4)) {
         simple_jump_triangular(world, PLAYER_BLACK, infos, new_idx, new_idx - 4);
         a = 1;
         new_idx = new_idx - 4;
       }
       // Forward left move.
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx + (2*WIDTH-2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_BLACK, new_idx, new_idx + (2*WIDTH-2))) {
         simple_jump_triangular(world, PLAYER_BLACK, infos, new_idx, new_idx + (2*WIDTH-2));
         a = 1;
         new_idx = new_idx + (2*WIDTH-2);
       }
       // Forward right move.
-      else if (is_allowed_simple_jump_triangular_world(world, PLAYER_BLACK, new_idx, new_idx - (2*WIDTH+2))) {
+      else if (is_allowed_simple_jump_triangular_world(world, infos, PLAYER_BLACK, new_idx, new_idx - (2*WIDTH+2))) {
         simple_jump_triangular(world, PLAYER_BLACK, infos, new_idx, new_idx - (2*WIDTH+2));
         a = 1;
         new_idx= new_idx - (2*WIDTH+2);
