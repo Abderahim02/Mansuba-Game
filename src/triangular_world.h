@@ -3,7 +3,8 @@
 #include "pawns.h"
 // A function printing the triangular world
 void print_triangular_world(struct world_t* world);
-
+//a function defining the triangular world
+void world_init_triangular(struct world_t* world);
 // The get_neighbor function in the triangular world
 unsigned int get_neighbor_triangular(unsigned int idx, enum dir_t d);
 

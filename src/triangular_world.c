@@ -102,6 +102,31 @@ void print_triangular_world(struct world_t* world){
   printf("\n");
 }
 
+//function returning a pointer to a triangular world
+void world_init_triangular(struct world_t* world){
+    unsigned int start = 0;
+    for(int i=1; i <= HEIGHT; ++i){
+        if(i%2==0){
+            for(int j = start; j < i*WIDTH ;){
+                world_set_sort(world, j, NO_SORT);
+                world_set(world, j, NO_COLOR);
+                world_set_sort(world, j+1, MAX_SORT); // id its not playable its sorts = MAX_SORTS
+                world_set(world, j+1, MAX_COLOR);
+                j=j+2; // id its not playable its color = MAX_color
+            }
+        }
+        else{
+            for(int j = start; j < i*WIDTH;){
+                world_set_sort(world, j+1, NO_SORT);
+                world_set(world, j+1, NO_COLOR);
+                world_set_sort(world, j, MAX_SORT); // id its not playable its sorts = MAX_SORTS
+                world_set(world, j, MAX_COLOR);
+                j=j+2; // id its not playable its color = MAX_color
+            }
+        }
+        start = start + WIDTH ;
+    }
+}
 /*A function returning the neighbor of idx in direction d in the triangular board ,
 we suppose that idx is a playable position */
 unsigned int get_neighbor_triangular(unsigned int idx, enum dir_t d) {
