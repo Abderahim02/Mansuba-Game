@@ -179,7 +179,7 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
         }
         else {
             current_player = next_player(current_player);
-            usleep(50* 1000);
+            sleep(1);
             ++infos.MAX_TURNS;
         }
     }
@@ -216,7 +216,7 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
         }
         else {
             current_player = next_player(current_player);
-        usleep(50* 1000);
+        sleep(1);
         ++infos.MAX_TURNS;
         }
     }
