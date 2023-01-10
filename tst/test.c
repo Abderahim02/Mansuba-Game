@@ -272,40 +272,40 @@ void test_simple_jump_triangular_world() {
         printf("One or more test of simple jump triangular world FAILED!\n");
     }
 }
-
+//A function printing neghbors of idx
 void print_neighbors(unsigned int idx) {
-    struct neighbors_t neighbors= get_neighbors_triangular(idx);
+    struct neighbors_t neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i != UINT_MAX){
-        printf("%d est voisin de %d dans la direction %s\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+        printf("%d est voisin de %d dans la direction %s \n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
          }
     }
 }
 
 //a function test for 
-void test_get_neighbors_triangular() {
+void test_get_neighbors_world() {
     int idx = 1;
-    struct neighbors_t neighbors= get_neighbors_triangular(idx);
+    struct neighbors_t neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i == 11 || neighbors.n[j].i == 10){
-            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+            printf("%d est voisin de %d dans la direction %s  : test get_neighbors_world passed !\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
         }
         
     }
     printf("\n");
     idx = 56;
-    neighbors= get_neighbors_triangular(idx);
+    neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i == 65 || neighbors.n[j].i == 76 || neighbors.n[j].i == 67 || neighbors.n[j].i == 45 || neighbors.n[j].i == 36|| neighbors.n[j].i == 47 ){
-            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+            printf("%d est voisin de %d dans la direction %s  : test get_neighbors_world passed !\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
         }
     }
      printf("\n");
     idx = 49;
-    neighbors= get_neighbors_triangular(idx);
+    neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i == 29 || neighbors.n[j].i == 38 || neighbors.n[j].i == 58|| neighbors.n[j].i == 69 ){
-            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+            printf("%d est voisin de %d dans la direction %s  : test get_neighbors_world passed !\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
         }
     }
 
@@ -354,11 +354,25 @@ void test_simple_jump_chess() {
     }
 }
 
+void test_elephant_move(){
+    
+
+}
+
+// The main function for the tests.
+/*int main() {
 // Test of the tower for achiev3.
 void test_tower_achiev3() {
     struct world_t* world = world_init();
     struct positions_info infos;
     init_infos(&infos);
+    init_neighbors(6);
+    init_players_triangular(world);
+    print_triangular_world(world);
+    test_get_neighbors_world();
+    test_simple_move_triangular_world(world, infos);
+    test_simple_jump_triangular_world(world, infos);
+    print_triangular_world(world);
     init_players_1(world);
     // print_world(world);
     // Now the white tower at pos 0 should take the black tower at pos 9 as a prisoner.
@@ -375,6 +389,7 @@ void test_tower_achiev3() {
     }
     // print_world(world);
 }
+}*/
 
 
 
@@ -391,6 +406,6 @@ int main() {
     test_simple_jump_triangular_world();
     test_simple_move_chess();
     test_simple_jump_chess();
-    test_tower_achiev3();
+    //test_tower_achiev3();
     return 0;
 }

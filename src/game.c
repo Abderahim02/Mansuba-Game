@@ -135,7 +135,6 @@ void move_current_player(struct world_t* world, enum players player, struct posi
             // Here we are favorising the Multiple Jump after it, the simple jump.
             case MULTIPLE_JUMP:
                 multi_jump(world, player, infos, move.ex_idx);
-                printf("I did a multiple JUMP!! \n");
                 move.new_idx = multi_jump(world, player, infos, move.ex_idx);
                 break;
             case SIMPLE_JUMP:
@@ -148,7 +147,7 @@ void move_current_player(struct world_t* world, enum players player, struct posi
             default:
                 break;
         }
-        printf("Player %d move with %d from %d to %d\n",player , move.type, move.ex_idx, move.new_idx);
+        printf("PLAYER %d MOVES WITH MOVE TYPE %d FROM %d TO %d\n",player , move.type, move.ex_idx, move.new_idx);
     }
 }
 
@@ -163,7 +162,7 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
             print_current_pieces(infos);
             print_world(world);        
             printf("\n");
-            printf("PLayed turns: %d\n", infos.TURNS);
+            printf("PLAYED TURNS: %d\n", infos.TURNS);
             printf("\n");
             printf("_____________________________\n");
         }
@@ -201,7 +200,7 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
             print_current_pieces(infos);
             print_world(world);        
             printf("\n");
-            printf("PLayed turns: %d\n", infos.TURNS);
+            printf("PLYED TURNS : %d\n", infos.TURNS);
             printf("\n");
             printf("_____________________________\n");
         }
