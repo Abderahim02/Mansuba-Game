@@ -2,7 +2,6 @@
 #define __COMPLEMENT_ENSEMBLE_H__
 #include "chess_world.h"
 
-
 //  A function testing if  a position idx is an initial position for the player 
 int is_initial_position(enum players player, struct positions_info* infos, unsigned int idx);
 

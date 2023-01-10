@@ -175,7 +175,7 @@ switch (player){
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_BLACK[i] == ex_idx ){
 	        infos->current_pieces_BLACK[i] = new_idx;
-          if (/*world_get(world, new_idx) == WHITE &&*/ is_prisoner(PLAYER_WHITE, infos, new_idx) != 1) {
+          if (world_get(world, new_idx) == WHITE && is_prisoner(PLAYER_WHITE, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
               if (infos->current_pieces_WHITE[j] == new_idx ) {
                 infos->status_pieces_WHITE[j] = PRISONER;
@@ -191,7 +191,7 @@ switch (player){
       for(int i=0; i < HEIGHT; ++i){
       if( infos->current_pieces_WHITE[i] == ex_idx ){ //we replace the position ex_idx it new_idx
 	        infos->current_pieces_WHITE[i] = new_idx;
-          if (/*world_get(world, new_idx) == BLACK &&*/ is_prisoner(PLAYER_BLACK, infos, new_idx) != 1) {
+          if (world_get(world, new_idx) == BLACK && is_prisoner(PLAYER_BLACK, infos, new_idx) != 1) {
             for (int j = 0; j < HEIGHT; ++j) {
               if (infos->current_pieces_BLACK[j] == new_idx ) {
                 infos->status_pieces_BLACK[j] = PRISONER;

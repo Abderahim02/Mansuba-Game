@@ -32,8 +32,8 @@ int is_allowed_to_simple_move_aux(struct world_t* world, enum players player, un
 }
 
 //we can add is_elephant(unsigned int ex_idx); 
-int is_allowed_elephant_move(struct world_t* world, enum players player, unsigned int ex_idx, unsigned int new_idx){
-  if(world_get_sort(world, ex_idx)){
+int is_allowed_elephant_move(struct world_t* world, enum players player,struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx){
+  if(world_get_sort(world, ex_idx) == ELEPHANT){
         if (is_new_ex_neighbor(ex_idx, new_idx) == 0){ // if new_ex is a neighbor we can't do elephant move , simple move only 
     struct neighbors_t neighbors = get_neighbors(ex_idx); // we get the neighbors of ex_idx  
     int num_ex_idx_neighbors = number_of_neighbors(neighbors); // we get their number
@@ -47,9 +47,28 @@ int is_allowed_elephant_move(struct world_t* world, enum players player, unsigne
                   for(int k=0; k < num_tmp_position_neighbors ; ++k){
                         enum dir_t tmp_dir_2 = tmp_neighbors.n[k].d ;
                         if(is_cardinal_dir(tmp_dir_2 )){
-                          if(is_allowed_to_simple_move_aux(world, player, tmp_position ,tmp_neighbors.n[k].i) && tmp_neighbors.n[k].i == new_idx){
-                                  return 1;
+                    //       if(is_allowed_to_simple_move_aux(world, player, tmp_position ,tmp_neighbors.n[k].i) && tmp_neighbors.n[k].i == new_idx){
+                    //               printf("YESSS\n");
+                    //               return 1;
+                    //   }
+                    if(is_allowed_to_simple_move_aux(world, player, tmp_position ,tmp_neighbors.n[k].i) && tmp_neighbors.n[k].i == new_idx){
+                                printf("possible? %d\n", is_allowed_to_simple_move_aux(world, player, tmp_position ,tmp_neighbors.n[k].i) && tmp_neighbors.n[k].i == new_idx);
+                                switch (player){
+                                    case PLAYER_BLACK:
+                                        if(is_prisoner(PLAYER_WHITE, infos, new_idx ) != 1){
+                                            return 1;
+                                        }
+                                        break;
+                                    case PLAYER_WHITE:
+                                        if(is_prisoner(PLAYER_BLACK, infos, new_idx ) != 1){
+                                                return 1;
+                                            }
+                                            break;
+                                    default:
+                                        break;
+                                }
                       }
+
                   }
                }
            }
@@ -60,10 +79,11 @@ int is_allowed_elephant_move(struct world_t* world, enum players player, unsigne
   return 0;
 }
 
+
 void elephant_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx) {
   switch (player){
     case PLAYER_WHITE:
-      if(is_allowed_elephant_move(world , player, ex_idx, new_idx)){
+      if(is_allowed_elephant_move(world , player,infos, ex_idx, new_idx)){
             update_current_pieces(world, player, infos, ex_idx, new_idx);
             world_set(world, new_idx, WHITE);
             world_set(world, ex_idx, NO_COLOR);
@@ -73,7 +93,7 @@ void elephant_move(struct world_t* world, enum players player, struct positions_
             }
       break;
     case PLAYER_BLACK:
-        if(is_allowed_elephant_move(world,player, ex_idx, new_idx)){
+        if(is_allowed_elephant_move(world,player, infos, ex_idx, new_idx)){
             update_current_pieces(world, player, infos, ex_idx, new_idx);
             world_set(world, new_idx, BLACK);
             world_set(world, ex_idx, NO_COLOR);

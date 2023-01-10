@@ -331,8 +331,16 @@ void test_simple_jump_chess() {
 }
 
 void test_elephant_move(){
-    
-
+    struct world_t* world = world_init();
+    struct positions_info infos;
+    init_infos(&infos);
+    init_players_1(world);
+    print_world(world);
+    printf("is 12 prisoner? %d", is_prisoner(PLAYER_BLACK, &infos, 12));
+    is_allowed_elephant_move(world, PLAYER_WHITE, &infos,  10,12 );
+    if(is_allowed_elephant_move(world, PLAYER_WHITE, &infos, 10,21 )){
+        printf("test is_allowed_elephant_move: TEST PASSED %d!\n ", is_allowed_elephant_move(world, PLAYER_WHITE,&infos, 10,21 ));
+    }
 }
 
 // The main function for the tests.
@@ -375,6 +383,8 @@ int main() {
     test_simple_move_chess();
     test_simple_jump_chess();
     //test_tower_achiev3();
+    test_elephant_move();
+    
     return 0;
 }
 
