@@ -399,20 +399,21 @@ void simple_move_triangular(struct world_t* world, enum players player, struct p
   {
   case PLAYER_WHITE:
     if (is_allowed_simple_move_triangular_world(world, infos, player, ex_idx, new_idx)) {
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(world, player, infos, ex_idx, new_idx);
     }
     break;
   case PLAYER_BLACK:
     if (is_allowed_simple_move_triangular_world(world, infos, player, ex_idx, new_idx)) {
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(world, player, infos, ex_idx, new_idx);
+      // update_current_pieces(world, player, infos, ex_idx, new_idx);
     }
     break;    
   default:
@@ -484,20 +485,22 @@ void simple_jump_triangular(struct world_t* world, enum players player, struct p
   {
   case PLAYER_WHITE:
     if (is_allowed_simple_jump_triangular_world(world, infos, player, ex_idx, new_idx)) {
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       world_set(world, new_idx, WHITE);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(world, player, infos, ex_idx, new_idx);
+      // update_current_pieces(world, player, infos, ex_idx, new_idx);
     }
     break;
   case PLAYER_BLACK:
     if (is_allowed_simple_jump_triangular_world(world, infos, player, ex_idx, new_idx)) {
+      update_current_pieces(world, player, infos, ex_idx, new_idx);
       world_set(world, new_idx, BLACK);
       world_set(world, ex_idx, NO_COLOR);
       world_set_sort(world, ex_idx, NO_SORT);
       world_set_sort(world, new_idx, PAWN);
-      update_current_pieces(world, player, infos, ex_idx, new_idx);
+      // update_current_pieces(world, player, infos, ex_idx, new_idx);
     }
     break;    
   default:
