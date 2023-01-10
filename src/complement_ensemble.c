@@ -74,3 +74,23 @@ void escape_piece(enum players player , struct positions_info* infos, unsigned i
             break;
     }
 }
+//A function that returns list of neighbors of idx depending on the value of the type of worlds
+/*When we will do the loop doing a game we will use only this function for getting neighbors*/
+struct neighbors_t get_neighbors_world(unsigned int idx){
+    int world_type = get_neighbors_seed();
+    struct neighbors_t neighbors;
+    switch (world_type){
+        case 8:
+            neighbors = get_neighbors(idx);
+            break;
+        case 4:
+            neighbors = get_neighbors_chess(idx);
+            break;
+        case 6:
+            neighbors = get_neighbors_triangular(idx);
+            break;
+        default:
+            break;
+    }
+    return neighbors;
+}

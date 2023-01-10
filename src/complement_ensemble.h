@@ -1,6 +1,6 @@
 #ifndef __COMPLEMENT_ENSEMBLE_H__
 #define __COMPLEMENT_ENSEMBLE_H__
-#include "ensemble.h"
+#include "chess_world.h"
 
 //a function testing if a pièce is prisoner 
 int is_prisoner(enum players player, struct positions_info* infos, unsigned int idx );
@@ -11,4 +11,6 @@ int is_initial_position(enum players player, struct positions_info* infos, unsig
 //make a piece free
 void escape_piece(enum players player , struct positions_info* infos, unsigned int idx );
 
+// A function giving the neighbors of idx depending on the world
+struct neighbors_t get_neighbors_world(unsigned int idx);
 #endif

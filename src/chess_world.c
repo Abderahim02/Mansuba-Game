@@ -117,6 +117,62 @@ void print_world_chess( struct world_t* world) {
   printf("\n");
 }
 
+// In this world you only have the directions SWEST, SEAST, NEAST and NWEST.
+unsigned int get_neighbor_chess(unsigned int idx, enum dir_t d) {
+    // Case for beeing on North or South edge of the playing field.
+    if ((idx < WIDTH && (d == NEAST || d == NWEST)) || 
+        (idx > WORLD_SIZE - WIDTH && (d == SWEST || d == SEAST))) {
+            return UINT_MAX;
+        }
+    // Case for beeing on the West edge of the playing field.
+    else if ( idx % WIDTH == 0  && (d == NWEST || d == SWEST)) {
+        return UINT_MAX;
+    }
+    // Case for beeing on the East edge of the playing field.
+    else if ( idx % WIDTH == WIDTH-1 && (d == NEAST || d == SEAST)) {
+        return UINT_MAX;
+    }
+    // Cases for having a neighbour. NB: we eliminate the east, west, south and north directions.
+    else{
+      switch (d){
+    case NEAST:
+        return idx - (WIDTH-1);
+        break;
+    case NWEST:
+        return idx - (WIDTH+1);
+        break;
+    case SEAST:
+        return idx + (WIDTH+1);
+        break;
+    case SWEST:
+      return idx + (WIDTH-1);
+      break;
+    default: 
+      return UINT_MAX;
+      }
+    }
+}
+
+
+struct neighbors_t get_neighbors_chess( unsigned int idx){
+  // We initialize the variable neigbors with the UINT_MAX, 0, so that the variable will be static.
+  struct neighbors_t neighbors={.n={{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0},{UINT_MAX,0}}}; 
+  enum dir_t dir = SEAST;
+  int j=0;
+  while( j < MAX_NEIGHBORS && dir < MAX_DIR){
+    unsigned int test = get_neighbor(idx, dir);
+    if( test!= UINT_MAX && (dir == EAST || dir == WEST || dir == SOUTH || dir== NORTH )){
+      neighbors.n[j].i = test;  // The while loop fills the first j positions with the neigbors. 
+      neighbors.n[j].d = dir;
+      dir = dir +1;
+      ++j;
+    }
+    else{
+      dir = dir +1;
+    }
+  }
+  return neighbors;
+}
 
 
 //Initialize the positions of players at the beginning of the game 
@@ -216,41 +272,6 @@ void bishop_move_chess(struct world_t* world, enum players player, struct positi
 }
 
 
-// In this world you only have the directions SWEST, SEAST, NEAST and NWEST.
-unsigned int get_neighbor_chess(unsigned int idx, enum dir_t d) {
-    // Case for beeing on North or South edge of the playing field.
-    if ((idx < WIDTH && (d == NEAST || d == NWEST)) || 
-        (idx > WORLD_SIZE - WIDTH && (d == SWEST || d == SEAST))) {
-            return UINT_MAX;
-        }
-    // Case for beeing on the West edge of the playing field.
-    else if ( idx % WIDTH == 0  && (d == NWEST || d == SWEST)) {
-        return UINT_MAX;
-    }
-    // Case for beeing on the East edge of the playing field.
-    else if ( idx % WIDTH == WIDTH-1 && (d == NEAST || d == SEAST)) {
-        return UINT_MAX;
-    }
-    // Cases for having a neighbour. NB: we eliminate the east, west, south and north directions.
-    else{
-      switch (d){
-    case NEAST:
-        return idx - (WIDTH-1);
-        break;
-    case NWEST:
-        return idx - (WIDTH+1);
-        break;
-    case SEAST:
-        return idx + (WIDTH+1);
-        break;
-    case SWEST:
-      return idx + (WIDTH-1);
-      break;
-    default: 
-      return UINT_MAX;
-      }
-    }
-}
 
 
 // A bool function returns if a simple move for pawn is possible or not.

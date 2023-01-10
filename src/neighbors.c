@@ -5,31 +5,32 @@
 #define UINT_MAX WORLD_SIZE
 
 static unsigned int s;
-
-// We used other functions for initializing the diffrent types of world.
+/* This function gives the type of world we are in , we did another function get_neighbors_world which is 
+defined in complement_ensemble.c , this function returns the list of neighbors depending on the world */
 void init_neighbors(unsigned int seed) {
-  s = seed;
   switch (seed)
   {
   case 8:
-    printf("We are in the normal world.\n");
-    // a = 1;
-    // MAX_NEIGHBORS = 8;
+    printf("---------WE ARE IN THE CLASSIC WORLD !-----------\n");
+    s=seed;
     break;
   case 6:
-    printf("We are in the triangular world.\n");
-    // a = 2;
-    // MAX_NEIGHBORS = 6;
+    printf("---------WE ARE IN THE TRIANGULAR WORLD!----------\n");
+    s=seed;
     break;
   case 4:
-    printf("We are in the chess world.\n");
-    // a = 3;
-    // MAX_NEIGHBORS = 4;
+    printf("---------WE ARE IN THE CHESS WORLD!---------------\n");
+    s=seed;
     break;
   default:
+    printf("---------------INVALID WORLD!------------------ \n");
     break;
   }
 }
+
+unsigned int get_neighbors_seed(){
+    return s;
+};
 
 
 unsigned int get_neighbor(unsigned int idx, enum dir_t d) {

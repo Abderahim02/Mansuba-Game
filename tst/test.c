@@ -249,40 +249,40 @@ void test_simple_jump_triangular_world(struct world_t* world, struct positions_i
         printf("One or more test of simple jump triangular world FAILED!\n");
     }
 }
-
+//A function printing neghbors of idx
 void print_neighbors(unsigned int idx) {
-    struct neighbors_t neighbors= get_neighbors_triangular(idx);
+    struct neighbors_t neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i != UINT_MAX){
-        printf("%d est voisin de %d dans la direction %s\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+        printf("%d est voisin de %d dans la direction %s \n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
          }
     }
 }
 
 //a function test for 
-void test_get_neighbors_triangular() {
+void test_get_neighbors_world() {
     int idx = 1;
-    struct neighbors_t neighbors= get_neighbors_triangular(idx);
+    struct neighbors_t neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i == 11 || neighbors.n[j].i == 10){
-            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+            printf("%d est voisin de %d dans la direction %s  : test get_neighbors_world passed !\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
         }
         
     }
     printf("\n");
     idx = 56;
-    neighbors= get_neighbors_triangular(idx);
+    neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i == 65 || neighbors.n[j].i == 76 || neighbors.n[j].i == 67 || neighbors.n[j].i == 45 || neighbors.n[j].i == 36|| neighbors.n[j].i == 47 ){
-            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+            printf("%d est voisin de %d dans la direction %s  : test get_neighbors_world passed !\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
         }
     }
      printf("\n");
     idx = 49;
-    neighbors= get_neighbors_triangular(idx);
+    neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
         if(neighbors.n[j].i == 29 || neighbors.n[j].i == 38 || neighbors.n[j].i == 58|| neighbors.n[j].i == 69 ){
-            printf("%d est voisin de %d dans la direction %s : test_passed\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
+            printf("%d est voisin de %d dans la direction %s  : test get_neighbors_world passed !\n", neighbors.n[j].i, idx , dir_to_string(neighbors.n[j].d));
         }
     }
 
@@ -326,6 +326,10 @@ void test_simple_jump_chess(struct world_t* world, struct positions_info infos) 
     }
 }
 
+void test_elephant_move(){
+    
+
+}
 
 // The main function for the tests.
 int main() {
@@ -333,59 +337,13 @@ int main() {
     struct positions_info infos;
     world_init_triangular(world);
     init_infos(&infos);
+    init_neighbors(6);
     init_players_triangular(world);
     print_triangular_world(world);
-    // int a=90;
-    // //bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 91, SWEST);
-    // printf("la case %d est prisoniere? %d", a, is_prisoner(PLAYER_WHITE, &infos, a ));
-    // // test_simple_move_triangular_world(world, infos);
-    // // test_simple_jump_triangular_world(world, infos);
-    // init_players_0(world);
-    // //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
-    // print_world(world);
-    // //test_simple_move_chess(world, infos);
-    // //test_simple_jump_chess(world, infos);
-    // //print_world(world);
-    // //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 99,98));
-    // //tower_move(world, PLAYER_BLACK, &infos,99 );
-    // //world_set_sort(world, 91, PAWN);
-    // printf("la couleur de la case 91 est %d\n", world_get(world, 91));
-    // a=91;
-    // //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
-    // int a=90;
-    //bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 91, SWEST);
-    // printf("la case %d est prisoniere? %d", a, is_prisoner(PLAYER_WHITE, &infos, a ));
-    //init_players_triangular(world);
+    test_get_neighbors_world();
     test_simple_move_triangular_world(world, infos);
     test_simple_jump_triangular_world(world, infos);
     print_triangular_world(world);
-    // init_players_0(world);
-    //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
-    // print_world(world);
-    //test_simple_move_chess(world, infos);
-    //test_simple_jump_chess(world, infos);
-    //print_world(world);
-    //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 99,98));
-    //tower_move(world, PLAYER_BLACK, &infos,99 );
-    //world_set_sort(world, 91, PAWN);
-    // printf("la couleur de la case 91 est %d\n", world_get(world, 91));
-    // a=91;
-    //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
-    // simple_move_player(world, PLAYER_BLACK, &infos, 99,98);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 98,97);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 97,96);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 96,95);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 95,94);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 94,93);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 93,92);
-    // simple_move_player(world, PLAYER_BLACK, &infos, 92,91);
-    // simple_move_player(world, PLAYER_WHITE, &infos, 90,91);
 
-    // //printf("is allowed to simple jump ?%d", is_allowed_simple_jump(world, PLAYER_WHITE, &infos, 90,92));
-    //printf("is allowed to simple jump ?%d", is_allowed_simple_jump(world, PLAYER_WHITE, &infos, 90,92));
-    // printf("la case %d est prisoniere? %d", 91, is_prisoner(PLAYER_BLACK, &infos, 91 ));
-    // print_world(world);
-    // escape_piece(PLAYER_BLACK, &infos, 91);
-    // printf("la case %d est prisoniere? %d\n", 91, is_prisoner(PLAYER_BLACK, &infos, 91 ));
     return 0;
 }
