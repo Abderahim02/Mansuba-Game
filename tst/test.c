@@ -6,7 +6,7 @@
 #include "complement_ensemble.h"
 //#define UINT_MAX WORLD_SIZE 
 
-//simple test function for get neighbors of the position 5
+// Simple test function for get neighbors of the position 5
 void test_get_neighbors( struct neighbors_t neighbors){
     for(int j; j < HEIGHT ; ++j){
         if(neighbors.n[j].i ==4  || neighbors.n[j].i ==14 || neighbors.n[j].i ==16 || neighbors.n[j].i ==15 || neighbors.n[j].i ==6){
@@ -96,6 +96,7 @@ void test_move_tower_white_2() {
     // printf("\n");
 }
 
+// Another test for the tower move.
 void test_move_tower_white_y() {
     struct world_t* world = world_init();
     struct positions_info infos;
@@ -120,6 +121,7 @@ void test_move_tower_white_y() {
     // printf("\n");
 }
 
+// Another test for the tower move.
 void test_move_tower_black_1() {
     struct world_t* world = world_init();
     struct positions_info infos;
@@ -144,7 +146,7 @@ void test_move_tower_black_1() {
     // printf("\n");
 }
 
-
+// Test for the elephant move.
 void test_init_tower_elephant(struct world_t* world) {
     for (int i = 0; i < WORLD_SIZE; ++i) {
         if (i == 0 || i == WORLD_SIZE-WIDTH || i == WIDTH-1 || i == WORLD_SIZE-1) {
@@ -165,7 +167,8 @@ void test_init_tower_elephant(struct world_t* world) {
         }
     }
 }
-//a function 
+
+// A function for print test. 
 void test_print_triangular_world(struct world_t* world){
      for(int i=0; i < WORLD_SIZE; ++i ){
         if(i%WIDTH == WIDTH -1){
@@ -188,17 +191,10 @@ void test_print_triangular_world(struct world_t* world){
     }
 }
 
-
-
-
-
 void test_world_init_2(struct world_t* world){
     print_triangular_world(world);
 }
 
-// void test_is_allowed_elephant_move( struct world_t* world, enum players player, struct positions_info* infos){
-//     printf("le mouvement elephant est: %d\n", is_allowed_elephant_move(world, infos, PLAYER_WHITE, infos, 0,2 ));
-// }
 
 // Test for the simple move triangular world.
 void test_simple_move_triangular_world() {
@@ -272,7 +268,8 @@ void test_simple_jump_triangular_world() {
         printf("One or more test of simple jump triangular world FAILED!\n");
     }
 }
-//A function printing neghbors of idx
+
+// A function printing neghbors of idx
 void print_neighbors(unsigned int idx) {
     struct neighbors_t neighbors= get_neighbors_world(idx);
     for(int j=0; j< MAX_NEIGHBORS ; ++j ){
@@ -282,7 +279,7 @@ void print_neighbors(unsigned int idx) {
     }
 }
 
-//a function test for 
+// A function test for 
 void test_get_neighbors_world() {
     int idx = 1;
     struct neighbors_t neighbors= get_neighbors_world(idx);
@@ -333,7 +330,6 @@ void test_simple_move_chess() {
 }
 
 // A test for simple jump in the chess world.
-// It is nessacery that the "test_simple move_chess" runs before, otherwise this test is not working.
 void test_simple_jump_chess() {
     struct world_t* world = world_init();
     struct positions_info infos;
@@ -359,8 +355,6 @@ void test_elephant_move(){
 
 }
 
-// The main function for the tests.
-/*int main() {
 // Test of the tower for achiev3.
 void test_tower_achiev3() {
     struct world_t* world = world_init();
@@ -368,11 +362,11 @@ void test_tower_achiev3() {
     init_infos(&infos);
     init_neighbors(6);
     init_players_triangular(world);
-    print_triangular_world(world);
+    // print_triangular_world(world);
     test_get_neighbors_world();
     test_simple_move_triangular_world(world, infos);
     test_simple_jump_triangular_world(world, infos);
-    print_triangular_world(world);
+    // print_triangular_world(world);
     init_players_1(world);
     // print_world(world);
     // Now the white tower at pos 0 should take the black tower at pos 9 as a prisoner.
@@ -389,8 +383,6 @@ void test_tower_achiev3() {
     }
     // print_world(world);
 }
-}*/
-
 
 
 // The main function for the tests.
@@ -406,6 +398,6 @@ int main() {
     test_simple_jump_triangular_world();
     test_simple_move_chess();
     test_simple_jump_chess();
-    //test_tower_achiev3();
+    test_tower_achiev3();
     return 0;
 }
