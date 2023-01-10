@@ -15,30 +15,37 @@ void test_get_neighbors( struct neighbors_t neighbors){
     }
 }
 
-// A test for the world_get() function.
-void test_world_get(struct world_t* world) {
+// A test for the world_get function.
+void test_world_get() {
+    struct world_t* world = world_init();
     // We know in the beginning in the middle of the world there are no PAWNS.
     if (world_get(world,WIDTH+(WIDTH/2)) == NO_COLOR && world_get_sort(world,WIDTH+(WIDTH/2)) == NO_SORT) {
-        printf("World_get_Test1 passed.\n");
+        printf("World get Test1 PASSED.\n");
     }
     if (world_get(world,WIDTH+(WIDTH/2)) != NO_COLOR || world_get_sort(world,WIDTH+(WIDTH/2)) != NO_SORT) {
-        printf("World_get_Test1 failed.\n");
+        printf("World get Test1 FAILED.\n");
     }
 }
 
 // A test for the world_set function.
-void test_world_set(struct world_t* world) {
+void test_world_set() {
+    struct world_t* world = world_init();
     world_set(world, 15, BLACK);
     world_set_sort(world, 18, PAWN);
     if (world_get(world,15) == BLACK && world_get_sort(world,18) == PAWN) {
-        printf("World_get_Test1 passed.\n");
+        printf("World set Test1 PASSED.\n");
     }
     if (world_get(world,15) != BLACK || world_get_sort(world,18) != PAWN) {
-        printf("World_get_Test1 failed.\n");
+        printf("World set Test1 FAILED.\n");
     }
 }
 
-void test_move_tower_white_1(struct world_t* world, struct positions_info infos) {
+// A test for the movment of the white tower.
+void test_move_tower_white_1() {
+    struct world_t* world = world_init();
+    struct positions_info infos;
+    init_infos(&infos);
+    init_players_1(world);
     // Check forward move with tower
     int a = 20;
     int b = 29;
@@ -51,18 +58,22 @@ void test_move_tower_white_1(struct world_t* world, struct positions_info infos)
     if (is_allowed_tower_move(world, PLAYER_WHITE, a)) {
         tower_move(world, PLAYER_WHITE, &infos, a);
         if (world_get_sort(world, a) == 0 && world_get_sort(world, b) == 2) {
-            printf("Test1 for move tower passed.\n");
+            printf("Test1 for move tower PASSED.\n");
         }
         else {
-            printf("Test1 for move tower failed.\n");
+            printf("Test1 for move tower FAILED.\n");
         }
     }
     // print_world(world);
     // printf("\n");
 }
 
-//a function doing a test for the auxilary function move_tower_white_2
-void test_move_tower_white_2(struct world_t* world, struct positions_info infos) {
+// A function doing a test for the auxilary function move_tower_white_2
+void test_move_tower_white_2() {
+    struct world_t* world = world_init();
+    struct positions_info infos;
+    init_infos(&infos);
+    init_players_1(world);
     // Check forward move with tower
     int a = 29;
     int b = 39;
@@ -75,17 +86,19 @@ void test_move_tower_white_2(struct world_t* world, struct positions_info infos)
     if (is_allowed_tower_move(world, PLAYER_WHITE, a)) {
         tower_move(world, PLAYER_WHITE, &infos, a);
         if (world_get_sort(world, a) == 0 && world_get_sort(world, b) == 2) {
-            printf("Test2 for move tower passed.\n");
+            printf("Test2 for move tower PASSED.\n");
         }
         else {
-            printf("Test2 for move tower failed.\n");
+            printf("Test2 for move tower FAILED.\n");
         }
     }
     // print_world(world);
     // printf("\n");
 }
 
-void test_move_tower_white_y(struct world_t* world, struct positions_info infos) {
+void test_move_tower_white_y() {
+    struct world_t* world = world_init();
+    struct positions_info infos;
     world_set(world, 83, 2);
     world_set_sort(world, 83, TOWER);
     world_set(world, 84, 2);
@@ -97,17 +110,19 @@ void test_move_tower_white_y(struct world_t* world, struct positions_info infos)
     if (is_allowed_tower_move(world, PLAYER_WHITE, 83)) {
        tower_move(world, PLAYER_WHITE, &infos, 83);
        if (world_get(world, 23) == WHITE && world_get_sort(world, 23) == TOWER) {
-        printf("Test3 for move tower passed.\n");
+        printf("Test3 for move tower PASSED.\n");
        }
        else {
-        printf("Test3 for move tower failed.\n");
+        printf("Test3 for move tower FAILED.\n");
        }
     } 
     // print_world(world);
     // printf("\n");
 }
 
-void test_move_tower_black_1(struct world_t* world, struct positions_info infos) {
+void test_move_tower_black_1() {
+    struct world_t* world = world_init();
+    struct positions_info infos;
     // Check forward move with tower
     int a = 59;
     int b = 50;
@@ -119,10 +134,10 @@ void test_move_tower_black_1(struct world_t* world, struct positions_info infos)
     if (is_allowed_tower_move(world, PLAYER_BLACK, a)) {
         tower_move(world, PLAYER_BLACK, &infos, a);
         if (world_get_sort(world, a) == 0 && world_get_sort(world, b) == 2) {
-            printf("Test4 for move tower passed.\n");
+            printf("Test4 for move tower PASSED.\n");
         }
         else {
-            printf("Test4 for move tower failed.\n");
+            printf("Test4 for move tower FAILED.\n");
         }
     }
     // print_world(world);
@@ -186,7 +201,10 @@ void test_world_init_2(struct world_t* world){
 // }
 
 // Test for the simple move triangular world.
-void test_simple_move_triangular_world(struct world_t* world, struct positions_info infos) {
+void test_simple_move_triangular_world() {
+    struct world_t* world = world_init();
+    struct positions_info infos;
+    init_infos(&infos);
     world_set_sort(world, 34, PAWN);
     world_set(world, 34, WHITE);
     infos.current_pieces_WHITE[0] = 34; 
@@ -199,30 +217,35 @@ void test_simple_move_triangular_world(struct world_t* world, struct positions_i
     infos.current_pieces_BLACK[0] = 45;
     world_set_sort(world, 54, PAWN);
     world_set(world, 54, BLACK);
-    // Testing achiev 2: Taking a prisoner.
+    // print_triangular_world(world);
+    // Testing achiev 3: Taking a prisoner.
     if (is_allowed_simple_move_triangular_world(world, &infos, PLAYER_WHITE, 34, 45) == 1) {
-        printf("Test1 for simple move triangular world passed!\n");
+        printf("Test1 for simple move triangular world PASSED!\n");
         simple_move_triangular(world,PLAYER_WHITE, &infos, 34, 45);
         if (is_prisoner(PLAYER_BLACK, &infos, 45) == 1) {
-            printf("Test1 is PRISONER for simple move triangular world passed!\n");
+            printf("Test2 is PRISONER for simple move triangular world PASSED!\n");
         }
         else {
-            printf("Test1 is PRISONER for simple move triangular world failed!\n");
+            printf("Test2 is PRISONER for simple move triangular world FAILED!\n");
         }
     }
+    // print_triangular_world(world);
     if (is_allowed_simple_move_triangular_world(world, &infos, PLAYER_WHITE, 21, 32)) {
         simple_move_triangular(world, PLAYER_WHITE, &infos, 21, 32);
         if (world_get(world, 32) == WHITE) {
-            printf("Test2 for simple move triangular world passed!\n");
+            printf("Test3 for simple move triangular world PASSED!\n");
         }
         else {
-            printf("Test2 for simple move triangular world failed!\n");
+            printf("Test3 for simple move triangular world FAILED!\n");
         }
     }
+    // print_triangular_world(world);
 }
 
 // Test for the simple jump in the triangular world.
-void test_simple_jump_triangular_world(struct world_t* world, struct positions_info infos) {
+void test_simple_jump_triangular_world() {
+    struct world_t* world = world_init();
+    struct positions_info infos;
     world_set_sort(world, 34, PAWN);
     world_set(world, 34, WHITE);
     world_set_sort(world, 25, PAWN);
@@ -314,8 +337,9 @@ void test_simple_move_chess() {
 void test_simple_jump_chess() {
     struct world_t* world = world_init();
     struct positions_info infos;
+    simple_move_chess(world, PLAYER_WHITE, &infos, 30, 41);
     if (is_allowed_simple_jump_chess(world, PLAYER_WHITE, &infos, 50, 32)) {
-        printf("Test1 simple jump chess PASSED.\n");
+        printf("Simple jump chess Test1 PASSED.\n");
         simple_jump_chess(world, PLAYER_WHITE, &infos, 50, 32);
         if (world_get(world, 50) == NO_COLOR && world_get_sort(world, 50) == NO_SORT &&
             world_get(world, 32) == WHITE && world_get_sort(world, 32) == PAWN) {
@@ -357,72 +381,16 @@ void test_tower_achiev3() {
 // The main function for the tests.
 // In the test functions we are redefining the world because every time we are modifing it.
 int main() {
+    test_world_get();
+    test_world_set();
+    test_move_tower_white_1();
+    test_move_tower_white_2();
+    test_move_tower_white_y();
+    test_move_tower_black_1();
+    test_simple_move_triangular_world();
+    test_simple_jump_triangular_world();
     test_simple_move_chess();
     test_simple_jump_chess();
     test_tower_achiev3();
     return 0;
 }
-
-
-// // Old function for the test
-// int main() {
-//     struct world_t* world = world_init();
-//     struct positions_info infos;
-//     world_init_triangular(world);
-//     init_infos(&infos);
-//     init_players_triangular(world);
-//     print_triangular_world(world);
-//     // int a=90;
-//     // //bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 91, SWEST);
-//     // printf("la case %d est prisoniere? %d", a, is_prisoner(PLAYER_WHITE, &infos, a ));
-//     // // test_simple_move_triangular_world(world, infos);
-//     // // test_simple_jump_triangular_world(world, infos);
-//     // init_players_0(world);
-//     // //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
-//     // print_world(world);
-//     // //test_simple_move_chess(world, infos);
-//     // //test_simple_jump_chess(world, infos);
-//     // //print_world(world);
-//     // //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 99,98));
-//     // //tower_move(world, PLAYER_BLACK, &infos,99 );
-//     // //world_set_sort(world, 91, PAWN);
-//     // printf("la couleur de la case 91 est %d\n", world_get(world, 91));
-//     // a=91;
-//     // //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
-//     // int a=90;
-//     //bishop_move_chess(world, PLAYER_BLACK, &infos, 19, 91, SWEST);
-//     // printf("la case %d est prisoniere? %d", a, is_prisoner(PLAYER_WHITE, &infos, a ));
-//     //init_players_triangular(world);
-//     test_simple_move_triangular_world(world, infos);
-//     test_simple_jump_triangular_world(world, infos);
-//     print_triangular_world(world);
-//     // init_players_0(world);
-//     //elephant_move(world, PLAYER_WHITE, &infos, 0,2);
-//     // print_world(world);
-//     //test_simple_move_chess(world, infos);
-//     //test_simple_jump_chess(world, infos);
-//     //print_world(world);
-//     //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 99,98));
-//     //tower_move(world, PLAYER_BLACK, &infos,99 );
-//     //world_set_sort(world, 91, PAWN);
-//     // printf("la couleur de la case 91 est %d\n", world_get(world, 91));
-//     // a=91;
-//     //printf("is allowed to simple move ?%d", is_allowed_to_simple_move(world, PLAYER_BLACK, &infos, 91,90));
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 99,98);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 98,97);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 97,96);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 96,95);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 95,94);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 94,93);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 93,92);
-//     // simple_move_player(world, PLAYER_BLACK, &infos, 92,91);
-//     // simple_move_player(world, PLAYER_WHITE, &infos, 90,91);
-
-//     // //printf("is allowed to simple jump ?%d", is_allowed_simple_jump(world, PLAYER_WHITE, &infos, 90,92));
-//     //printf("is allowed to simple jump ?%d", is_allowed_simple_jump(world, PLAYER_WHITE, &infos, 90,92));
-//     // printf("la case %d est prisoniere? %d", 91, is_prisoner(PLAYER_BLACK, &infos, 91 ));
-//     // print_world(world);
-//     // escape_piece(PLAYER_BLACK, &infos, 91);
-//     // printf("la case %d est prisoniere? %d\n", 91, is_prisoner(PLAYER_BLACK, &infos, 91 ));
-//     return 0;
-// }
