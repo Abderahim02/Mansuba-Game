@@ -150,7 +150,7 @@ int is_allowed_tower_move(struct world_t* world, enum players player, unsigned i
 }
 
 
-// Move the tower.
+// Move the tower. The int return helps to fix a problem.
 int tower_move(struct world_t* world, enum players player, struct positions_info* infos, int ex_idx) {
     int p = ex_idx;
     int px = give_end_position_x(player, p);
@@ -169,7 +169,7 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        return 1;
                     }
                     else if (world_get(world, i) != NO_COLOR) {
                         update_current_pieces(world, player, infos, ex_idx, i+1);
@@ -205,9 +205,8 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        return 1;
                     }
-
                     else if (world_get(world, i) != NO_COLOR) {
                         world_set(world, i + WIDTH, BLACK);
                         world_set(world, ex_idx, NO_COLOR);
@@ -241,7 +240,7 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        return 1;
                     }
 
                     if (world_get(world, i) != NO_COLOR) {
@@ -269,9 +268,8 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
     case PLAYER_WHITE:
         // We prefer the move on the x-axle.
         if (p != px) {
-            if (world_get(world, p+1) == NO_COLOR) {
+            // if (world_get(world, p+1) == NO_COLOR) {
                 for (int i = p+1; i <= px; ++i) {
-
                     // For achiev 2: The tower can take another Tower of the opponent as a prisoner.
                     if (world_get(world, i) == BLACK && world_get_sort(world, i) == TOWER) {
                         update_current_pieces(world, player, infos, ex_idx, i);
@@ -279,16 +277,14 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        return 1;
                     }
-
                     else if (world_get(world, i) != NO_COLOR) {
                         update_current_pieces(world, player, infos, ex_idx, i-1);
                         world_set(world, i-1, WHITE);
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i-1, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
                         return 1;
                     }
                     else if (i == px && world_get(world, i) == NO_COLOR) {
@@ -296,18 +292,16 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, i, WHITE);
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
-                        world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        world_set_sort(world, ex_idx, NO_SORT);                     
                         return 1;
                     }
                 }
-            }
+            // }
         }
         // Move to the top.
         if (p != py_top) {
             if (world_get(world, p - WIDTH) == NO_COLOR) {
                 for (int j = p - WIDTH; j >= py_top; j = j - WIDTH) {
-
                     // For achiev 2: The tower can take another Tower of the opponent as a prisoner.
                     if (world_get(world, j) == BLACK && world_get_sort(world, j) == TOWER) {
                         update_current_pieces(world, player, infos, ex_idx, j);
@@ -315,17 +309,15 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, j, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        return 1;
                     }
-
                     // Checking where the next PAWN is.
                     else if (world_get(world, j) != NO_COLOR) {
                         update_current_pieces(world, player, infos, ex_idx, j+WIDTH);
                         world_set(world, j+WIDTH, WHITE);
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, j+WIDTH, TOWER);
-                        world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        world_set_sort(world, ex_idx, NO_SORT);       
                         return 1;
                     }
                     else if (j == py_top) {
@@ -334,7 +326,6 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, j, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
                         return 1;
                     }
                 }
@@ -344,7 +335,6 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
         if (p != py_down) {
             if (world_get(world, p + WIDTH) == NO_COLOR) {
                 for (int i = p + WIDTH; i <= py_down; i = i + WIDTH) {
-
                     // For achiev 2: The tower can take another Tower of the opponent as a prisoner.
                     if (world_get(world, i) == BLACK && world_get_sort(world, i) == TOWER) {
                         update_current_pieces(world, player, infos, ex_idx, i);
@@ -352,17 +342,15 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
                         world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        return 1;
                     }
-
                     // Checking where the next PAWN is.
                     else if (world_get(world, i) != NO_COLOR) {
                         update_current_pieces(world, player, infos, ex_idx, i - WIDTH);
                         world_set(world, i - WIDTH, WHITE);
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i - WIDTH, TOWER);
-                        world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        world_set_sort(world, ex_idx, NO_SORT);                    
                         return 1;
                     }
                     else if (i == py_down) {
@@ -370,8 +358,7 @@ int tower_move(struct world_t* world, enum players player, struct positions_info
                         world_set(world, i, WHITE);
                         world_set(world, ex_idx, NO_COLOR);
                         world_set_sort(world, i, TOWER);
-                        world_set_sort(world, ex_idx, NO_SORT);
-                        
+                        world_set_sort(world, ex_idx, NO_SORT);                       
                         return 1;
                     }
                 }

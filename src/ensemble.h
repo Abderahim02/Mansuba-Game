@@ -94,7 +94,7 @@ void print_current_pieces(struct positions_info infos);
 int count_pieces(struct world_t* world);
 
 //a function testing if idx is a prisonned piece which belongs to the player
-int is_prisoner(enum players player, struct positions_info* infos, unsigned int idx ); 
+// int is_prisoner(enum players player, struct positions_info* infos, unsigned int idx ); 
 
 
 #endif // __ENSEMBLE_H__
