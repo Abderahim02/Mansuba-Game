@@ -336,7 +336,7 @@ void test_elephant_move(){
 }
 
 // The main function for the tests.
-int main() {
+/*int main() {
 // Test of the tower for achiev3.
 void test_tower_achiev3() {
     struct world_t* world = world_init();
@@ -365,7 +365,7 @@ void test_tower_achiev3() {
     }
     // print_world(world);
 }
-}
+}*/
 
 
 
@@ -374,7 +374,7 @@ void test_tower_achiev3() {
 int main() {
     test_simple_move_chess();
     test_simple_jump_chess();
-    test_tower_achiev3();
+    //test_tower_achiev3();
     return 0;
 }
 

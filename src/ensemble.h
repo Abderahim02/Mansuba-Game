@@ -43,6 +43,9 @@ int is_new_ex_neighbor(unsigned int ex_idx, unsigned int new_idx);
 // Initialize current pieces for black and white.
 void init_infos(struct positions_info* infos);
 
+//a function testing if a pièce is prisoner 
+int is_prisoner(enum players player, struct positions_info* infos, unsigned int idx );
+
 // Is a help/bool function, which returns 1 if the 
 int is_allowed_to_simple_move(struct world_t* world, enum players player, struct positions_info* infos, unsigned int ex_idx, unsigned int new_idx);
 
