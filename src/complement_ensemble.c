@@ -64,7 +64,6 @@ void escape_piece(enum players player , struct positions_info* infos, unsigned i
              for( int i=0; i<HEIGHT;++i ){
                 if(infos->current_pieces_BLACK[i]==idx && is_prisoner(PLAYER_BLACK, infos, idx ) == 1){ //we check if its a prisonner position
                     int j = (rand())%2; // the piece can escape with a probability of 0.5
-                    //printf("\nj_rand == %d\n", j);
                     if(j == 1){
                         infos->status_pieces_BLACK[i] = NON_PRISONER;
                         break;

@@ -18,34 +18,6 @@ struct world_t* world_init(){
   }
     return  &monde;
 }
-// //function returning a pointer to a triangular world
-// struct world_t world_2;
-// struct world_t* world_init_triangular(){
-//     unsigned int start = 0;
-//     for(int i=1; i <= HEIGHT; ++i){
-//         if(i%2==0){
-//             for(int j = start; j < i*WIDTH ;){
-//                 world_set_sort(&world_2, j, NO_SORT);
-//                 world_set(&world_2, j, NO_COLOR);
-//                 world_set_sort(&world_2, j+1, MAX_SORT); // id its not playable its sorts = MAX_SORTS
-//                 world_set(&world_2, j+1, MAX_COLOR);
-//                 j=j+2; // id its not playable its color = MAX_color
-//             }
-//         }
-//         else{
-//             for(int j = start; j < i*WIDTH;){
-//                 world_set_sort(&world_2, j+1, NO_SORT);
-//                 world_set(&world_2, j+1, NO_COLOR);
-//                 world_set_sort(&world_2, j, MAX_SORT); // id its not playable its sorts = MAX_SORTS
-//                 world_set(&world_2, j, MAX_COLOR);
-//                 j=j+2; // id its not playable its color = MAX_color
-//             }
-//         }
-//         start = start + WIDTH ;
-//     }
-//     return &world_2;
-// }
-
 
 enum color_t world_get( const struct world_t* b, unsigned int idx){
   return b->colors[idx] ;

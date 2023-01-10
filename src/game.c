@@ -56,12 +56,12 @@ unsigned int choose_random_piece_belonging_to(struct positions_info infos, unsig
     switch (current_player) {
     case PLAYER_WHITE:
         i = rand() % HEIGHT;
-        printf("\nchoosed: %d\n\n",infos.current_pieces_WHITE[i] );
+        // printf("\nchoosed: %d\n\n",infos.current_pieces_WHITE[i] );
         return infos.current_pieces_WHITE[i];
         break;
     case PLAYER_BLACK:
         i = rand() % HEIGHT;
-        printf("\nchoosed: %d\n\n", infos.current_pieces_BLACK[i]);
+        // printf("\nchoosed: %d\n\n", infos.current_pieces_BLACK[i]);
         return infos.current_pieces_BLACK[i];
         break;    
     default:
@@ -139,7 +139,6 @@ void move_current_player(struct world_t* world, enum players player, struct posi
                 break;
             case SIMPLE_JUMP:
                 simple_jump(world, player, infos, move.ex_idx, move.new_idx);
-                // printf("I did a simple JUMP!! \n");
                 break;
             case SIMPLE_MOVE:
                 simple_move_player(world, player, infos, move.ex_idx, move.new_idx);
@@ -151,7 +150,7 @@ void move_current_player(struct world_t* world, enum players player, struct posi
     }
 }
 
-//we do a function that do the simple game
+// We do a function that do the simple game
 int simple_win_game(struct world_t* world, struct positions_info infos , unsigned int MAX_TURNS, enum players current_player){
     while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
@@ -159,7 +158,6 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
         // We are using this if test because sometimes it gives us an unkown move.
         if (random_move.type == 1 || random_move.type == 2 || random_move.type == 3) {
             move_current_player( world, current_player, &infos, random_move);
-            print_current_pieces(infos);
             print_world(world);        
             printf("\n");
             printf("PLAYED TURNS: %d\n", infos.TURNS);
@@ -188,8 +186,8 @@ int simple_win_game(struct world_t* world, struct positions_info infos , unsigne
     printf("There is no Winner.\n");
     return 0;
 }
-//we do a function that do the complex game, we did it we int output so as if there is an error 
-//the game stop
+// We do a function that do the complex game, we did it we int output so as if there is an error 
+// The game stop
 int complex_win_game(struct world_t* world, struct positions_info infos, unsigned int MAX_TURNS , enum players current_player){
     while(nobody_has_won(world, infos) && infos.TURNS < MAX_TURNS) {
         unsigned int p = choose_random_piece_belonging_to(infos, current_player);
@@ -197,7 +195,6 @@ int complex_win_game(struct world_t* world, struct positions_info infos, unsigne
         // We are using this if test because sometimes it gives us an unkown move.
         if (random_move.type == 1 || random_move.type == 2 || random_move.type == 3) {
             move_current_player( world, current_player, &infos, random_move);
-            print_current_pieces(infos);
             print_world(world);        
             printf("\n");
             printf("PLYED TURNS : %d\n", infos.TURNS);

@@ -207,7 +207,7 @@ switch (player){
     break;
   }
 }
-//A function printing current pieces for each player
+// A function printing current pieces for each player
 void print_current_pieces(struct positions_info infos){
     for(int i=0 ; i < HEIGHT; ++i){
           printf("%d   %d\n \n", infos.current_pieces_BLACK[i], infos.current_pieces_WHITE[i]);
@@ -243,7 +243,8 @@ void simple_move_player(struct world_t* world, enum players player, struct posit
   }
 
 }
-//______________________________________________the jump function_____________________________
+
+
 // This first auxillary gives us the number of neighbors of a position, it will help us with the loops. 
 int number_of_neighbors(struct neighbors_t neighbors) {
   int c=0;
