@@ -1,0 +1,474 @@
+
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+
+\documentclass[11pt]{article}
+\usepackage[french]{babel}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{varwidth}
+\usepackage{algpseudocode}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[T1]{fontenc} 
+\title{ENSEIRB-MATMECA I1\\Rapport de projet d'algorithmique et de programmation n°1  \\ $MANSUBA$}
+\author{ \\ \\ Abderahim LAGRAOUI \\ \\ Finn ROTERS  \\ \\Encadrant : Idris DULAU}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\renewcommand{\headrulewidth}{1pt}
+\fancyhead[]{} 
+%\fancyhead[C]{\textbf{page \thepage}} 
+%\fancyhead[L]{\leftmark}
+%\fancyhead[R]{machin}
+\renewcommand{\footrulewidth}{1pt}
+\fancyfoot[C]{{\thepage/25}} 
+\fancyfoot[L]{Projet de programmation N°1}
+\fancyfoot[R]{Année 2022/2023}
+
+
+\begin{document}
+%
+\maketitle
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=18cm, height=9cm ]{enseirb.png}
+\end{figure}
+\newpage
+\tableofcontents
+    \newpage
+    \section{Introduction}
+        \subsection{Présentation générale du projet}
+            \begin{wrapfigure}{r}{0.35\textwidth} %%this figure will be at the right
+            \centering
+            \includegraphics[width=0.35\textwidth]{ChineseCheckersboard.jpeg}
+            \caption{Tableau de jeu de dames chinoises }
+            \label{figure1}
+            \end{wrapfigure}
+            Étant introduit au monde européen par les arabes au $X^{e}$ siècle, le jeu d'échecs est l'un des jeux de réflexion les plus populaires au monde. Le projet du module \textit{"Projet d'algorithmique et de programmation N° 1"} s'intéresse particulièrement à l'une des anciennes formes de ce jeu c'est "Manṣūba". Il s'agit d'un jeu précurseur du jeu de société chinois des dames. Dans nôtre modèle simplifié, une partie se joue à deux, les deux joueurs occupent initialement des positions symétriques dans le tableau du jeu, chaque pièce selon son type a plusieurs possibilités de déplacement. Le critère d'une victoire, qui se fixe en début de partie, se présente en deux variétés : une victoire simple ou une victoire complexe.
+            L'objectif de ce projet est de s'intéresser à ces jeux de plateaux avec des pièces qui se déplacent de manière plus ou moins loufoques, dans des tableaux de de jeu variés.
+    
+        \subsection {Problématique}
+            La problématique principale était de comprendre et de faire une abstraction du jeu en appliquant toutes nos connaissances sur la programmation en langage C, de bien échanger les idées et les connaissances au sein du groupe et de savoir comment résoudre les différents problèmes sur le niveau compilation mais aussi sur le niveau de manipulation de nôtre dépôt $Git$. De plus, l'exercice c'était de implémenter un code qui se base sur les structures de données et les fonctions prédéfinies dans la version de base. 
+        \subsection{Architecture du projet}
+            Le projet est constitué d'un ensemble de fichiers écrits en langage de programmation C. Pour compiler le projet, on utilise l'outil Makefile qui crée un exécutable pour chaque fichier et ensuite compile l'ensemble des fichiers en un seul exécutable appelé \textit{projet}. Afin d'améliorer l'indépendance entre les fichiers, nous avons créé un \textit{header} pour chaque fichier qui contient le minimum des \textit{\#include} nécessaires pour la compilation. Pour les tests, nous avons adopté une stratégie qui consiste à effectuer autant de tests que possible pour chaque fonction, en changeant les valeurs des arguments et en traitant des cas extrêmes, comme pour la fonction \textit{get\_neighbors} où nous avons testé des exemples de positions au milieu du tableau ainsi que des positions aux bords du tableau. À propos des options du jeu tels la taille de la grille et le nombre de tours, on a utilisé la fonction $getopt$ .
+             \begin{figure}[h]
+                \centering
+                \includegraphics[width=14cm, height=4.8cm ]{Graph_de_dependances.drawio(2).png}
+                \caption{Graphe des dépendances }
+                \label{figure}
+                \end{figure}
+    \section{Définition du monde }
+        \subsection{Tableau du jeu}
+            \subsubsection{Abstraction du monde}
+                La contrainte d'optimisation du code en termes de complexité nous a amené à ne pas implémenter le monde comme étant un tableau $2D$, car en effet à chaque parcours d'une position, il faudra au moins deux boucles imbriquées. Alors on a choisi de l'imaginer comme étant un seul tableau de taille \textit{WORLD\_SIZE} et chaque début de ligne est caractérisé par une position $idx$ telle que $idx \equiv 0 \pmod{WIDTH}$. Voilà un exemple illustrant ce principe sur la figure~\ref{figure2}.
+                \begin{figure}[h]
+                \centering
+                \includegraphics[width=14cm, height=9.5cm ]{grid.png}
+                \caption{Tableau de jeu 10 x 10}
+                \label{figure2}
+                \end{figure}
+            \subsubsection{La structure \textit{world\_t} }%TROUVER UN NOUVEAU NOM  %%world_t
+                L'implémentation du type abstrait \textit{world\_t} est désormais évidente grâce au principe expliqué dans la partie précédente. Comme l'illustre la figure~\ref{figure3}, cette structure qui représente l'état de toutes les cases, contient deux champs : un tableau \textit{colors} de type énuméré \textit{color\_t} de taille \textit{WORLD\_SIZE} et un autre tableau $sorts$ \ de type énuméré\ \textit{sort\_t}  de même taille.
+                \begin{figure}[h]
+                \centering
+                \includegraphics[width=10cm, height=2cm ]{worldt.png}
+                \caption{La structure \textit{world\_t} }
+                \label{figure3}
+                \end{figure}
+                \newpage
+            \subsubsection{Initialisation du monde}
+                Avant de commencer une partie, il faut d'abord créer un tableau de jeu vide, pour cela on utilise la fonction $world\_init$ \ qui remet les deux champs d'une variable globale $monde$, définie exclusivement dans le fichier $world.c$, à $NO\_COLOR$ et $NO\_SORT$. Dans la première implémentation de cette fonction, on a utilisé la fonction $malloc$ pour allouer de l'espace mémoire afin de pouvoir retourner un pointeur vers le tableau de jeu, mais on a eu des erreurs de type $valgrind$. Et à cause de cela, on était obligé de s'en sortir avec la variable globale $monde$. $world\_init$ a une complexité linéaire O(n).
+        \subsection{Relations définies sur le monde}
+            \subsubsection{La structure \textit{neighbors\_t} } %%neighbors_t
+                Puisque chaque pièce a une dynamique de mouvement, il faut absolument mettre en évidence les relations qu'elle maintient avec ses voisins. Dans le modèle de base du jeu, selon sa position chaque pièce a un nombre de voisins qui varie entre 3 et 8 voisins et chaque position peut être occupée par au plus une seule pièce.
+                
+                L'implémentation de ces aspects se fait grâce à deux structures dépendantes des deux figures~\ref{figure4} et~\ref{figure5}: $vector\_t$ \ qui contient un champ $i$ de type entier représentant l'indice du voisin et un champ $d$ de type énuméré $dir\_t$ désignant la direction dans laquelle se situe, et la structure $neighbors\_t$ sous forme d'un tableau de type $vector\_t$ \ de taille $MAX\_NEIGHBORS$ . 
+                \begin{figure}[h]
+                \centering
+                \includegraphics[width=14cm, height=1.8cm ]{vectort.png}
+                \caption{La structure $vector\_t$}
+                \label{figure4}
+                \includegraphics[width=12cm, height=1.5cm ]{neghborst.png}
+                \caption{La structure $neighbors\_t$}
+                \label{figure5}
+                \end{figure}
+            \subsubsection {Identification des voisins }
+                La gestion du tableau de jeu nécessite de plus l'identification de la liste des voisins de chaque case, la fonction $get\_neighbors$ s'en servit .Le principe algorithmique de cette fonction est de distinguer entre deux zones critiques du tableau comme s'est montré sur la figure~\ref{figure6}, la zone au milieu en gris et la zone constituée par les 4 frontières en jaune. Et puis selon la zone à laquelle appartient la case prise comme argument, on retourne une structure $vector\_t$ \ indiquant la liste de ses voisins.Il est à noter que dans tous les types des grilles qu'on définira , cette fonction retourne une liste de 8 voisins, les voisins avec une valeur $UINT\_MAX$ ne seront pas pris en compte.
+
+                La complexité de la fonction \textit{get\_neighbors} est en $O(n)$, avec $n$ égale à \textit{MAX\_NEIGHBORS}.
+                \begin{figure}[h]
+                \centering
+                \includegraphics[width=14cm, height=9.5cm ]{zones_critiques.png}
+                \caption{Zones critiques dans un tableau de jeu}
+                \label{figure6}
+                \end{figure}
+                \newpage
+            
+    \section{Construction du jeu}
+        \subsection{Définition des structures de données}
+            \subsubsection{Types structures } %%$positions$\_ $info$ 
+                Après avoir créer le tableau du jeu, il est désormais possible de mettre en place les règles du jeu. Pour cela on définit une nouvelle structure de données $positions$\_ $info$ sur la figure~\ref{figure7}, cette structure associe à chacun des deux joueurs, quatre tableaux représentant l'ensemble de ses informations relatives, celui des positions initiales, celui des positions actuelles qu'il occupe et celui de l'état d'emprisonnement de ces positions. De plus, elle contient deux entiers non signés $MAX\_TURNS$ et $TURNS$ représentant respectivement le nombre maximal de tours possibles et le nombre de tours joués. Pour une contrainte de complexité, le champ des mouvements possibles pour chaque joueur était omis. Cependant ce besoin va être réglé ailleurs . 
+                \begin{figure}[h]
+                \centering
+                \includegraphics[width=16cm, height=5cm ]{positions_info.png}
+                \caption{La structure $positions$\_ $info$ }
+                \label{figure7}
+                \end{figure}
+                \newpage
+                La structure \textit{move} de la figure~\ref{figure8}, sert à discrétiser un déplacement donnée, elle contient les indices de départ et d'arrivée de la pièce concernée ainsi que le type du déplacement. Elle sera très utile dans la génération d'une partie aléatoire.
+                \begin{figure}[h]
+                \centering
+                \includegraphics[width=7cm, height=2cm ]{move.png}
+                \caption{La structure $move$ }
+                \label{figure8}
+                \end{figure}
+            
+            \subsubsection{Types énumérés } %%$sort$\_ $t$, $color$\_ $t$, $dir$\_ $t$, $players$, $move$\_ $types$ et $victory$
+                Voilà la liste des types énumérés utilisés dans l'implémentation du jeu.
+                \begin{itemize}
+                    \item[] Comme c'est défini sur la figure~\ref{figure9}, les couleurs possibles des pièces sont le blanc et le noir. 
+                        \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=10cm, height=2.4cm ]{color_t.png}
+                        \caption{Le type énuméré $color\_t$ }
+                        \label{figure9}
+                        \end{figure}
+                    
+                    \item[] Les directions possibles sont les huit directions mentionnées dans la figure ~\ref{figure11}.
+                        \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=12cm, height=6cm ]{dir_t.png}
+                        \caption{ Le type énuméré $dir\_t$ }
+                        \label{figure11}
+                        \end{figure}
+                        % \newpage
+                    \item[] Comme elle le montre la figure~\ref{figure10}, les types des pièces mises en jeu le simple pion $PAWN$, la tour $TOWER$, l'éléphant $ELEPHANT$ et le sauteur $BISHOP$.
+                        \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=12cm, height=5cm ]{sort_t.png}
+                        \caption{ Le type énuméré $sort\_t$ }
+                        \label{figure10}
+                        \end{figure}
+                        \newpage
+                    \item[] Comme elle le montre la figure~\ref{figure12}, une victoire peut être simple ou complexe. le type $move\_types$ ne sera utilisé que dans la génération de la partie aléatoire dans la version de base du jeu, pour cela on ne considère que les trois types de mouvements définis pour les simples pions.
+                        \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=10cm, height=6cm ]{enums1.png}
+                        \caption{ Les types énumérés $victory$ et $move\_types$ }
+                        \label{figure12}
+                        \end{figure}
+                \end{itemize}
+                % \newpage
+
+           %%faire des referneces aux figures ou ajouter du texte 
+           %%fautes d'orthographe  = grammar mistakes
+        \subsection{Initialisation séparée d'une partie du jeu}
+            Grâce à tous les outils définis précédemment il est possible maintenant de commencer le jeu. À cause des problèmes liés aux tailles des tableaux dans les deux structures \textit{world\_t} et $positions\_infos$, on a décidé d'initialiser séparément le tableau de jeu et les informations du jeu en utilisant deux fonctions indépendantes, et ces dernières vont être utilisés une seule fois au début de la partie .
+            \subsubsection{Initialisation des informations du jeu } %init_infos
+                La fonction $init\_infos$ associe aux deux joueurs leurs positions initiales qui seront confondues avec leurs positions actuelles au début de la partie comme le montre la figure~\ref{figure13}, on suppose que le joueur avec les pièces blanches occupe initialement toutes les positions de la dernière colonne à gauche du tableau de jeu (en rouge), et l'autre joueur occupe symétriquement celles à droite (en vert).
+                \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=14cm, height=9.5cm ]{positions_initiales.png}
+                        \caption{ Un tableau de jeu au début d'une partie }
+                        \label{figure13}
+                        \end{figure}
+                        \newpage
+            \subsubsection{Initialisation du tableau de jeu }%init players + world_init
+            La fonction $init\_players\_0$ applique le même principe de la fonction $init\_infos$ sauf qu'elle agit sur le monde c'est à dire sur le monde physique définie précédemment .
+        \subsection{Déplacements}
+            Les mouvements des joueurs sont indispensables au jeu. On distingue trois types , déplacement simple, un saut simple et des sauts multiples. À son tour, chaque joueur peut effectuer l'un de ces mouvements. Pour le déplacement et saut simples, on prend comme argument la position d'arrivée et on utilise une fonction auxiliaire booléenne, permettant de savoir si ce déplacement est possible. Pourtant pour les sauts multiples, on fait une suite de sauts simples tant qu'il est possible sous réserve de ne pas revenir à la position initiale. Finalement, après chaque déplacement, le monde et les informations du jeu sont mis à jour.
+            \subsubsection{Mouvement simple}
+                Avec un déplacement simple, une pièce se déplace vers une position voisine à condition que cette dernière soit libre. On distingue entre les déplacements des pièces noires et des pièces blanches. On autorise uniquement les déplacements vers une position gagnante, cela signifie que les pions blancs partent à l'ouest et ne peuvent se déplacer que dans les directions nord, nord-est, est, sud-est ou sud comme s'est montré sur la figure~\ref{figure14}. Noir part de l'est et se déplace dans les directions nord, nord-ouest, ouest, sud-ouest ou sud comme l'illustre la  figure~\ref{figure15}. 
+                \begin{figure}[h]
+                \begin{minipage}[c]{.46\linewidth}
+                    \centering
+                    \includegraphics{DÃ©placement white.png}
+                    \caption{Déplacement d'un blanc}
+                    \label{figure14}
+                \end{minipage}
+                \hfill%
+                \begin{minipage}[c]{.46\linewidth}
+                    \centering
+                    \includegraphics{DÃ©placements Black.png}
+                    \caption{Déplacements d'un noir}
+                    \label{figure15}
+                \end{minipage}
+            \end{figure}
+            \newpage
+            \subsubsection{Saut simple}
+                Lors d'un saut simple, le pion saute par-dessus un autre pion. Ainsi, le pion peut se déplacer plus rapidement qu'avec un déplacement simple. La condition préalable à ce mouvement est que la position sur laquelle le pion saute soit libre et que la position de passage entre les deux positions soit occupée par un pion de n'importe quelle couleur, voir la figure~\ref{figure16}.
+                \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=4cm, height=4cm ]{saut_simple.png}
+                            \caption{ Exemple d'un saut simple}
+                            \label{figure16}
+                            \end{figure}
+            \subsubsection{Sauts multiples }
+                Un saut multiple est est une suite de sauts simples, voir figure~\ref{figure17}. Tant que il est possible, on effectue des sauts simples et la fonction qui effectue ce déplacement retourne la position finale du pion. Il est impératif de ne pas revenir à la position initiale, sinon un saut infiniment long et inutile peut être généré.
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm, height=4.5cm ]{saut_multiple.png}
+                                \caption{ Exemple d'un saut multiple}
+                                \label{figure17}
+                                \end{figure}
+                %\newpage
+                \newpage
+            \subsubsection{Mouvement d'un éléphant}
+                L'éléphant comme s'est montré sur la figure~\ref{figure60} avec le caractère $\&$, effectue deux mouvements simples dans deux directions cardinales possibles pour le joueur concerné, et cela sans aucun exigence sur la case intermédiaire qu'il soit libre ou non.
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm, height=4.5cm ]{Elephant_move_classic.png}
+                                \caption{ Déplacements d'un éléphant}
+                                \label{figure60}
+                                \end{figure}
+            \subsubsection{Mouvement d'une tour}
+                La tour peut se translater selon un direction cardinale tant qu'elle n'affronte pas de case occupée comme s'est montré dans la figure~\ref{figure61} avec le caractère $\#$. 
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm, height=4.5cm ]{Tower_move_classic.png}
+                                \caption{ Déplacements d'une tour}
+                                \label{figure61}
+                                \end{figure}
+        \subsection{Mise à jour du tableau de jeu}
+            Comme c'est déjà mentionné pour les déplacements, le tableau du jeu doit être actualisé après chaque tour. Cela se fait en mettant à jour le tableau du jeu de type \textit{world\_t} et les informations du jeu de type $position\_info$. Pour cela, nous utilisons la fonction $update\_current pieces$. Après chaque tour, cette fonction réorganise le tableau des positions actuelles des joueurs en remplaçant l'ancienne position par la nouvelle position et change l'état de l'ancienne position en position libre.
+            
+            Le cas d'une capture simple, c'est lorsque le déplacement d'une pièce se termine sur une case contenant une pièce d'une couleur différente. Dans ce cas, cette dernière pièce sera considérée comme prisonnière. La mise à jour du tableau prend en compte cet effet et si les conditions d'un emprisonnement sont vérifiées on l'effectue en modifiant le champ \textit{status\_pieces} dans les informations du jeu.
+            \newpage
+        \subsection{Détermination de la fin d'une partie }
+            Une partie est terminée lorsqu'un joueur obtient une victoire simple ou une victoire complexe.
+                \subsubsection*{Victoire simple}
+                    Une simple victoire est réalisée lorsqu'un pion appartenant à un joueur atteint une des positions initiales de l'adversaire, un exemple est fourni sur la figure~\ref{figure19}. Pour cela, on vérifie s'il existe une position dans un tableau de positions initiales d'un joueur occupée par une pièce appartenant à son adversaire en utilisant les champs de la structure $positions\_info$. La fonction \textit{simple\_win} qui détermine la fin de cette partie a une complexité en O(n), où n est la valeur de $WORLD\_SIZE$.
+                \begin{figure}[h]
+                \begin{minipage}[c]{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=6cm,height=6cm]{positions_initiales_1.png}
+                    \caption{L'état initial du plateau }
+                    \label{figure18}
+                \end{minipage}
+                \hfill
+                \begin{minipage}[c]{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=6cm,height=6cm]{victoire_simple.png}
+                    \caption{Victoire simple du noir }
+                    \label{figure19}
+                \end{minipage}
+            \end{figure}
+                \subsubsection*{Victoire complexe}
+                Une victoire complexe est réalisée lorsque tous les pions d'un joueur occupent toutes les positions initiales de son adversaire, un exemple est fourni sur la figure~\ref{figure21}. La fonction \textit{complex\_win} qui détermine la fin de cette partie a une complexité en O(n), où n est la valeur de $WORLD\_SIZE$.
+                \begin{figure}[h]
+                \begin{minipage}[c]{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=6cm,height=6cm]{positions_initiales_1.png}
+                    \caption{L'état initial du plateau }
+                    \label{figure20}
+                \end{minipage}
+                \hfill
+                \begin{minipage}[c]{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=6cm,height=6cm]{victoire_complex.png}
+                    \caption{Victoire complexe du noir}
+                    \label{figure21}
+                \end{minipage}
+            \end{figure}
+        \subsection{Génération d'une partie aléatoire}
+        Pour commencer une partie du jeu, des paramètres aléatoires sont générés. Par exemple, un joueur aléatoire est choisi pour démarrer le jeu. Un pion aléatoire du joueur qui démarre est sélectionné, lui même effectue un mouvement possible aléatoire.Il est à noter que dans cette partie, seuls les simples pions sont mis sur le plateau de jeu.
+        
+            \subsubsection*{Choix aléatoire d'un joueur  }
+                Comme il n'y a que deux joueurs dans ce jeu, il faut générer soit un nombre valant $1$ pour le joueur avec les pions noirs et $2$ pour l'autre joueur. Pour cela, on génère un entier $r$ avec la fonction rand() et comme $r$ est aléatoire, on retient $r \ mod (2) + 1$ . %Nous obtenons ainsi le nombre aléatoire souhaité entre un et deux.
+            \subsubsection*{Choix aléatoire d'une pièce appartenant à ce dernier }
+                La fonction $choose\_random\_piece\_belonging\_to$ choisit une pièce aléatoire appartenant au joueur pris comme argument. Pour cela, un nombre aléatoire quelconque est également généré et réduit avec la technique de $mod\ (HEIGHT)$ . Ce nombre représente l'indice dans le tableau $current\_pieces$ de la pièce à choisir.
+            
+            \subsubsection*{Choix aléatoire d'un mouvement possible pour cette pièce}
+                La fonction $choose\_random\_move\_for\_piece$ retourne un $struct\ move$ représentant un déplacement possible pour la pièce choisie. On choisit une position du tableau de jeu, et tant que aucun mouvement vers cette position n'est possible, on prend une autre position aléatoire et on vérifie si un déplacement possible parmi les trois types de déplacements vers cette position est possible. Il est à signalé qu'on favorise dans cet ordre le saut multiple puis le saut simple et enfin le déplacement simple .   
+            \subsubsection*{Exécution du mouvement et mise à jour du monde}
+                En se basant sur le mouvement aléatoire choisi, on effectue les mises à jour nécessaires du tableau et les informations du jeu en appelant les fonctions déjà implémentées .
+            \subsubsection*{Passage du tour à l'adversaire}
+                La tour des rôles est maintenue par la fonction $next\_player$ retourne un $enum \ players$ représentant l'adversaire .
+        \subsection{Affichage du jeu}
+                 La communication avec les joueurs reste un point primordial dans le jeu, pour cela on utilise la fonction $print\_world$ qui affiche la grille du jeu après chaque déplacement, on utilise la couleur $rouge$ pour les pièces blanches et la couleur $verte$ pour celles en noir. De plus les pions sont affichés sous forme du caractère $*$ et les positions libres en un $0$ blanc.À la fin d'une partie, on affiche le gagnant.Un exemple est fourni sur la figure~\ref{figure22}. 
+                 \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=7cm, height=3.63cm ]{affichage.png}
+                                \caption{ Une victoire réalisée par le joueur en pions noirs }
+                                \label{figure22}
+                                \end{figure}
+            \newpage
+    \section{Autres tableaux de jeu}
+        \subsection{La grille triangulaire}
+            \subsubsection{Construction}
+                    En se basant sur la même définition du tableau de la grille classique, on construit une nouvelle grille appelée grille triangulaire. Ce nouveau plateau de jeu est caractérisé par un nombre de voisins limité à 6 et par deux directions cardinales éliminées. On commence par rendre des positions non jouables tel que une position $idx$ est non jouable si et seulement si sa couleur est égale à $MAX\_COLOR$ et le type de sort dedans est de type $MAX\_SORT$. Le tableau contient $HEIGHT$ lignes  $L_{0}, L_{1}, L_{2}....L_{HEIGHT - 1}$, dans chaque ligne $L_{i}$ : si $i$ est pair on rend la première position de $L_{i}$ non jouable (en blanc )et la deuxième jouable (en gris) ainsi de suite comme l'illustre la figure~\ref{figure23}, sinon on fait l'inverse.
+                    \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=9cm, height=8cm ]{Triangular_grid.png}
+                            \caption{ Une grille triangulaire }
+                            \label{figure23}
+                            \end{figure}
+            \subsubsection{Relations}
+                Dans la grille triangulaire, chaque position jouable peut avoir au maximum 6 voisins. Pour les directions non cardinales, les voisins restent identiques à ceux de la grille classique. Cependant pour les directions cardinales, on élimine les deux directions $EAST$ et $WEST$ c'est à dire qu'on ne les considère pas dans la liste des voisins. Et pour les directions $SOUTH$ et $NORTH$, on saute la première case dans une direction qui est non jouable et on prend la deuxième case dans la même direction comme s'est montré dans la figure~\ref{figure24}. 
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm, height=4cm ]{neighbor_triangular.png}
+                                \caption{ Exemple de repérage de voisins }
+                                \label{figure24}
+                                \end{figure} 
+            \subsubsection{Déplacements}
+            Vu l'élimination des deux directions $EAST$ et $WEST$, les déplacements des types $ELEPHANT$ et $TOWER$ sont inutiles. Ainsi dans cette grille, on ne considère que les déplacements des types $PAWN$ et du type $BISHOP$. Le $BISHOP$ ou le sauteur peut faire des déplacements uniquement selon les directions diagonales possibles pour chaque joueur: dans les directions $SEAST$ et $NEAST$ pour le joueur en pièces blanches et dans les directions $SWEST$ et $NWEST$ pour le joueur en pièces noires.
+                \begin{enumerate}
+                    \item Déplacement simple:
+                    
+                        Dans ce plateau de jeu, les déplacements simples qui concernant les deux types de pièces existantes sont définies tels que dans le plateau classique : une pièce se déplace vers une une position voisine sous réserve qu'elle soit libre et bien évidemment jouable comme c'est montré dans la figure~\ref{figure25}. De plus, on favorise pour chaque joueur les déplacements qui le rapproche d'une victoire. 
+                        \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{simple_move_triangular.png}
+                                \caption{ Exemple d'un déplacement simple d'une pièce blanche }
+                                \label{figure25}
+                                \end{figure}
+                    \item Saut simple:
+                    
+                        Un saut simple est une suite de deux déplacements simples dans la même direction (voir la figure~\ref{figure26}).
+                        \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{simple_jump_triangular.png}
+                                \caption{ Exemple d'un saut simple d'une pièce blanche }
+                                \label{figure26}
+                                \end{figure}
+                                %\newpage
+                    \item Déplacement du SAUTEUR:
+                    
+                        Comme c'est expliqué précédemment le $BISHOP$ peut de déplacer dans deux directions diagonaux possibles pour chaque joueur comme c'est montré sur la figure~\ref{figure27}. Cependant, il n'a pas le droit de sauter au dessus d'une autre pièce. \newpage
+                        \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{bishop_move_triangular.png}
+                                \caption{ Exemple d'un déplacement d'un sauteur de couleur blanche }
+                                \label{figure27}
+                                \end{figure}
+                \end{enumerate}
+                
+            \subsubsection{Initialisation du tableau de jeu}
+                        Pour déterminer les positions de départ des joueurs, on va utiliser une configuration symétrique. Le joueur avec les pièces blanches occupera les positions jouables de la dernière colonne à gauche et remplira ces positions avec des pions simples, à l'exception des première et dernière positions jouables de cette colonne, où il placera des $BISHOP$. Le joueur avec les pièces noires effectuera le même principe dans le côté droit de la grille. C'est ce qui est illustré par la figure~\ref{figure28}.
+                        \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=7cm,height=6cm]{Initial_grid_triangular.png}
+                                \caption{ Tableau de jeu initial d'une grille triangulaire  }
+                                \label{figure28}
+                                \end{figure}
+                            %\newpage
+            \subsubsection{Affichage du tableau}
+                Pour afficher la grille triangulaire, on utilise les mêmes principes d'affichage de la grille classique sauf qu'on ignore les positions non jouables du tableau. Et pour le nouveau type de pièce $BISHOP$, on utilise comme identifiant le caractère $\#$ tel qu'il est montré dans la figure~\ref{figure29}.
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{affichage_triangular_grid.png}
+                                \caption{ Affichage d'une grille triangulaire}
+                                \label{figure29}
+                                \end{figure}
+        \subsection{La grille d'échecs classiques}
+            \subsubsection{Construction}
+                La grille d'échecs classiques ou l'échiquier, est un tableau de jeu dont les positions sont en alternances sombres et claires. Et chaque pièce ne peut se déplacer que dans les positions ayant la même couleur qu'elle. On construit cette grille de la même manière que la grille triangulaire sauf que les positions non jouables se transformeront en des positions claires et les positions jouables vont être des positions sombres, la figure~\ref{figure30} illustre ce principe. Cependant, il n'est pas possible de définir une position claire comme étant de type $MAX\_SORT$, car cela entraînerait une contradiction avec le fait qu'une position peut être à la fois sombre et occupée. Pour cette raison, le caractère sombre ou clair d'une position n'a pas de signification physique dans nôtre code. Ainsi pour régler ce problème, la fonction qui identifie les voisins d'une case dans cette grille, prend en compte cette contrainte. Il est à noter que les deux joueurs ne se croisent jamais dans cette grille, donc le statut d'emprisonnement d'une case n'a plus de sens.
+                  \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=9cm, height=8cm ]{chess_world_grid.png}
+                            \caption{ Un échiquier de taille 10x10 }
+                            \label{figure30}
+                            \end{figure}
+                
+            \subsubsection{Relations}
+                Dans cette grille, chaque position peut avoir au plus 4 voisins. Ce sont les positions voisines dans les 4 directions non cardinales comme le montre la figure~\ref{figure31}.
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{neighbor_chess.png}
+                                \caption{ Exemple de voisins dans un échiquier}
+                                \label{figure31}
+                                \end{figure}
+            \subsubsection{Déplacements}
+                \begin{enumerate}
+                    \item Déplacement simple:
+                    
+                    Les pions peuvent se déplacer d'une case dans une des deux directions diagonalement opposées selon leur couleur. Les pions blancs peuvent se déplacer vers le nord-est ou le sud-est, tandis que les pions noirs peuvent se déplacer vers le nord-ouest ou le sud-ouest. C'est ce que la figure~\ref{figure32} illustre.
+                    \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{simple_move_chess.png}
+                                \caption{ Exemple d'un déplacement simple}
+                                \label{figure32}
+                                \end{figure}
+
+                    \item Saut simple:
+                    
+                    La figure~\ref{figure33} montre le principe d'un simple saut sur cette grille. Comme les deux joueurs ne se croisent jamais sur le tableau du jeu, un saut simple avec un pion n'est possible que si la case intermédiaire est occupée par un pion de la même couleur.
+                    \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{simple_jump_chess.png}
+                                \caption{ Exemple d'un saut simple}
+                                \label{figure33}
+                                \end{figure}
+                    \item Sauts multiples:
+                    
+                    Pour les sauts multiples sur un échiquier classique, les mêmes conditions que précédemment s'appliquent (voir section 4.3.3). Comme pour le saut simple, seules les pièces de la même couleur peuvent sauter les unes au dessus des autres. La figure~\ref{figure34} l'illustre.
+                        \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{multiple_jumps_chess.png}
+                                \caption{ Exemple de sauts multiples}
+                                \label{figure34}
+                                \end{figure}
+                                \newpage
+                    \item Déplacement du SAUTEUR:
+                    
+                    Le sauteur conserve les mêmes chemins de déplacements que ceux de la grille triangulaire. En fonction du joueur à qu'il appartient, il peut se déplacer dans deux directions diagonalement opposées. La figure~\ref{figure35} donne un exemple de ce type de déplacement.
+                    \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=5cm,height=4cm]{bishop_move_chess.png}
+                                \caption{ Exemple d'un déplacement avec le sauteur}
+                                \label{figure35}
+                                \end{figure}
+                \end{enumerate}
+            \subsubsection{Initialisation du tableau de jeu}
+                Pour le tableau initial, on utilise la même configuration symétrique que celle de la grille triangulaire avec une translation des positions initiales des pièces noires par une seule case vers le haut. Cette configuration c'est celle présentée dans la figure~\ref{figure65}.
+                \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=8cm,height=7cm]{initial_grid_chess.png}
+                                \caption{ Tableau initial}
+                                \label{figure65}
+                                \end{figure}
+  
+            \subsubsection{Affichage du tableau}
+            Cette grille présente la particularité d'avoir des cases sombres ou claires ce qui rend l'affichage difficile. Pour répondre à cet contrainte, on utilise les mêmes principes d'affichage précédents sauf que dans la commande $\textbackslash 033$, on ajoute un argument qui paramètre la couleur de l'arrière plan. Voilà un exemple sur la figure~\ref{figure66} .
+            \begin{figure}[h]
+                                \centering
+                                \includegraphics[width=10cm,height=7cm]{chess_world_v2.png}
+                                \caption{ Affichage d'une grille d'échecs classiques}
+                                \label{figure66}
+                                \end{figure}
+            \newpage
+    \section{Améliorations possibles}
+        La totalité de nos travaux dans le projet \textit{"Mansuba"} ne peuvent pas s'arrêter à ce niveau, plusieurs fonctionnalités parmi celles qu'on a pu faire, peuvent être largement améliorées et plusieurs nouvelles idées peuvent perfectionner nôtre travail. Dans cette partie on parlera de quelques unes, et on fera une analyse critique de nôtre travail tout au long le projet.
+            \subsection{Stratégies gagnantes}
+        Le jeu repose sur des mouvements aléatoires, cependant nous avons veillé à ce que les pions ne soient pas limités à des mouvements répétitifs ou à un mouvement arrière. Nous avons également pris soin de ne pas inclure des stratégies gagnantes trop évidentes. Il aurait cependant été intéressant d'implémenter des options de positionnement des pions qui permettent d'atteindre l'objectif plus rapidement en effectuant des sauts multiples, considérés comme les mouvements les plus puissants. Par exemple, on pourrait déterminer l'ensemble des mouvements possibles pour chaque pièce et les trier suivant un ordre croissant du nombre des cases en avant qu'elles apportent.
+            \subsection{Interface Homme-Machine}
+        De plus, il aurait été intéressant de pouvoir jouer contre l'ordinateur en demandant à l'utilisateur une liste de valeurs qui seront pris par la fonction $scanf$, cette fonction permet la saisie de commandes par un utilisateur sur le terminal. Cela aurait non seulement ajouté une dimension de défi supplémentaire au jeu, mais aurait également permis de tester les stratégies proposées dans la première proposition d'amélioration en les utilisant pour essayer de battre l'ordinateur.
+%         \subsection{Noms de fonction}
+% Il est crucial que le code soit clair et facile à comprendre. C'est pourquoi nous avons pris soin d'ajouter des commentaires explicatifs pour chacune des fonctions, afin de préciser leur fonctionnement. Malheureusement, nous avons rencontré des difficultés pour choisir des noms de fonctions concis et cohérents, ce qui a entraîné certains noms de fonctions trop longs, rendant le code moins lisible.
+    \subsection{Performance du code}
+        Le projet en cours ne priorisait pas la complexité, mais il est important de considérer cet aspect dans d'autres projets ou dans sa carrière professionnelle. Des améliorations en termes de simplicité auraient pu être apportées en consacrant davantage de temps à la réflexion. Dans ce projet, on a jamais utilisé la récursivité dans l'implémentation des fonctions, car la majorité des idées algorithmiques n'étaient pas basé sur ce principe.
+        
+    \section{Conclusion}
+    Dans le cours "Projet de programmation" de M. Renault en première année d'informatique, nous avons abordé le jeu "Mansuba". L'objectif était de créer une version de base du jeu, dans laquelle deux joueurs s'affrontaient avec le même nombre de pions. Il y avait différentes manières de déplacer les pions et deux conditions de victoire différentes. Le jeu a été développé et amélioré dans le cadre d'autres $achievements$. Au total, chaque développeur a consacré plus de 75 heures au projet et écrit plus de 3000 lignes de code. Pour cela, 18 programmes différents ont été codés et des fonctions ont été vérifiées pour s'assurer qu'elles étaient correctes.
+    Le projet nous a permis d'approfondir nôtre connaissance en programmation avec le langage C. Nous avons appris à organiser un projet en équipe et à nous concerter. Nous avons également pris conscience de l'importance des tests pour les fonctions écrites. 
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+    
+\end{document}
