@@ -17,10 +17,10 @@ La page des projets en général :
 - A. Lagraoui
 - F. Roters
 # Execution:
-  pour executer le jeu $ make project , avec les options suivante:
+  ## pour executer le jeu $ make project , avec les options suivante:
     un paramètre optionnel -s pour initialiser le générateur aléatoire.
     un paramètre optionnel -t pour fixer le type de victoire (s déclare une victoire simple, c une victoire complexe).
     un paramètre optionnel -m pour fixer le nombre maximal de tours.
-  pour executer les tests:
+  ## pour executer les tests:
     $ make test
     
